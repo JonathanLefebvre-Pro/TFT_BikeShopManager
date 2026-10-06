@@ -64,27 +64,29 @@
         - Montant déja payé
         - Montant restant à payer
         - Status (Cloturée, annulée, ...)
+        - Id du client
+        - Id de l'employé en charge de la commande
         - Date d'ajout
         - Date de mise à jour
 
     Magasin.BonLivraison - Bons de livraison d'un client
         - Id
+        - Id de la commande
         - Date d'ajout
         - Date de mise à jour
 
     Magasin.Factures - Factures d'un client
         - Id
-        - Date d'ajout
-        - Date de mise à jour
-
-    Magasin.Ventes - Liste des ventes
-        - Id
-        - Id de la facture
+        - Numéro de facture
+        - Id du bon de livraison
         - Id du client
-        - Id de l'employé en charge de la vente
+        - Id de l'employé en charge
         - Total HTVA
         - Total TVA
         - Total TVAC
+        - Status (Emise, payée, annulée, ...)
+        - Date d'ajout
+        - Date de mise à jour
 
 
     **Info** : Les commandes sont converties en bon de livraison puis en factures. Une facture ne peux pas être supprimée.
