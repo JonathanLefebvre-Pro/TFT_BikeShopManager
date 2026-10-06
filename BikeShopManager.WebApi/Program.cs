@@ -1,8 +1,24 @@
+using System.Data.Common;
+using Microsoft.Data.SqlClient;
+using Scalar.AspNetCore;
+
+//using WebApi.AppCore.Interfaces.Repositories;
+//using WebApi.Infrastructure.Services;
+
+string conStringTFT = @"GOS-VDI406\TFTIC";
+string conStringJo = @"JONATHAN\DATAVIZ";
+string connectionString =
+    @"Data Source="
+    + conStringJo
+    + @";Initial Catalog=ASP_WebApi;Integrated Security=True;Trust Server Certificate=True";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<DbConnection>(db => new SqlConnection(connectionString));
 
 builder.Services.AddControllers();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -12,12 +28,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
