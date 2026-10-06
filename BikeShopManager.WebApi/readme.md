@@ -9,7 +9,7 @@
 
 ## Magasin
 
-### Tables
+### Tables Personnes
 
     Personnes.Utilisateurs - Liste de toutes les personnes, clients et employés confondus 
         - Id (PK)
@@ -46,7 +46,9 @@
         - Date d'ajout
         - Date de mise à jour
         - **Autres infos liées uniquement aux employés**
-#
+
+### Tables Magasin
+
     Magasin.Commandes - Fiches de commande d'un client
         - Id
         - Liste d'articles (Accessoires et/ou vélos)
@@ -86,7 +88,9 @@
 
 
     **Info** : Les commandes sont converties en bon de livraison puis en factures. Une facture ne peux pas être supprimée.
-#
+
+### Tables Stock
+
     Stock.TauxTva
         - Id (PK)
         - Libellé (Standard, alimentaire, main d'oeuvre, ...)
@@ -171,9 +175,3 @@
         - Date d'ajout
         - Date de mise à jour
         - Id de l'emplacement (Réserve, Showroom, ...)
-
-## Atelier
-
-### Tables
-
-    Fiches de réparations
