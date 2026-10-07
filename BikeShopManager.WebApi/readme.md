@@ -290,6 +290,7 @@
 - Les acomptes sont déduits du solde au paiement final.
 - Totaux de ligne, totaux de commande, montant payé et reste à payer sont calculés, jamais stockés. (Sauf les totaux de Ventes ?)
 - Chaque action sensible écrit une entrée dans AuditLogs, dans la même transaction.
+- Une sous-catégorie doit avoir le même Domain que son parent.
 
 
 ### Trucs en plus
