@@ -70,8 +70,8 @@
         - Access failed count (Int Non Null defaut 0)
         - Lockout fin (DatetimeOffset Null)
 
-        - Date d'embauche
-        - Date de fin de contrat (opt)
+        - Date d'embauche (Non Null)
+        - Date de fin de contrat (Null)
         - Est-ce que l'employé est actif (bit) (Pour garder les anciens employés !)
         - Date d'ajout
         - Date de mise à jour
@@ -84,7 +84,6 @@
         - Date de mise à jour
     
     Personnes.EmployéRoles
-        - Id (PK)
         - Id de l'employé (Non Null)
         - Id du role (Non Null)
         - Clé primaire composite (EmployeId, RoleId)
@@ -96,8 +95,8 @@
         - Id de l'employé (Non Null)
         - Hash du token (Non Null)
         - Date d'expiration (Non Null)
-        - Date de révocation (Nullable) (Différence avec expiration ????)
-        - RemplaceParTokenHash (Non Nul) (Rotation des tokens ?????)
+        - Date de révocation (Nullable)
+        - RemplaceParTokenHash (Non Nul) (Rotation des tokens)
         - Date d'ajout (Non Null)
 
 
@@ -132,7 +131,7 @@
         - Id de l'article (Null) ??
         - Id du vélo (Null) ??
         - Url (Non Null)
-        - Nom de l'image (Nom Null) (Au cas ou l'image n'apparait pas)
+        - Nom de l'image (Non Null) (Au cas ou l'image n'apparait pas)
         - Date d'ajout
         - Date de mise à jour
         **Contrainte** : L'un des deux champs (ArticleId/VeloId) doit être renseigné.
@@ -149,8 +148,6 @@
         - Quantité disponible (Non Null defaut 0)
         - Quantité min (Non Null defaut 0)
         - Quantité max (Null)
-        - Id de l'emplacement ??? Utile ???
-        - Est actif ??? utile ???
         - EAN (Null, Index unique filtré)
         - Date d'ajout
         - Date de mise à jour
@@ -290,8 +287,9 @@
 - Facturer depuis un bon de livraison crée la **"Vente"**, ses lignes et la facture.
 - Le bon passe à **"Facturé"**, la commande à **"Facturée"**et les exemplaires à **"Vendu"**.
 - Une vente contenant un vélo exige l'id du bon de livraison et l'id du client, et ne passe à **"Payée"** qu'avec une facture.
-- Les acomptes (Paiements.CommandeId) sont déduits du solde au paiement final.
+- Les acomptes sont déduits du solde au paiement final.
 - Totaux de ligne, totaux de commande, montant payé et reste à payer sont calculés, jamais stockés. (Sauf les totaux de Ventes ?)
+- Chaque action sensible écrit une entrée dans AuditLogs, dans la même transaction.
 
 
 ### Trucs en plus
