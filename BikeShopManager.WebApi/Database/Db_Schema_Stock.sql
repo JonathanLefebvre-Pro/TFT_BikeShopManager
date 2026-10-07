@@ -56,7 +56,7 @@ CREATE TABLE Stock.Categories (
 
     CONSTRAINT PK_Categories PRIMARY KEY (Id),
     CONSTRAINT UQ_Categories_Domain_ParentCategoryId_Name UNIQUE (Domain, ParentCategoryId, Name),
-    CONSTRAINT FK_Categories_ParentCategoryId FOREIGN KEY (ParentCategoryId) REFERENCES Stock.Categories(Id),
+    CONSTRAINT FK_Categories_ParentCategories FOREIGN KEY (ParentCategoryId) REFERENCES Stock.Categories(Id),
     CONSTRAINT CK_Categories_Domain CHECK (Domain IN ('Article', 'Bike')),
     CONSTRAINT CK_Categories_NotOwnParent CHECK (ParentCategoryId IS NULL OR ParentCategoryId <> Id)
 );
@@ -93,9 +93,9 @@ CREATE TABLE Stock.Articles (
     UpdatedAt DATETIME2 NOT NULL CONSTRAINT DF_Articles_UpdatedAt DEFAULT SYSUTCDATETIME(),
 
     CONSTRAINT PK_Articles PRIMARY KEY (Id),
-    CONSTRAINT FK_Articles_BrandId FOREIGN KEY (BrandId) REFERENCES Stock.Brands(Id),
-    CONSTRAINT FK_Articles_CategoryId FOREIGN KEY (CategoryId) REFERENCES Stock.Categories(Id),
-    CONSTRAINT FK_Articles_VatRateId FOREIGN KEY (VatRateId) REFERENCES Stock.VatRates(Id),
+    CONSTRAINT FK_Articles_Brands FOREIGN KEY (BrandId) REFERENCES Stock.Brands(Id),
+    CONSTRAINT FK_Articles_Categories FOREIGN KEY (CategoryId) REFERENCES Stock.Categories(Id),
+    CONSTRAINT FK_Articles_VatRates FOREIGN KEY (VatRateId) REFERENCES Stock.VatRates(Id),
     CONSTRAINT CK_Articles_Prices CHECK (PurchasePriceExclVat >= 0 AND SalePriceInclVat >= 0),
     CONSTRAINT CK_Articles_Quantities CHECK (AvailableQuantity >= 0 AND MinQuantity >= 0 AND (MaxQuantity IS NULL OR MaxQuantity >= MinQuantity)),
     --CONSTRAINT UQ_Articles_EAN UNIQUE (EAN)
@@ -125,9 +125,9 @@ CREATE TABLE Stock.BikeModels (
     UpdatedAt DATETIME2 NOT NULL CONSTRAINT DF_BikeModels_UpdatedAt DEFAULT SYSUTCDATETIME(),
 
     CONSTRAINT PK_BikeModels PRIMARY KEY (Id),
-    CONSTRAINT FK_BikeModels_BrandId FOREIGN KEY (BrandId) REFERENCES Stock.Brands(Id),
-    CONSTRAINT FK_BikeModels_CategoryId FOREIGN KEY (CategoryId) REFERENCES Stock.Categories(Id),
-    CONSTRAINT FK_BikeModels_VatRateId FOREIGN KEY (VatRateId) REFERENCES Stock.VatRates(Id),
+    CONSTRAINT FK_BikeModels_Brands FOREIGN KEY (BrandId) REFERENCES Stock.Brands(Id),
+    CONSTRAINT FK_BikeModels_Categories FOREIGN KEY (CategoryId) REFERENCES Stock.Categories(Id),
+    CONSTRAINT FK_BikeModels_VatRates FOREIGN KEY (VatRateId) REFERENCES Stock.VatRates(Id),
     CONSTRAINT CK_BikeModels_Prices CHECK (PurchasePriceExclVat >= 0 AND SalePriceInclVat >= 0)
     --CONSTRAINT UQ_BikeModels_EAN UNIQUE (EAN)
 );
@@ -151,8 +151,8 @@ CREATE TABLE Stock.BikeUnits (
 
     CONSTRAINT PK_BikeUnits PRIMARY KEY (Id),
     CONSTRAINT UQ_BikeUnits_SerialNumber UNIQUE (SerialNumber),
-    CONSTRAINT FK_BikeUnits_BikeModelId FOREIGN KEY (BikeModelId) REFERENCES Stock.BikeModels(Id),
-    CONSTRAINT FK_BikeUnits_LocationId FOREIGN KEY (LocationId) REFERENCES Stock.Locations(Id),
+    CONSTRAINT FK_BikeUnits_BikeModels FOREIGN KEY (BikeModelId) REFERENCES Stock.BikeModels(Id),
+    CONSTRAINT FK_BikeUnits_Locations FOREIGN KEY (LocationId) REFERENCES Stock.Locations(Id),
     CONSTRAINT CK_BikeUnits_Status CHECK (Status IN ('InStock', 'Reserved', 'Sold'))
 );
 
@@ -172,8 +172,8 @@ CREATE TABLE Stock.Images (
     UpdatedAt DATETIME2 NOT NULL CONSTRAINT DF_Images_UpdatedAt DEFAULT SYSUTCDATETIME(),
 
     CONSTRAINT PK_Images PRIMARY KEY (Id),
-    CONSTRAINT FK_Images_ArticleId FOREIGN KEY (ArticleId) REFERENCES Stock.Articles(Id),
-    CONSTRAINT FK_Images_BikeModelId FOREIGN KEY (BikeModelId) REFERENCES Stock.BikeModels(Id),
+    CONSTRAINT FK_Images_Articles FOREIGN KEY (ArticleId) REFERENCES Stock.Articles(Id),
+    CONSTRAINT FK_Images_BikeModels FOREIGN KEY (BikeModelId) REFERENCES Stock.BikeModels(Id),
     CONSTRAINT CK_Images_SingleOwner CHECK 
     ((ArticleId IS NOT NULL AND BikeModelId IS NULL)
      OR 
