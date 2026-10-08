@@ -40,6 +40,14 @@ namespace BikeShopManager.WebApi.Controllers
             return this.FromResult(result);
         }
 
+        [Route("EnableAsync/{id}")]
+        [HttpPatch]
+        public async Task<IActionResult> EnableAsync(int id)
+        {
+            Result result = await Repository.HandleAsync(new EnableCustomerCommand(id));
+            return this.FromResult(result);
+        }
+
         [Route("AddAsync")]
         [HttpPost]
         public async Task<IActionResult> AddAsync([FromBody] AddCustomerDto customer)

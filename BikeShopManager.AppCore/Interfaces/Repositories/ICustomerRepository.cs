@@ -10,4 +10,5 @@ public interface ICustomerRepository
     : IQueryHandlerAsync<GetCustomerByIdQuery, Customer>,
         ICommandHandlerAsync<AddCustomerCommand, int>,
         ICommandHandlerAsync<DisableCustomerCommand>,
+        ICommandHandlerAsync<EnableCustomerCommand>,
         ICommandHandlerAsync<UpdateCustomerCommand>;

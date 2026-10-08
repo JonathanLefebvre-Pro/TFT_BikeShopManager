@@ -19,9 +19,16 @@ public class CustomerService : ICustomerRepository
         _dbConnection.Open();
     }
 
-    public async Task<Result<int>> HandleAsync(AddCustomerCommand command)
+    public async Task<Result<int>> HandleAsync(
+        AddCustomerCommand command,
+        IDbTransaction transact = null!
+    )
     {
-        using (IDbTransaction transaction = _dbConnection.BeginTransaction())
+        using (
+            IDbTransaction transaction = transact is not null
+                ? transact
+                : _dbConnection.BeginTransaction()
+        )
         {
             //Insert user data in User table and recover row id
             string userSqlQuery =
@@ -97,29 +104,175 @@ public class CustomerService : ICustomerRepository
         }
     }
 
-    public Task<Result> HandleAsync(DisableCustomerCommand command)
+    public async Task<Result> HandleAsync(
+        DisableCustomerCommand command,
+        IDbTransaction transact = null!
+    )
     {
-        throw new NotImplementedException();
+        string sqlQuery =
+            @"UPDATE Persons.Customers 
+                SET IsActive=@IsActive 
+                WHERE Persons.Customers.Id = @Id
+                AND Persons.Customers.IsActive='true'";
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@IsActive", false);
+        parameters.Add("@Id", command.Id);
+
+        int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters, transact);
+        if (row is 0)
+            return Result.Failure(CustomerError.NotDisabled);
+
+        return Result.Success();
     }
 
-    public Task<Result> HandleAsync(UpdateCustomerCommand command)
+    public async Task<Result> HandleAsync(
+        EnableCustomerCommand command,
+        IDbTransaction transact = null!
+    )
     {
-        throw new NotImplementedException();
+        string sqlQuery =
+            @"UPDATE Persons.Customers 
+                SET IsActive=@IsActive 
+                WHERE Persons.Customers.Id = @Id 
+                AND Persons.Customers.IsActive='false'";
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@IsActive", true);
+        parameters.Add("@Id", command.Id);
+
+        int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters, transact);
+        if (row is 0)
+            return Result.Failure(CustomerError.NotEnabled);
+
+        return Result.Success();
     }
 
-    public async Task<Result<Customer>> HandleAsync(GetCustomerByIdQuery query)
+    public async Task<Result> HandleAsync(
+        UpdateCustomerCommand command,
+        IDbTransaction transact = null!
+    )
     {
-        //SELECT * FROM Persons.Customers JOIN Persons.Users ON Persons.Customers.UserId = Persons.Users.Id
+        using (
+            IDbTransaction transaction = transact is not null
+                ? transact
+                : _dbConnection.BeginTransaction()
+        )
+        {
+            //Get the customer based on the command Id parameter
+            //Get the user row linked to the customer UserId
+            Result<Customer> result = await HandleAsync(
+                new GetCustomerByIdQuery(command.Id),
+                transaction
+            );
+            if (result.IsFailure)
+            {
+                transaction.Rollback();
+                return Result.Failure(CustomerError.NotFound);
+            }
+
+            //Update the user row
+            string userSqlQuery =
+                @"UPDATE Persons.Users 
+                SET FirstName=@FirstName, 
+                LastName=@LastName, 
+                Email=@Email, 
+                PhoneNumber=@PhoneNumber, 
+                Address=@Address, 
+                City=@City, 
+                ZipCode=@ZipCode, 
+                Country=@Country, 
+                BirthDate=@BirthDate, 
+                AllowMarketing=@AllowMarketing, 
+                UpdatedAt=@UpdatedAt 
+                WHERE Persons.Users.Id = @Id";
+
+            DynamicParameters userParameters = new DynamicParameters();
+            userParameters.Add("@Id", result.Data.UserId);
+            userParameters.Add("@FirstName", command.User.FirstName);
+            userParameters.Add("@LastName", command.User.LastName);
+            userParameters.Add("@Email", command.User.Email);
+            userParameters.Add("@PhoneNumber", command.User.PhoneNumber);
+            userParameters.Add("@Address", command.User.Address);
+            userParameters.Add("@City", command.User.City);
+
+            userParameters.Add("@ZipCode", command.User.ZipCode);
+            userParameters.Add("@Country", command.User.Country);
+            userParameters.Add("@BirthDate", command.User.BirthDate);
+            userParameters.Add("@AllowMarketing", command.User.AllowMarketing);
+            userParameters.Add("@UpdatedAt", DateTime.UtcNow);
+
+            int affectedRows = 0;
+            try
+            {
+                affectedRows = await _dbConnection.ExecuteAsync(
+                    userSqlQuery,
+                    userParameters,
+                    transaction
+                );
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return ex;
+            }
+
+            if (affectedRows is 0)
+            {
+                transaction.Rollback();
+                return Result.Failure(CustomerError.NotUpdated);
+            }
+
+            //Update the customer row
+            string customerSqlQuery =
+                @"UPDATE Persons.Customers 
+                SET VatNumber=@VatNumber, UpdatedAt=@UpdatedAt 
+                WHERE Persons.Customers.Id=@Id";
+            DynamicParameters customerParameters = new DynamicParameters();
+            customerParameters.Add("@Id", command.Id);
+            customerParameters.Add("@VatNumber", command.Customer.VatNumber);
+            customerParameters.Add("@UpdatedAt", DateTime.UtcNow);
+
+            try
+            {
+                affectedRows = await _dbConnection.ExecuteAsync(
+                    customerSqlQuery,
+                    customerParameters,
+                    transaction
+                );
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return ex;
+            }
+
+            if (affectedRows is 0)
+            {
+                transaction.Rollback();
+                return Result.Failure(CustomerError.NotUpdated);
+            }
+
+            transaction.Commit();
+            return Result.Success();
+        }
+    }
+
+    public async Task<Result<Customer>> HandleAsync(
+        GetCustomerByIdQuery query,
+        IDbTransaction transact = null!
+    )
+    {
         string customerSqlQuery =
             @"SELECT Id, UserId, VatNumber, IsActive, CreatedAt, UpdatedAt 
-                FROM Persons.Customers WHERE Persons.Customers.Id=@Id";
+                FROM Persons.Customers 
+                WHERE Persons.Customers.Id=@Id";
 
         DynamicParameters customerParameters = new DynamicParameters();
         customerParameters.Add("@Id", query.Id);
 
         Customer? customer = await _dbConnection.QuerySingleOrDefaultAsync<Customer>(
             customerSqlQuery,
-            customerParameters
+            customerParameters,
+            transact
         );
 
         if (customer is null)
@@ -133,7 +286,8 @@ public class CustomerService : ICustomerRepository
 
         User? user = await _dbConnection.QuerySingleOrDefaultAsync<User>(
             userSqlQuery,
-            userParameters
+            userParameters,
+            transact
         );
 
         if (user is null)

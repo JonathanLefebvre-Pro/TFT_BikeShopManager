@@ -1,3 +1,4 @@
+using System.Data;
 using BikeShopManager.AppCore.Features.Results;
 
 namespace BikeShopManager.AppCore.Interfaces.Commands;
@@ -17,11 +18,11 @@ public interface ICommandHandler<TCommand, TResult>
 public interface ICommandHandlerAsync<TCommand>
     where TCommand : ICommandDefinition
 {
-    Task<Result> HandleAsync(TCommand command);
+    Task<Result> HandleAsync(TCommand command, IDbTransaction transact = null!);
 }
 
 public interface ICommandHandlerAsync<TCommand, TResult>
     where TCommand : ICommandDefinition<TResult>
 {
-    Task<Result<TResult>> HandleAsync(TCommand command);
+    Task<Result<TResult>> HandleAsync(TCommand command, IDbTransaction transact = null!);
 }
