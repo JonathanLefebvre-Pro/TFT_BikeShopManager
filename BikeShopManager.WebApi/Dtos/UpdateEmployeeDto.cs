@@ -4,7 +4,7 @@ namespace BikeShopManager.WebApi.Dtos;
 
 public class UpdateEmployeeDto
 {
-    public UserDto? User { get; set; }
+    public UserDto User { get; set; } = default!;
 
-    public EmployeeDto? Employee { get; set; }
+    public EmployeeDto Employee { get; set; } = default!;
 }

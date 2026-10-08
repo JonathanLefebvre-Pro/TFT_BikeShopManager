@@ -12,7 +12,9 @@ public class EmployeeDto
 
     //public int AccessFailedCount { get; set; }
     //public DateTimeOffset LockoutEnd { get; set; }
+
     [Required]
+    [DataType(DataType.Date)]
     public DateOnly HiredAt { get; set; }
     public DateOnly? ContractEndAt { get; set; }
 }
