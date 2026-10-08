@@ -71,11 +71,13 @@ public class EmployeeService : IEmployeeRepository
 
             //Insert Employee data in Employee table and recover row id
             string EmployeeSqlQuery =
-                @"INSERT INTO Persons.Employees (UserId, HiredAt, ContractEndAt) 
+                @"INSERT INTO Persons.Employees (UserId, PasswordHash, SecurityStamp, HiredAt, ContractEndAt) 
                     OUTPUT INSERTED.ID 
-                    VALUES (@UserId, @HiredAt, @ContractEndAt)";
+                    VALUES (@UserId, @PasswordHash, @SecurityStamp, @HiredAt, @ContractEndAt)";
             DynamicParameters employeeParameters = new DynamicParameters();
             employeeParameters.Add("@UserId", userRowId);
+            employeeParameters.Add("@PasswordHash", command.Employee.PasswordHash);
+            employeeParameters.Add("@SecurityStamp", command.Employee.SecurityStamp);
             employeeParameters.Add("@HiredAt", command.Employee.HiredAt);
             employeeParameters.Add("@ContractEndAt", command.Employee.ContractEndAt);
 

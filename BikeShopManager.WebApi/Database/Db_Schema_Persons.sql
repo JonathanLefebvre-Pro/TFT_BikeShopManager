@@ -15,6 +15,10 @@ GO
 
 CREATE SCHEMA Persons;
 
+SELECT * FROM Persons.Users
+SELECT * FROM Persons.Customers
+SELECT * FROM Persons.Employees
+
 GO
 
 CREATE TABLE Persons.Users (

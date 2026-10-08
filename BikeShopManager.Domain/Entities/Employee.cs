@@ -6,10 +6,10 @@ public class Employee : Audit
     public int UserId { get; set; }
     public string PasswordHash { get; set; } = default!;
     public string SecurityStamp { get; set; } = default!;
-    public int AccessFailedCount { get; set; } = 0;
-    public DateTimeOffset LockoutEnd { get; set; }
+    public int AccessFailedCount { get; set; }
+    public DateTimeOffset? LockoutEnd { get; set; }
     public DateOnly HiredAt { get; set; }
-    public DateOnly ContractEndAt { get; set; }
+    public DateOnly? ContractEndAt { get; set; }
     public bool IsActive { get; set; } = true;
 
     public User User { get; set; } = default!;
