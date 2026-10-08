@@ -70,7 +70,7 @@ CREATE TABLE Stock.Locations (
     UpdatedAt DATETIME2 NOT NULL CONSTRAINT DF_Locations_UpdatedAt DEFAULT SYSUTCDATETIME(),
 
     CONSTRAINT PK_Locations PRIMARY KEY (Id),
-    CONSTRAINT UQ_Locations_Name UNIQUE (Name),
+    CONSTRAINT UQ_Locations_Name UNIQUE (Name)
 );
 
 GO
@@ -97,13 +97,13 @@ CREATE TABLE Stock.Articles (
     CONSTRAINT FK_Articles_Categories FOREIGN KEY (CategoryId) REFERENCES Stock.Categories(Id),
     CONSTRAINT FK_Articles_VatRates FOREIGN KEY (VatRateId) REFERENCES Stock.VatRates(Id),
     CONSTRAINT CK_Articles_Prices CHECK (PurchasePriceExclVat >= 0 AND SalePriceInclVat >= 0),
-    CONSTRAINT CK_Articles_Quantities CHECK (AvailableQuantity >= 0 AND MinQuantity >= 0 AND (MaxQuantity IS NULL OR MaxQuantity >= MinQuantity)),
-    --CONSTRAINT UQ_Articles_EAN UNIQUE (EAN)
+    CONSTRAINT CK_Articles_EAN CHECK (EAN NOT LIKE '%[^0-9]%'),
+    CONSTRAINT CK_Articles_Quantities CHECK (AvailableQuantity >= 0 AND MinQuantity >= 0 AND (MaxQuantity IS NULL OR MaxQuantity >= MinQuantity))
 );
 
 GO
 
-CREATE UNIQUE INDEX UX_ArticlesEAN ON Stock.Articles (EAN) WHERE EAN IS NOT NULL;
+CREATE UNIQUE INDEX UX_Articles_EAN ON Stock.Articles (EAN) WHERE EAN IS NOT NULL;
 CREATE INDEX IX_Articles_BrandId ON Stock.Articles(BrandId);
 CREATE INDEX IX_Articles_CategoryId ON Stock.Articles(CategoryId);
 
@@ -128,8 +128,8 @@ CREATE TABLE Stock.BikeModels (
     CONSTRAINT FK_BikeModels_Brands FOREIGN KEY (BrandId) REFERENCES Stock.Brands(Id),
     CONSTRAINT FK_BikeModels_Categories FOREIGN KEY (CategoryId) REFERENCES Stock.Categories(Id),
     CONSTRAINT FK_BikeModels_VatRates FOREIGN KEY (VatRateId) REFERENCES Stock.VatRates(Id),
+    CONSTRAINT CK_BikeModels_EAN CHECK (EAN NOT LIKE '%[^0-9]%'),
     CONSTRAINT CK_BikeModels_Prices CHECK (PurchasePriceExclVat >= 0 AND SalePriceInclVat >= 0)
-    --CONSTRAINT UQ_BikeModels_EAN UNIQUE (EAN)
 );
 
 GO
@@ -158,7 +158,7 @@ CREATE TABLE Stock.BikeUnits (
 
 GO
 
-CREATE INDEX IX_BikeUnits_BikeModelId ON Stock.BikeUnits (BikeModelId)
+CREATE INDEX IX_BikeUnits_BikeModelId ON Stock.BikeUnits (BikeModelId);
 
 GO
 

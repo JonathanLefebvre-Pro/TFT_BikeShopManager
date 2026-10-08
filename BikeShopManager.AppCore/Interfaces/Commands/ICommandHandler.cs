@@ -17,11 +17,11 @@ public interface ICommandHandler<TCommand, TResult>
 public interface ICommandHandlerAsync<TCommand>
     where TCommand : ICommandDefinition
 {
-    Task<Result> Handle(TCommand command);
+    Task<Result> HandleAsync(TCommand command);
 }
 
 public interface ICommandHandlerAsync<TCommand, TResult>
     where TCommand : ICommandDefinition<TResult>
 {
-    Task<Result<TResult>> Handle(TCommand command);
+    Task<Result<TResult>> HandleAsync(TCommand command);
 }

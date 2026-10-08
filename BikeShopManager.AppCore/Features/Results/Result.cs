@@ -15,7 +15,7 @@ public class Result
 
     public static implicit operator Result(Exception exception)
     {
-        return Failure(Error.Exception);
+        return Failure(new Error(Error.Exception.Code, exception.Message));
     }
 
     public static Result Success()
@@ -55,18 +55,13 @@ public class Result<TResult>
 
     public static implicit operator Result<TResult>(Exception exception)
     {
-        return Failure(Error.Exception);
+        return Failure(new Error(Error.Exception.Code, exception.Message));
     }
 
     public static implicit operator Result<TResult>(TResult data)
     {
         return Success(data);
     }
-
-    /*public static implicit operator Result<TResult>(TResult data) where TResult : IEnumerable<TResult>
-    {
-        return Success(data);
-    }*/
 
     public static Result<TResult> Success(TResult data)
     {

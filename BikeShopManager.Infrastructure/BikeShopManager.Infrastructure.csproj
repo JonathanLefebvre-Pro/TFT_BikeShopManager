@@ -10,4 +10,8 @@
     <ProjectReference Include="..\BikeShopManager.AppCore\BikeShopManager.AppCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.89" />
+  </ItemGroup>
+
 </Project>

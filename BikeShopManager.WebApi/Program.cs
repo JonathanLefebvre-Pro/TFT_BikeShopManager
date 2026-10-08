@@ -1,21 +1,21 @@
-using System.Data.Common;
+using System.Data;
+using BikeShopManager.AppCore.Interfaces.Repositories;
+using BikeShopManager.Infrastructure.Services;
 using Microsoft.Data.SqlClient;
 using Scalar.AspNetCore;
-
-//using WebApi.AppCore.Interfaces.Repositories;
-//using WebApi.Infrastructure.Services;
 
 string conStringTFT = @"GOS-VDI406\TFTIC";
 string conStringJo = @"JONATHAN\DATAVIZ";
 string connectionString =
     @"Data Source="
     + conStringJo
-    + @";Initial Catalog=ASP_WebApi;Integrated Security=True;Trust Server Certificate=True";
+    + @";Initial Catalog=TFT_BikeShopManager_WebApi;Integrated Security=True;Trust Server Certificate=True";
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<DbConnection>(db => new SqlConnection(connectionString));
+builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
+builder.Services.AddScoped<ICustomerRepository, CustomerService>();
 
 builder.Services.AddControllers();
 
