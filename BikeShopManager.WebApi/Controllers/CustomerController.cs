@@ -15,7 +15,7 @@ namespace BikeShopManager.WebApi.Controllers
     public class CustomerController(ICustomerRepository Repository) : ControllerBase
     {
         [Route("GetAsync/{id}")]
-        [HttpGet()]
+        [HttpGet]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             Result<Customer> result = await Repository.HandleAsync(new GetCustomerByIdQuery(id));

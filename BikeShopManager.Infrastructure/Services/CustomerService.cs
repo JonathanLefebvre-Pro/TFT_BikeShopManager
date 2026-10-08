@@ -111,12 +111,13 @@ public class CustomerService : ICustomerRepository
     {
         string sqlQuery =
             @"UPDATE Persons.Customers 
-                SET IsActive=@IsActive 
+                SET IsActive=@IsActive, UpdatedAt=@UpdatedAt
                 WHERE Persons.Customers.Id = @Id
                 AND Persons.Customers.IsActive='true'";
         DynamicParameters parameters = new DynamicParameters();
-        parameters.Add("@IsActive", false);
         parameters.Add("@Id", command.Id);
+        parameters.Add("@IsActive", false);
+        parameters.Add("@UpdatedAt", DateTime.UtcNow);
 
         int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters, transact);
         if (row is 0)
@@ -132,12 +133,13 @@ public class CustomerService : ICustomerRepository
     {
         string sqlQuery =
             @"UPDATE Persons.Customers 
-                SET IsActive=@IsActive 
+                SET IsActive=@IsActive, UpdatedAt=@UpdatedAt
                 WHERE Persons.Customers.Id = @Id 
                 AND Persons.Customers.IsActive='false'";
         DynamicParameters parameters = new DynamicParameters();
-        parameters.Add("@IsActive", true);
         parameters.Add("@Id", command.Id);
+        parameters.Add("@IsActive", true);
+        parameters.Add("@UpdatedAt", DateTime.UtcNow);
 
         int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters, transact);
         if (row is 0)

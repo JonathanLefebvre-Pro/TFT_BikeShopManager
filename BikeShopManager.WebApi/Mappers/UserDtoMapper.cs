@@ -19,8 +19,6 @@ public static class UserDtoMapper
             Country = dto.Country,
             BirthDate = dto.BirthDate,
             AllowMarketing = dto.AllowMarketing,
-            //TODO : CreatedAt
-            //TODO : UpdatedAt
         };
     }
 }

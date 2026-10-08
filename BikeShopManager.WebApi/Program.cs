@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
 builder.Services.AddScoped<ICustomerRepository, CustomerService>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeService>();
 
 builder.Services.AddControllers();
 

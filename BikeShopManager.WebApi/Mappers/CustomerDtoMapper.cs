@@ -7,12 +7,6 @@ public static class CustomerDtoMapper
 {
     public static Customer ToEntity(this CustomerDto dto)
     {
-        return new Customer()
-        {
-            VatNumber = dto.VatNumber,
-            IsActive = dto.IsActive,
-            //TODO : CreatedAt
-            //TODO : UpdatedAt
-        };
+        return new Customer() { VatNumber = dto.VatNumber };
     }
 }
