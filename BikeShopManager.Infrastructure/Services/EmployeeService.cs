@@ -261,10 +261,13 @@ public class EmployeeService : IEmployeeRepository
             //Update the Employee row
             string employeeSqlQuery =
                 @"UPDATE Persons.Employees 
-                SET HiredAt=@HiredAt, ContractEndAt=@ContractEndAt, UpdatedAt=@UpdatedAt 
+                SET PasswordHash=@PasswordHash, SecurityStamp=@SecurityStamp, 
+                HiredAt=@HiredAt, ContractEndAt=@ContractEndAt, UpdatedAt=@UpdatedAt
                 WHERE Persons.Employees.Id=@Id";
             DynamicParameters employeeParameters = new DynamicParameters();
             employeeParameters.Add("@Id", command.Id);
+            employeeParameters.Add("@PasswordHash", command.Employee.PasswordHash);
+            employeeParameters.Add("@SecurityStamp", command.Employee.SecurityStamp);
             employeeParameters.Add("@HiredAt", command.Employee.HiredAt);
             employeeParameters.Add("@ContractEndAt", command.Employee.ContractEndAt);
             employeeParameters.Add("@UpdatedAt", DateTime.UtcNow);
