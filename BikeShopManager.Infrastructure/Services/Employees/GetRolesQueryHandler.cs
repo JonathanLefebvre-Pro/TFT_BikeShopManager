@@ -29,7 +29,7 @@ public class GetRolesQueryHandler : IQueryHandlerAsync<GetRolesQuery, IEnumerabl
             _dbSession.Transaction
         );
 
-        if (roles is not null)
+        if (roles is not null && roles.Count() > 0)
             return Result<IEnumerable<Role>>.Success(roles);
         else
             return RoleError.Empty;
