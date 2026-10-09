@@ -2,8 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BikeShopManager.WebApi.Dtos;
 
-public class EmployeRoleDto
+public class EmployeeRoleDto
 {
     [Required]
-    public required string Name { get; set; }
+    public required int Id { get; set; }
 }

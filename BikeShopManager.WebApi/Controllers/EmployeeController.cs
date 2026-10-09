@@ -60,7 +60,11 @@ namespace BikeShopManager.WebApi.Controllers
         public async Task<IActionResult> AddAsync([FromBody] AddEmployeeDto Employee)
         {
             Result<int> result = await Dispatcher.SendCommandAsync<AddEmployeeCommand, int>(
-                new AddEmployeeCommand(Employee.User.ToEntity(), Employee.Employee.ToEntity())
+                new AddEmployeeCommand(
+                    Employee.User.ToEntity(),
+                    Employee.Employee.ToEntity(),
+                    Employee.EmployeeRole.Id
+                )
             );
 
             return this.FromResult(result);
@@ -74,6 +78,17 @@ namespace BikeShopManager.WebApi.Controllers
                 GetRolesQuery,
                 IEnumerable<Role>
             >(new GetRolesQuery());
+
+            return this.FromResult(result);
+        }
+
+        [Route("GetRoleByIdAsync/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetRoleByIdAsync(int id)
+        {
+            Result<Role> result = await Dispatcher.SendQueryAsync<GetRoleByIdQuery, Role>(
+                new GetRoleByIdQuery(id)
+            );
 
             return this.FromResult(result);
         }

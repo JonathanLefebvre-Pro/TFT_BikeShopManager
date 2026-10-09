@@ -6,5 +6,5 @@ public class AddEmployeeDto
 
     public EmployeeDto Employee { get; set; } = default!;
 
-    public EmployeRoleDto EmployeRole { get; set; } = default!;
+    public EmployeeRoleDto EmployeeRole { get; set; } = default!;
 }

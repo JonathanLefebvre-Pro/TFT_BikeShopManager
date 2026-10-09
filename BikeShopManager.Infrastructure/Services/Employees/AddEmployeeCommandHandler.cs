@@ -1,4 +1,3 @@
-using System.Data;
 using BikeShopManager.AppCore.Extensions;
 using BikeShopManager.AppCore.Features.Commands;
 using BikeShopManager.AppCore.Features.Errors;
@@ -89,8 +88,6 @@ public class AddEmployeeCommandHandler : ICommandHandlerAsync<AddEmployeeCommand
             }
         }
 
-        //TODO : Get the role id based on the role name from the Persons.Roles table
-
         //Insert Employee data in Employee table and recover row id
         string EmployeeSqlQuery =
             @"INSERT INTO Persons.Employees (UserId, PasswordHash, SecurityStamp, HiredAt, ContractEndAt) 
@@ -118,9 +115,23 @@ public class AddEmployeeCommandHandler : ICommandHandlerAsync<AddEmployeeCommand
         }
 
         if (employeeRowId is 0)
-        {
             return Result<int>.Failure(EmployeeError.NotInserted);
-        }
+
+        //TODO : Add a row on the Persons.EmployeeRoles table
+        string insertRoleSqlQuery =
+            @"INSERT INTO Persons.EmployeeRoles (EmployeeId, RoleId) VALUES (@EmployeeId, @RoleId)";
+        DynamicParameters insertRoleParameters = new DynamicParameters();
+        insertRoleParameters.Add("@EmployeeId", employeeRowId);
+        insertRoleParameters.Add("@RoleId", command.RoleId);
+
+        int roleRowId = await _dbSession.Connection.ExecuteAsync(
+            insertRoleSqlQuery,
+            insertRoleParameters,
+            _dbSession.Transaction
+        );
+
+        if (roleRowId is 0)
+            return Result<int>.Failure(EmployeeError.NotInserted);
 
         return Result<int>.Success(employeeRowId);
     }
