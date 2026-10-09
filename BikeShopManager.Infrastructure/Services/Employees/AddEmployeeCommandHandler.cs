@@ -89,6 +89,8 @@ public class AddEmployeeCommandHandler : ICommandHandlerAsync<AddEmployeeCommand
             }
         }
 
+        //TODO : Get the role id based on the role name from the Persons.Roles table
+
         //Insert Employee data in Employee table and recover row id
         string EmployeeSqlQuery =
             @"INSERT INTO Persons.Employees (UserId, PasswordHash, SecurityStamp, HiredAt, ContractEndAt) 

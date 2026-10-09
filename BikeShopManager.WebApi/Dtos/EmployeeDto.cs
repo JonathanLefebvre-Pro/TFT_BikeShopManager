@@ -15,6 +15,6 @@ public class EmployeeDto
 
     [Required]
     [DataType(DataType.Date)]
-    public DateOnly HiredAt { get; set; }
+    public required DateOnly HiredAt { get; set; }
     public DateOnly? ContractEndAt { get; set; }
 }

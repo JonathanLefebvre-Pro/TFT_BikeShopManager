@@ -11,6 +11,6 @@ public static class CustomerError
         new Error("CustomerError.NotDisabled", "Customer not disabled !");
     public static Error NotEnabled =>
         new Error("CustomerError.NotEnabled", "Customer not enabled !");
-    public static Error TableIsEmpty =>
+    public static Error Empty =>
         new Error("CustomerError.TableIsEmpty", "Customer table is empty !");
 }
