@@ -12,7 +12,7 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeeController(IEmployeeRepository Repository) : ControllerBase
+    class EmployeeController(IEmployeeRepository Repository) : ControllerBase
     {
         [Route("GetAsync/{id}")]
         [HttpGet]

@@ -3,24 +3,21 @@ using BikeShopManager.AppCore.Features.Commands;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Commands;
+using BikeShopManager.AppCore.Interfaces.Connection;
 using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services;
 
 public class EnableEmployeeCommandHandler : ICommandHandlerAsync<EnableEmployeeCommand>
 {
-    private readonly IDbConnection _dbConnection;
+    private readonly IDbSession _dbSession;
 
-    public EnableEmployeeCommandHandler(IDbConnection DbConnection)
+    public EnableEmployeeCommandHandler(IDbSession DbSession)
     {
-        _dbConnection = DbConnection;
-        _dbConnection.Open();
+        _dbSession = DbSession;
     }
 
-    public async Task<Result> HandleAsync(
-        EnableEmployeeCommand command,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result> HandleAsync(EnableEmployeeCommand command)
     {
         string sqlQuery =
             @"UPDATE Persons.Employees 
@@ -32,7 +29,11 @@ public class EnableEmployeeCommandHandler : ICommandHandlerAsync<EnableEmployeeC
         parameters.Add("@IsActive", true);
         parameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters, transact);
+        int row = await _dbSession.Connection.ExecuteAsync(
+            sqlQuery,
+            parameters,
+            _dbSession.Transaction
+        );
         if (row is 0)
             return Result.Failure(EmployeeError.NotEnabled);
 

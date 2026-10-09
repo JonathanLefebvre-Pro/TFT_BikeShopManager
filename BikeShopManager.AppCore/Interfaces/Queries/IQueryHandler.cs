@@ -12,5 +12,5 @@ public interface IQueryHandler<TQuery, TResult>
 public interface IQueryHandlerAsync<TQuery, TResult>
     where TQuery : IQueryDefinition<TResult>
 {
-    Task<Result<TResult>> HandleAsync(TQuery query, IDbTransaction transact = null!);
+    Task<Result<TResult>> HandleAsync(TQuery query);
 }

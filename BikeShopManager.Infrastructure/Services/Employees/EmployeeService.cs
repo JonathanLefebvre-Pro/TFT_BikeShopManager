@@ -20,16 +20,9 @@ public class EmployeeService : IEmployeeRepository
         _dbConnection.Open();
     }
 
-    public async Task<Result<int>> HandleAsync(
-        AddEmployeeCommand command,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result<int>> HandleAsync(AddEmployeeCommand command)
     {
-        using (
-            IDbTransaction transaction = transact is not null
-                ? transact
-                : _dbConnection.BeginTransaction()
-        )
+        using (IDbTransaction transaction = _dbConnection.BeginTransaction())
         {
             //Check if user already exist or not
             //If the user exist -> check values with the values inputed by the user
@@ -139,10 +132,7 @@ public class EmployeeService : IEmployeeRepository
         }
     }
 
-    public async Task<Result> HandleAsync(
-        DisableEmployeeCommand command,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result> HandleAsync(DisableEmployeeCommand command)
     {
         string sqlQuery =
             @"UPDATE Persons.Employees 
@@ -154,17 +144,14 @@ public class EmployeeService : IEmployeeRepository
         parameters.Add("@IsActive", false);
         parameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters, transact);
+        int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters);
         if (row is 0)
             return Result.Failure(EmployeeError.NotDisabled);
 
         return Result.Success();
     }
 
-    public async Task<Result> HandleAsync(
-        EnableEmployeeCommand command,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result> HandleAsync(EnableEmployeeCommand command)
     {
         string sqlQuery =
             @"UPDATE Persons.Employees 
@@ -176,30 +163,20 @@ public class EmployeeService : IEmployeeRepository
         parameters.Add("@IsActive", true);
         parameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters, transact);
+        int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters);
         if (row is 0)
             return Result.Failure(EmployeeError.NotEnabled);
 
         return Result.Success();
     }
 
-    public async Task<Result> HandleAsync(
-        UpdateEmployeeCommand command,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result> HandleAsync(UpdateEmployeeCommand command)
     {
-        using (
-            IDbTransaction transaction = transact is not null
-                ? transact
-                : _dbConnection.BeginTransaction()
-        )
+        using (IDbTransaction transaction = _dbConnection.BeginTransaction())
         {
             //Get the Employee based on the command Id parameter
             //Get the user row linked to the Employee UserId
-            Result<Employee> result = await HandleAsync(
-                new GetEmployeeByIdQuery(command.Id),
-                transaction
-            );
+            Result<Employee> result = await HandleAsync(new GetEmployeeByIdQuery(command.Id));
             if (result.IsFailure)
             {
                 transaction.Rollback();
@@ -297,10 +274,7 @@ public class EmployeeService : IEmployeeRepository
         }
     }
 
-    public async Task<Result<Employee>> HandleAsync(
-        GetEmployeeByIdQuery query,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result<Employee>> HandleAsync(GetEmployeeByIdQuery query)
     {
         string employeeSqlQuery =
             @"SELECT Id, UserId, PasswordHash, SecurityStamp, AccessFailedCount, LockoutEnd, HiredAt, ContractEndAt, IsActive, CreatedAt, UpdatedAt
@@ -312,8 +286,7 @@ public class EmployeeService : IEmployeeRepository
 
         Employee? employee = await _dbConnection.QuerySingleOrDefaultAsync<Employee>(
             employeeSqlQuery,
-            employeeParameters,
-            transact
+            employeeParameters
         );
 
         if (employee is null)
@@ -327,8 +300,7 @@ public class EmployeeService : IEmployeeRepository
 
         User? user = await _dbConnection.QuerySingleOrDefaultAsync<User>(
             userSqlQuery,
-            userParameters,
-            transact
+            userParameters
         );
 
         if (user is null)

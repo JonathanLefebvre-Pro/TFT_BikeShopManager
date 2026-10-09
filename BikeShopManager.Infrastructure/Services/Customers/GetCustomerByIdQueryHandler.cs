@@ -2,6 +2,7 @@ using System.Data;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Queries;
 using BikeShopManager.AppCore.Features.Results;
+using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.AppCore.Interfaces.Queries;
 using BikeShopManager.Domain.Entities;
 using Dapper;
@@ -10,18 +11,14 @@ namespace BikeShopManager.Infrastructure.Services.Customers;
 
 public class GetCustomerByIdQueryHandler : IQueryHandlerAsync<GetCustomerByIdQuery, Customer>
 {
-    private readonly IDbConnection _dbConnection;
+    private readonly IDbSession _dbSession;
 
-    public GetCustomerByIdQueryHandler(IDbConnection DbConnection)
+    public GetCustomerByIdQueryHandler(IDbSession DbSession)
     {
-        _dbConnection = DbConnection;
-        _dbConnection.Open();
+        _dbSession = DbSession;
     }
 
-    public async Task<Result<Customer>> HandleAsync(
-        GetCustomerByIdQuery query,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result<Customer>> HandleAsync(GetCustomerByIdQuery query)
     {
         string customerSqlQuery =
             @"SELECT Id, UserId, VatNumber, IsActive, CreatedAt, UpdatedAt 
@@ -31,10 +28,10 @@ public class GetCustomerByIdQueryHandler : IQueryHandlerAsync<GetCustomerByIdQue
         DynamicParameters customerParameters = new DynamicParameters();
         customerParameters.Add("@Id", query.Id);
 
-        Customer? customer = await _dbConnection.QuerySingleOrDefaultAsync<Customer>(
+        Customer? customer = await _dbSession.Connection.QuerySingleOrDefaultAsync<Customer>(
             customerSqlQuery,
             customerParameters,
-            transact
+            _dbSession.Transaction
         );
 
         if (customer is null)
@@ -46,10 +43,10 @@ public class GetCustomerByIdQueryHandler : IQueryHandlerAsync<GetCustomerByIdQue
         DynamicParameters userParameters = new DynamicParameters();
         userParameters.Add("@UserId", customer.UserId);
 
-        User? user = await _dbConnection.QuerySingleOrDefaultAsync<User>(
+        User? user = await _dbSession.Connection.QuerySingleOrDefaultAsync<User>(
             userSqlQuery,
             userParameters,
-            transact
+            _dbSession.Transaction
         );
 
         if (user is null)

@@ -20,16 +20,9 @@ public class CustomerService : ICustomerRepository
         _dbConnection.Open();
     }
 
-    public async Task<Result<int>> HandleAsync(
-        AddCustomerCommand command,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result<int>> HandleAsync(AddCustomerCommand command)
     {
-        using (
-            IDbTransaction transaction = transact is not null
-                ? transact
-                : _dbConnection.BeginTransaction()
-        )
+        using (IDbTransaction transaction = _dbConnection.BeginTransaction())
         {
             //Check if user already exist or not
             //If the user exist -> check values with the values inputed by the user
@@ -136,10 +129,7 @@ public class CustomerService : ICustomerRepository
         }
     }
 
-    public async Task<Result> HandleAsync(
-        DisableCustomerCommand command,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result> HandleAsync(DisableCustomerCommand command)
     {
         string sqlQuery =
             @"UPDATE Persons.Customers 
@@ -151,17 +141,14 @@ public class CustomerService : ICustomerRepository
         parameters.Add("@IsActive", false);
         parameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters, transact);
+        int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters);
         if (row is 0)
             return Result.Failure(CustomerError.NotDisabled);
 
         return Result.Success();
     }
 
-    public async Task<Result> HandleAsync(
-        EnableCustomerCommand command,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result> HandleAsync(EnableCustomerCommand command)
     {
         string sqlQuery =
             @"UPDATE Persons.Customers 
@@ -173,30 +160,20 @@ public class CustomerService : ICustomerRepository
         parameters.Add("@IsActive", true);
         parameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters, transact);
+        int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters);
         if (row is 0)
             return Result.Failure(CustomerError.NotEnabled);
 
         return Result.Success();
     }
 
-    public async Task<Result> HandleAsync(
-        UpdateCustomerCommand command,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result> HandleAsync(UpdateCustomerCommand command)
     {
-        using (
-            IDbTransaction transaction = transact is not null
-                ? transact
-                : _dbConnection.BeginTransaction()
-        )
+        using (IDbTransaction transaction = _dbConnection.BeginTransaction())
         {
             //Get the customer based on the command Id parameter
             //Get the user row linked to the customer UserId
-            Result<Customer> result = await HandleAsync(
-                new GetCustomerByIdQuery(command.Id),
-                transaction
-            );
+            Result<Customer> result = await HandleAsync(new GetCustomerByIdQuery(command.Id));
             if (result.IsFailure)
             {
                 transaction.Rollback();
@@ -290,10 +267,7 @@ public class CustomerService : ICustomerRepository
         }
     }
 
-    public async Task<Result<Customer>> HandleAsync(
-        GetCustomerByIdQuery query,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result<Customer>> HandleAsync(GetCustomerByIdQuery query)
     {
         string customerSqlQuery =
             @"SELECT Id, UserId, VatNumber, IsActive, CreatedAt, UpdatedAt 
@@ -305,8 +279,7 @@ public class CustomerService : ICustomerRepository
 
         Customer? customer = await _dbConnection.QuerySingleOrDefaultAsync<Customer>(
             customerSqlQuery,
-            customerParameters,
-            transact
+            customerParameters
         );
 
         if (customer is null)
@@ -320,8 +293,7 @@ public class CustomerService : ICustomerRepository
 
         User? user = await _dbConnection.QuerySingleOrDefaultAsync<User>(
             userSqlQuery,
-            userParameters,
-            transact
+            userParameters
         );
 
         if (user is null)

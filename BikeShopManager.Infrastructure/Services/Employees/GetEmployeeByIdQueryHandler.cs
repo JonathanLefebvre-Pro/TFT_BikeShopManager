@@ -2,6 +2,7 @@ using System.Data;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Queries;
 using BikeShopManager.AppCore.Features.Results;
+using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.AppCore.Interfaces.Queries;
 using BikeShopManager.Domain.Entities;
 using Dapper;
@@ -10,18 +11,14 @@ namespace BikeShopManager.Infrastructure.Services.Employees;
 
 public class GetEmployeeByIdQueryHandler : IQueryHandlerAsync<GetEmployeeByIdQuery, Employee>
 {
-    private readonly IDbConnection _dbConnection;
+    private readonly IDbSession _dbSession;
 
-    public GetEmployeeByIdQueryHandler(IDbConnection DbConnection)
+    public GetEmployeeByIdQueryHandler(IDbSession DbSession)
     {
-        _dbConnection = DbConnection;
-        _dbConnection.Open();
+        _dbSession = DbSession;
     }
 
-    public async Task<Result<Employee>> HandleAsync(
-        GetEmployeeByIdQuery query,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result<Employee>> HandleAsync(GetEmployeeByIdQuery query)
     {
         string employeeSqlQuery =
             @"SELECT Id, UserId, PasswordHash, SecurityStamp, AccessFailedCount, LockoutEnd, HiredAt, ContractEndAt, IsActive, CreatedAt, UpdatedAt
@@ -31,10 +28,10 @@ public class GetEmployeeByIdQueryHandler : IQueryHandlerAsync<GetEmployeeByIdQue
         DynamicParameters employeeParameters = new DynamicParameters();
         employeeParameters.Add("@Id", query.Id);
 
-        Employee? employee = await _dbConnection.QuerySingleOrDefaultAsync<Employee>(
+        Employee? employee = await _dbSession.Connection.QuerySingleOrDefaultAsync<Employee>(
             employeeSqlQuery,
             employeeParameters,
-            transact
+            _dbSession.Transaction
         );
 
         if (employee is null)
@@ -46,10 +43,10 @@ public class GetEmployeeByIdQueryHandler : IQueryHandlerAsync<GetEmployeeByIdQue
         DynamicParameters userParameters = new DynamicParameters();
         userParameters.Add("@UserId", employee.UserId);
 
-        User? user = await _dbConnection.QuerySingleOrDefaultAsync<User>(
+        User? user = await _dbSession.Connection.QuerySingleOrDefaultAsync<User>(
             userSqlQuery,
             userParameters,
-            transact
+            _dbSession.Transaction
         );
 
         if (user is null)

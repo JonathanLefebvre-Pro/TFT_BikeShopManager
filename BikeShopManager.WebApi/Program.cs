@@ -3,10 +3,12 @@ using BikeShopManager.AppCore.Features.Commands;
 using BikeShopManager.AppCore.Features.Dispatcher;
 using BikeShopManager.AppCore.Features.Queries;
 using BikeShopManager.AppCore.Interfaces.Commands;
+using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.AppCore.Interfaces.Queries;
 using BikeShopManager.AppCore.Interfaces.Repositories;
 using BikeShopManager.Domain.Entities;
+using BikeShopManager.Infrastructure;
 using BikeShopManager.Infrastructure.Services;
 using BikeShopManager.Infrastructure.Services.Customers;
 using BikeShopManager.Infrastructure.Services.Employees;
@@ -24,10 +26,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
+builder.Services.AddScoped<IDbSession, DbSession>();
+builder.Services.AddScoped<IDispatcher, Dispatcher>();
+
 builder.Services.AddScoped<ICustomerRepository, CustomerService>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeService>();
 
-builder.Services.AddScoped<IDispatcher, Dispatcher>();
+#region Add Command & Query Handlers
 builder.Services.AddScoped<
     ICommandHandlerAsync<AddCustomerCommand, int>,
     AddCustomerCommandHandler
@@ -69,6 +74,7 @@ builder.Services.AddScoped<
     IQueryHandlerAsync<GetEmployeeByIdQuery, Employee>,
     GetEmployeeByIdQueryHandler
 >();
+#endregion
 
 builder.Services.AddControllers();
 

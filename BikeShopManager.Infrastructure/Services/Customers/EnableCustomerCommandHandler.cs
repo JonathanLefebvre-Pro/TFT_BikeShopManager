@@ -1,26 +1,22 @@
-using System.Data;
 using BikeShopManager.AppCore.Features.Commands;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Commands;
+using BikeShopManager.AppCore.Interfaces.Connection;
 using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services;
 
 public class EnableCustomerCommandHandler : ICommandHandlerAsync<EnableCustomerCommand>
 {
-    private readonly IDbConnection _dbConnection;
+    private readonly IDbSession _dbSession;
 
-    public EnableCustomerCommandHandler(IDbConnection DbConnection)
+    public EnableCustomerCommandHandler(IDbSession DbSession)
     {
-        _dbConnection = DbConnection;
-        _dbConnection.Open();
+        _dbSession = DbSession;
     }
 
-    public async Task<Result> HandleAsync(
-        EnableCustomerCommand command,
-        IDbTransaction transact = null!
-    )
+    public async Task<Result> HandleAsync(EnableCustomerCommand command)
     {
         string sqlQuery =
             @"UPDATE Persons.Customers 
@@ -32,7 +28,11 @@ public class EnableCustomerCommandHandler : ICommandHandlerAsync<EnableCustomerC
         parameters.Add("@IsActive", true);
         parameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int row = await _dbConnection.ExecuteAsync(sqlQuery, parameters, transact);
+        int row = await _dbSession.Connection.ExecuteAsync(
+            sqlQuery,
+            parameters,
+            _dbSession.Transaction
+        );
         if (row is 0)
             return Result.Failure(CustomerError.NotEnabled);
 
