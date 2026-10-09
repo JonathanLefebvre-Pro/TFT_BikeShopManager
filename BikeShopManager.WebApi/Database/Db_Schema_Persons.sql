@@ -139,5 +139,7 @@ GO
 SELECT * FROM Persons.Users
 SELECT * FROM Persons.Customers
 SELECT * FROM Persons.Employees
+SELECT * FROM Persons.Roles
+SELECT * FROM Persons.EmployeeRoles
 
 GO
