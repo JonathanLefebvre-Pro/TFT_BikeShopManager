@@ -1,7 +1,7 @@
 using BikeShopManager.AppCore.Features.Commands;
 using BikeShopManager.AppCore.Features.Queries;
 using BikeShopManager.AppCore.Features.Results;
-using BikeShopManager.AppCore.Interfaces.Repositories;
+using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos;
 using BikeShopManager.WebApi.Infrastructure.Extensions;
@@ -12,13 +12,16 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    class CustomerController(ICustomerRepository Repository) : ControllerBase
+    public class CustomerController(IDispatcher Dispatcher) : ControllerBase
     {
         [Route("GetAsync/{id}")]
         [HttpGet]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
-            Result<Customer> result = await Repository.HandleAsync(new GetCustomerByIdQuery(id));
+            Result<Customer> result = await Dispatcher.SendQueryAsync<
+                GetCustomerByIdQuery,
+                Customer
+            >(new GetCustomerByIdQuery(id));
             return this.FromResult(result);
         }
 
@@ -26,7 +29,7 @@ namespace BikeShopManager.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateCustomerDto dto)
         {
-            Result result = await Repository.HandleAsync(
+            Result result = await Dispatcher.SendCommandAsync<UpdateCustomerCommand>(
                 new UpdateCustomerCommand(id, dto.User.ToEntity(), dto.Customer.ToEntity())
             );
             return this.FromResult(result);
@@ -36,7 +39,9 @@ namespace BikeShopManager.WebApi.Controllers
         [HttpPatch]
         public async Task<IActionResult> DisableAsync(int id)
         {
-            Result result = await Repository.HandleAsync(new DisableCustomerCommand(id));
+            Result result = await Dispatcher.SendCommandAsync<DisableCustomerCommand>(
+                new DisableCustomerCommand(id)
+            );
             return this.FromResult(result);
         }
 
@@ -44,17 +49,20 @@ namespace BikeShopManager.WebApi.Controllers
         [HttpPatch]
         public async Task<IActionResult> EnableAsync(int id)
         {
-            Result result = await Repository.HandleAsync(new EnableCustomerCommand(id));
+            Result result = await Dispatcher.SendCommandAsync<EnableCustomerCommand>(
+                new EnableCustomerCommand(id)
+            );
             return this.FromResult(result);
         }
 
         [Route("AddAsync")]
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] AddCustomerDto customer)
+        public async Task<IActionResult> AddAsyncDispatcher([FromBody] AddCustomerDto customer)
         {
-            Result<int> result = await Repository.HandleAsync(
+            Result<int> result = await Dispatcher.SendCommandAsync<AddCustomerCommand, int>(
                 new AddCustomerCommand(customer.User.ToEntity(), customer.Customer.ToEntity())
             );
+
             return this.FromResult(result);
         }
     }

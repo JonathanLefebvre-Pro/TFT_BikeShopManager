@@ -6,7 +6,6 @@ using BikeShopManager.AppCore.Interfaces.Commands;
 using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.AppCore.Interfaces.Queries;
-using BikeShopManager.AppCore.Interfaces.Repositories;
 using BikeShopManager.Domain.Entities;
 using BikeShopManager.Infrastructure;
 using BikeShopManager.Infrastructure.Services;
@@ -28,9 +27,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
 builder.Services.AddScoped<IDbSession, DbSession>();
 builder.Services.AddScoped<IDispatcher, Dispatcher>();
-
-builder.Services.AddScoped<ICustomerRepository, CustomerService>();
-builder.Services.AddScoped<IEmployeeRepository, EmployeeService>();
 
 #region Add Command & Query Handlers
 builder.Services.AddScoped<
