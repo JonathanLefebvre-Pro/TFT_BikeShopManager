@@ -25,8 +25,6 @@ public class Dispatcher : IDispatcher
             () => _serviceProvider.GetRequiredService<ICommandHandler<TCommand>>().Handle(command),
             result => result.IsSuccess
         );
-
-        //TODO : Implement validators with behavior pattern ???
     }
 
     public Result<TResult> SendCommand<TCommand, TResult>(TCommand command)
@@ -39,8 +37,6 @@ public class Dispatcher : IDispatcher
                     .Handle(command),
             result => result.IsSuccess
         );
-
-        //TODO : Implement validators with behavior pattern ???
     }
 
     public async Task<Result> SendCommandAsync<TCommand>(TCommand command)
@@ -53,8 +49,6 @@ public class Dispatcher : IDispatcher
                     .HandleAsync(command),
             result => result.IsSuccess
         );
-
-        //TODO : Implement validators with behavior pattern ???
     }
 
     public async Task<Result<TResult>> SendCommandAsync<TCommand, TResult>(TCommand command)
@@ -67,33 +61,19 @@ public class Dispatcher : IDispatcher
                     .HandleAsync(command),
             result => result.IsSuccess
         );
-
-        //TODO : Implement validators with behavior pattern ???
     }
 
     public Result<TResult> SendQuery<TQuery, TResult>(TQuery query)
         where TQuery : IQueryDefinition<TResult>
     {
-        return _session.ExecuteInTransaction(
-            () =>
-                _serviceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>().Handle(query),
-            result => result.IsSuccess
-        );
-
-        //TODO : Implement validators with behavior pattern ???
+        return _serviceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>().Handle(query);
     }
 
     public async Task<Result<TResult>> SendQueryAsync<TQuery, TResult>(TQuery query)
         where TQuery : IQueryDefinition<TResult>
     {
-        return await _session.ExecuteInTransactionAsync(
-            () =>
-                _serviceProvider
-                    .GetRequiredService<IQueryHandlerAsync<TQuery, TResult>>()
-                    .HandleAsync(query),
-            result => result.IsSuccess
-        );
-
-        //TODO : Implement validators with behavior pattern ???
+        return await _serviceProvider
+            .GetRequiredService<IQueryHandlerAsync<TQuery, TResult>>()
+            .HandleAsync(query);
     }
 }
