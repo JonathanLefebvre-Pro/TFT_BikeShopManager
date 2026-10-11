@@ -1,33 +1,24 @@
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Queries;
 using BikeShopManager.AppCore.Features.Results;
-using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.AppCore.Interfaces.Queries;
+using BikeShopManager.AppCore.Interfaces.Repositories;
 using BikeShopManager.Domain.Entities;
-using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services.Employees;
 
 public class GetRolesQueryHandler : IQueryHandlerAsync<GetRolesQuery, IEnumerable<Role>>
 {
-    private readonly IDbSession _dbSession;
+    private readonly IRoleRepository _roleRepository;
 
-    public GetRolesQueryHandler(IDbSession DbSession)
+    public GetRolesQueryHandler(IRoleRepository roleRepository)
     {
-        _dbSession = DbSession;
+        _roleRepository = roleRepository;
     }
 
     public async Task<Result<IEnumerable<Role>>> HandleAsync(GetRolesQuery query)
     {
-        string sqlQuery =
-            @"SELECT Id, Name, NormalizedName, CreatedAt, UpdatedAt 
-                FROM Persons.Roles";
-
-        IEnumerable<Role> roles = await _dbSession.Connection.QueryAsync<Role>(
-            sqlQuery,
-            null,
-            _dbSession.Transaction
-        );
+        IEnumerable<Role> roles = await _roleRepository.GetRoles();
 
         if (roles is null || roles.Count() is 0)
             return RoleError.Empty;

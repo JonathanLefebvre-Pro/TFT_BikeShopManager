@@ -2,40 +2,23 @@ using BikeShopManager.AppCore.Features.Commands;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Commands;
-using BikeShopManager.AppCore.Interfaces.Connection;
-using Dapper;
+using BikeShopManager.AppCore.Interfaces.Repositories;
 
 namespace BikeShopManager.Infrastructure.Services;
 
 public class DisableCustomerCommandHandler : ICommandHandlerAsync<DisableCustomerCommand>
 {
-    private readonly IDbSession _dbSession;
+    private readonly ICustomerRepository _customerRepository;
 
-    public DisableCustomerCommandHandler(IDbSession DbSession)
+    public DisableCustomerCommandHandler(ICustomerRepository customerRepository)
     {
-        _dbSession = DbSession;
+        _customerRepository = customerRepository;
     }
 
     public async Task<Result> HandleAsync(DisableCustomerCommand command)
     {
-        string sqlQuery =
-            @"UPDATE Persons.Customers 
-                SET IsActive=@IsActive, UpdatedAt=@UpdatedAt
-                WHERE Persons.Customers.Id = @Id
-                AND Persons.Customers.IsActive='true'";
-        DynamicParameters parameters = new DynamicParameters();
-        parameters.Add("@Id", command.Id);
-        parameters.Add("@IsActive", false);
-        parameters.Add("@UpdatedAt", DateTime.UtcNow);
+        bool result = await _customerRepository.DisableCustomer(command.Id);
 
-        int row = await _dbSession.Connection.ExecuteAsync(
-            sqlQuery,
-            parameters,
-            _dbSession.Transaction
-        );
-        if (row is 0)
-            return Result.Failure(CustomerError.NotDisabled);
-
-        return Result.Success();
+        return result ? Result.Success() : Result.Failure(CustomerError.NotDisabled);
     }
 }

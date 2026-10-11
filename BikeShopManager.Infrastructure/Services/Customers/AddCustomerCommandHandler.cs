@@ -1,22 +1,25 @@
-using System.Data;
 using BikeShopManager.AppCore.Extensions;
 using BikeShopManager.AppCore.Features.Commands;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Commands;
-using BikeShopManager.AppCore.Interfaces.Connection;
+using BikeShopManager.AppCore.Interfaces.Repositories;
 using BikeShopManager.Domain.Entities;
-using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services;
 
 public class AddCustomerCommandHandler : ICommandHandlerAsync<AddCustomerCommand, int>
 {
-    private readonly IDbSession _dbSession;
+    private readonly ICustomerRepository _customerRepository;
+    private readonly IUserRepository _userRepository;
 
-    public AddCustomerCommandHandler(IDbSession DbSession)
+    public AddCustomerCommandHandler(
+        ICustomerRepository customerRepository,
+        IUserRepository userRepository
+    )
     {
-        _dbSession = DbSession;
+        _customerRepository = customerRepository;
+        _userRepository = userRepository;
     }
 
     public async Task<Result<int>> HandleAsync(AddCustomerCommand command)
@@ -26,18 +29,7 @@ public class AddCustomerCommandHandler : ICommandHandlerAsync<AddCustomerCommand
         //  if ok -> use the existing user
         //  if nok -> create a new user
         //If not -> create a new user
-        string getUserSqlQuery =
-            @"SELECT Id, FirstName, LastName, Email, BirthDate 
-                    FROM Persons.Users
-                    WHERE Email=@Email";
-        DynamicParameters getUserParameters = new DynamicParameters();
-        getUserParameters.Add("@Email", command.User.Email);
-        ExistingUser? existingUser =
-            await _dbSession.Connection.QuerySingleOrDefaultAsync<ExistingUser>(
-                getUserSqlQuery,
-                getUserParameters,
-                _dbSession.Transaction
-            );
+        ExistingUser? existingUser = await _userRepository.GetUserByMail(command.User.Email!);
 
         int userRowId = 0;
         bool isSameIdentity = false;
@@ -53,68 +45,33 @@ public class AddCustomerCommandHandler : ICommandHandlerAsync<AddCustomerCommand
         if (!isSameIdentity)
         {
             //Insert user data in User table and recover row id
-            string insertUserSqlQuery =
-                @"INSERT INTO Persons.Users (FirstName, LastName, Email, PhoneNumber, Address, City, ZipCode, Country, BirthDate, AllowMarketing) 
-                    OUTPUT INSERTED.ID
-                    VALUES (@FirstName, @LastName, @Email, @PhoneNumber, @Address, @City, @ZipCode, @Country, @BirthDate, @AllowMarketing)";
-            DynamicParameters insertUserParameters = new DynamicParameters();
-            insertUserParameters.Add("@FirstName", command.User.FirstName);
-            insertUserParameters.Add("@LastName", command.User.LastName);
-            insertUserParameters.Add("@Email", command.User.Email);
-            insertUserParameters.Add("@PhoneNumber", command.User.PhoneNumber);
-            insertUserParameters.Add("@Address", command.User.Address);
-            insertUserParameters.Add("@City", command.User.City);
-            insertUserParameters.Add("@ZipCode", command.User.ZipCode);
-            insertUserParameters.Add("@Country", command.User.Country);
-            insertUserParameters.Add("@BirthDate", command.User.BirthDate);
-            insertUserParameters.Add("@AllowMarketing", command.User.AllowMarketing);
-
             try
             {
                 //Avoid crash if query failed (I.E : user with same email already exist !)
-                userRowId = await _dbSession.Connection.ExecuteScalarAsync<int>(
-                    insertUserSqlQuery,
-                    insertUserParameters,
-                    _dbSession.Transaction
-                );
+                userRowId = await _userRepository.CreateUser(command.User);
+                if (userRowId is 0)
+                    return Result<int>.Failure(UserError.NotInserted);
             }
             catch (Exception ex)
             {
                 return ex;
             }
-
-            if (userRowId is 0)
-            {
-                return Result<int>.Failure(CustomerError.NotInserted);
-            }
         }
 
         //Insert Customer data in Customer table and recover row id
-        string insertCustomerSqlQuery =
-            @"INSERT INTO Persons.Customers (UserId, VatNumber) 
-                    OUTPUT INSERTED.ID 
-                    VALUES (@UserId, @VatNumber)";
-        DynamicParameters insertCustomerParameters = new DynamicParameters();
-        insertCustomerParameters.Add("@UserId", userRowId);
-        insertCustomerParameters.Add("@VatNumber", command.Customer.VatNumber);
-
-        int customerRowId = 0;
+        int customerRowId;
         try
         {
-            customerRowId = await _dbSession.Connection.ExecuteScalarAsync<int>(
-                insertCustomerSqlQuery,
-                insertCustomerParameters,
-                _dbSession.Transaction
+            customerRowId = await _customerRepository.CreateCustomer(
+                userRowId,
+                command.Customer.VatNumber
             );
+            if (customerRowId is 0)
+                return Result<int>.Failure(CustomerError.NotInserted);
         }
         catch (Exception ex)
         {
             return ex;
-        }
-
-        if (customerRowId is 0)
-        {
-            return Result<int>.Failure(CustomerError.NotInserted);
         }
 
         return Result<int>.Success(customerRowId);

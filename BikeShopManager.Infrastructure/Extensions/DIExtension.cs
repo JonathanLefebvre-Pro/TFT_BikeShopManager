@@ -1,6 +1,8 @@
 using BikeShopManager.AppCore.Interfaces.Commands;
 using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.AppCore.Interfaces.Queries;
+using BikeShopManager.AppCore.Interfaces.Repositories;
+using BikeShopManager.Infrastructure.Services.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BikeShopManager.Infrastructure.Extensions;
@@ -22,6 +24,11 @@ public static class DIExtension
                 .AsImplementedInterfaces()
                 .WithScopedLifetime()
         );
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IEmployeeRoleRepository, EmployeeRoleRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
 
         return services;
     }
