@@ -19,7 +19,7 @@ public class EnableCustomerCommandHandler : ICommandHandlerAsync<EnableCustomerC
     {
         bool isCustomerExist = await _customerRepository.IsCustomerExist(command.Id);
         if (!isCustomerExist)
-            Result.Failure(CustomerError.NotFound);
+            return Result.Failure(CustomerError.NotFound);
 
         bool result = await _customerRepository.EnableCustomer(command.Id);
 
