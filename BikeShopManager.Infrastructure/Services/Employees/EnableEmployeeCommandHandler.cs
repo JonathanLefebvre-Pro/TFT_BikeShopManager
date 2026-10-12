@@ -6,18 +6,16 @@ using BikeShopManager.AppCore.Interfaces.Repositories;
 
 namespace BikeShopManager.Infrastructure.Services;
 
-public class EnableEmployeeCommandHandler : ICommandHandlerAsync<EnableEmployeeCommand>
+public class EnableEmployeeCommandHandler(IEmployeeRepository EmployeeRepository)
+    : ICommandHandlerAsync<EnableEmployeeCommand>
 {
-    private readonly IEmployeeRepository _employeeRepository;
-
-    public EnableEmployeeCommandHandler(IEmployeeRepository employeeRepository)
-    {
-        _employeeRepository = employeeRepository;
-    }
-
     public async Task<Result> HandleAsync(EnableEmployeeCommand command)
     {
-        bool result = await _employeeRepository.EnableEmployee(command.Id);
+        bool isEmployeeExist = await EmployeeRepository.IsEmployeeExist(command.Id);
+        if (!isEmployeeExist)
+            return Result.Failure(EmployeeError.NotFound);
+
+        bool result = await EmployeeRepository.EnableEmployee(command.Id);
 
         return result ? Result.Success() : Result.Failure(EmployeeError.NotEnabled);
     }
