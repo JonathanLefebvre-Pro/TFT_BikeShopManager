@@ -24,17 +24,16 @@ public class UpdateCustomerCommandHandler : ICommandHandlerAsync<UpdateCustomerC
 
     public async Task<Result> HandleAsync(UpdateCustomerCommand command)
     {
-        //Get the customer based on the command Id parameter
-        //Get the user row linked to the customer UserId
-        Customer? customer = await _customerRepository.GetCustomerById(command.Id);
+        //Get the customer userId from the customer id
+        int userId = await _customerRepository.GetCustomerUserId(command.Id);
 
-        if (customer is null)
+        if (userId is 0)
             return Result.Failure(CustomerError.NotFound);
 
         //Update the user row
         try
         {
-            bool isUserUpdated = await _userRepository.UpdateUser(customer.UserId, command.User);
+            bool isUserUpdated = await _userRepository.UpdateUser(userId, command.User);
             if (!isUserUpdated)
                 return Result.Failure(UserError.NotUpdated);
         }

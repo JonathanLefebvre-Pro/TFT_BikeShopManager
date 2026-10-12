@@ -7,4 +7,6 @@ public interface IRoleRepository
     Task<IEnumerable<Role>> GetRoles();
 
     Task<Role?> GetRoleById(int id);
+
+    Task<bool> IsRoleExist(int id);
 }

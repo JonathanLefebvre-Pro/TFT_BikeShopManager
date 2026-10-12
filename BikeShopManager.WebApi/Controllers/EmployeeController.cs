@@ -70,25 +70,14 @@ namespace BikeShopManager.WebApi.Controllers
             return this.FromResult(result);
         }
 
-        [Route("GetRolesAsync")]
+        [Route("GetEmployeesByRoleIdAsync/{id}")]
         [HttpGet]
-        public async Task<IActionResult> GetRolesAsync()
+        public async Task<IActionResult> GetEmployeesByRoleIdAsync(int id)
         {
-            Result<IEnumerable<Role>> result = await Dispatcher.SendQueryAsync<
-                GetRolesQuery,
-                IEnumerable<Role>
-            >(new GetRolesQuery());
-
-            return this.FromResult(result);
-        }
-
-        [Route("GetRoleByIdAsync/{id}")]
-        [HttpGet]
-        public async Task<IActionResult> GetRoleByIdAsync(int id)
-        {
-            Result<Role> result = await Dispatcher.SendQueryAsync<GetRoleByIdQuery, Role>(
-                new GetRoleByIdQuery(id)
-            );
+            Result<IEnumerable<Employee>> result = await Dispatcher.SendQueryAsync<
+                GetEmployeesByRoleIdQuery,
+                IEnumerable<Employee>
+            >(new GetEmployeesByRoleIdQuery(id));
 
             return this.FromResult(result);
         }

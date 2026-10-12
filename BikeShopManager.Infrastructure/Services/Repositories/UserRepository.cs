@@ -5,19 +5,14 @@ using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository(IDbSession DbSession) : IUserRepository
 {
-    private readonly IDbSession _dbSession;
-
-    public UserRepository(IDbSession dbSession)
-    {
-        _dbSession = dbSession;
-    }
+    private const string _tableName = @"Persons.Users";
 
     public async Task<int> CreateUser(User user)
     {
         string insertUserSqlQuery =
-            @"INSERT INTO Persons.Users (FirstName, LastName, Email, PhoneNumber, Address, City, ZipCode, Country, BirthDate, AllowMarketing) 
+            @$"INSERT INTO {_tableName} (FirstName, LastName, Email, PhoneNumber, Address, City, ZipCode, Country, BirthDate, AllowMarketing) 
                     OUTPUT INSERTED.ID
                     VALUES (@FirstName, @LastName, @Email, @PhoneNumber, @Address, @City, @ZipCode, @Country, @BirthDate, @AllowMarketing)";
         DynamicParameters insertUserParameters = new DynamicParameters();
@@ -32,25 +27,25 @@ public class UserRepository : IUserRepository
         insertUserParameters.Add("@BirthDate", user.BirthDate);
         insertUserParameters.Add("@AllowMarketing", user.AllowMarketing);
 
-        return await _dbSession.Connection.ExecuteScalarAsync<int>(
+        return await DbSession.Connection.ExecuteScalarAsync<int>(
             insertUserSqlQuery,
             insertUserParameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
     }
 
     public async Task<User?> GetUserById(int id)
     {
         string userSqlQuery =
-            @"SELECT Id, FirstName, LastName , Email , PhoneNumber , Address , City , ZipCode , Country , BirthDate , AllowMarketing, CreatedAt, UpdatedAt
-                FROM Persons.Users WHERE Persons.Users.Id = @UserId";
+            @$"SELECT Id, FirstName, LastName , Email , PhoneNumber , Address , City , ZipCode , Country , BirthDate , AllowMarketing, CreatedAt, UpdatedAt
+                FROM {_tableName} WHERE {_tableName}.Id = @UserId";
         DynamicParameters userParameters = new DynamicParameters();
         userParameters.Add("@UserId", id);
 
-        return await _dbSession.Connection.QuerySingleOrDefaultAsync<User>(
+        return await DbSession.Connection.QuerySingleOrDefaultAsync<User>(
             userSqlQuery,
             userParameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
     }
 
@@ -60,23 +55,38 @@ public class UserRepository : IUserRepository
             return null;
 
         string getUserSqlQuery =
-            @"SELECT Id, FirstName, LastName, Email, BirthDate 
-                    FROM Persons.Users
+            @$"SELECT Id, FirstName, LastName, Email, BirthDate 
+                    FROM {_tableName}
                     WHERE Email=@Email";
         DynamicParameters getUserParameters = new DynamicParameters();
         getUserParameters.Add("@Email", email);
 
-        return await _dbSession.Connection.QuerySingleOrDefaultAsync<ExistingUser>(
+        return await DbSession.Connection.QuerySingleOrDefaultAsync<ExistingUser>(
             getUserSqlQuery,
             getUserParameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
+    }
+
+    public async Task<bool> IsUserExist(int id)
+    {
+        string userSqlQuery = @$"SELECT Id FROM {_tableName} WHERE {_tableName}.Id = @UserId";
+        DynamicParameters userParameters = new DynamicParameters();
+        userParameters.Add("@UserId", id);
+
+        int userId = await DbSession.Connection.QuerySingleOrDefaultAsync<int>(
+            userSqlQuery,
+            userParameters,
+            DbSession.Transaction
+        );
+
+        return userId is not 0;
     }
 
     public async Task<bool> UpdateUser(int id, User user)
     {
         string userSqlQuery =
-            @"UPDATE Persons.Users 
+            @$"UPDATE {_tableName} 
                 SET FirstName=@FirstName, 
                 LastName=@LastName, 
                 Email=@Email, 
@@ -88,7 +98,7 @@ public class UserRepository : IUserRepository
                 BirthDate=@BirthDate, 
                 AllowMarketing=@AllowMarketing, 
                 UpdatedAt=@UpdatedAt 
-                WHERE Persons.Users.Id = @Id";
+                WHERE {_tableName}.Id = @Id";
 
         DynamicParameters userParameters = new DynamicParameters();
         userParameters.Add("@Id", id);
@@ -105,10 +115,10 @@ public class UserRepository : IUserRepository
         userParameters.Add("@AllowMarketing", user.AllowMarketing);
         userParameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int rows = await _dbSession.Connection.ExecuteAsync(
+        int rows = await DbSession.Connection.ExecuteAsync(
             userSqlQuery,
             userParameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
 
         return rows is not 0;

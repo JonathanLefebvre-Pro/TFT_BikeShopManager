@@ -4,29 +4,42 @@ using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services.Repositories;
 
-public class EmployeeRoleRepository : IEmployeeRoleRepository
+public class EmployeeRoleRepository(IDbSession DbSession) : IEmployeeRoleRepository
 {
-    private readonly IDbSession _dbSession;
-
-    public EmployeeRoleRepository(IDbSession dbSession)
-    {
-        _dbSession = dbSession;
-    }
+    private const string _tableName = @"Persons.EmployeeRoles";
 
     public async Task<bool> CreateEmployeeRole(int employeeId, int roleId)
     {
-        string insertRoleSqlQuery =
-            @"INSERT INTO Persons.EmployeeRoles (EmployeeId, RoleId) VALUES (@EmployeeId, @RoleId)";
-        DynamicParameters insertRoleParameters = new DynamicParameters();
-        insertRoleParameters.Add("@EmployeeId", employeeId);
-        insertRoleParameters.Add("@RoleId", roleId);
+        string sqlQuery =
+            @$"INSERT INTO {_tableName} (EmployeeId, RoleId) VALUES (@EmployeeId, @RoleId)";
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@EmployeeId", employeeId);
+        parameters.Add("@RoleId", roleId);
 
-        int rows = await _dbSession.Connection.ExecuteAsync(
-            insertRoleSqlQuery,
-            insertRoleParameters,
-            _dbSession.Transaction
+        int rows = await DbSession.Connection.ExecuteAsync(
+            sqlQuery,
+            parameters,
+            DbSession.Transaction
         );
 
         return rows is not 0;
+    }
+
+    public async Task<int> GetEmployeeRole(int employeeId)
+    {
+        string sqlQuery = @$"SELECT RoleId FROM {_tableName} WHERE EmployeeId=@EmployeeId";
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@EmployeeId", employeeId);
+
+        return await DbSession.Connection.QuerySingleOrDefaultAsync<int>(sqlQuery, parameters);
+    }
+
+    public async Task<IEnumerable<int>> GetEmployeesByRole(int roleId)
+    {
+        string sqlQuery = @$"SELECT EmployeeId FROM {_tableName} WHERE RoleId=@RoleId";
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@RoleId", roleId);
+
+        return await DbSession.Connection.QueryAsync<int>(sqlQuery, parameters);
     }
 }

@@ -5,7 +5,7 @@ using BikeShopManager.AppCore.Interfaces.Queries;
 using BikeShopManager.AppCore.Interfaces.Repositories;
 using BikeShopManager.Domain.Entities;
 
-namespace BikeShopManager.Infrastructure.Services.Employees;
+namespace BikeShopManager.Infrastructure.Services.Roles;
 
 public class GetRolesQueryHandler : IQueryHandlerAsync<GetRolesQuery, IEnumerable<Role>>
 {

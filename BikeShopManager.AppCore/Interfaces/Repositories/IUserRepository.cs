@@ -8,4 +8,5 @@ public interface IUserRepository
     Task<User?> GetUserById(int id);
     Task<int> CreateUser(User user);
     Task<bool> UpdateUser(int id, User user);
+    Task<bool> IsUserExist(int id);
 }

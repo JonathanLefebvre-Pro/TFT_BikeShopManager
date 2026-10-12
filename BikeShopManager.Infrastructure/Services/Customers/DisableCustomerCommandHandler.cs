@@ -17,6 +17,10 @@ public class DisableCustomerCommandHandler : ICommandHandlerAsync<DisableCustome
 
     public async Task<Result> HandleAsync(DisableCustomerCommand command)
     {
+        bool isCustomerExist = await _customerRepository.IsCustomerExist(command.Id);
+        if (!isCustomerExist)
+            Result.Failure(CustomerError.NotFound);
+
         bool result = await _customerRepository.DisableCustomer(command.Id);
 
         return result ? Result.Success() : Result.Failure(CustomerError.NotDisabled);

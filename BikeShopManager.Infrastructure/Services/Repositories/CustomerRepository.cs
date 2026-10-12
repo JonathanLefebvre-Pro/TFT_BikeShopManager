@@ -5,48 +5,43 @@ using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services.Repositories;
 
-public class CustomerRepository : ICustomerRepository
+public class CustomerRepository(IDbSession DbSession) : ICustomerRepository
 {
-    private readonly IDbSession _dbSession;
-
-    public CustomerRepository(IDbSession dbSession)
-    {
-        _dbSession = dbSession;
-    }
+    private const string _tableName = @"Persons.Customers";
 
     public async Task<int> CreateCustomer(int userId, string? vatNumber)
     {
         string insertCustomerSqlQuery =
-            @"INSERT INTO Persons.Customers (UserId, VatNumber) 
+            @$"INSERT INTO {_tableName} (UserId, VatNumber) 
                     OUTPUT INSERTED.ID 
                     VALUES (@UserId, @VatNumber)";
         DynamicParameters insertCustomerParameters = new DynamicParameters();
         insertCustomerParameters.Add("@UserId", userId);
         insertCustomerParameters.Add("@VatNumber", vatNumber);
 
-        return await _dbSession.Connection.ExecuteScalarAsync<int>(
+        return await DbSession.Connection.ExecuteScalarAsync<int>(
             insertCustomerSqlQuery,
             insertCustomerParameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
     }
 
     public async Task<bool> DisableCustomer(int id)
     {
         string sqlQuery =
-            @"UPDATE Persons.Customers 
+            @$"UPDATE {_tableName} 
                 SET IsActive=@IsActive, UpdatedAt=@UpdatedAt
-                WHERE Persons.Customers.Id = @Id
-                AND Persons.Customers.IsActive='true'";
+                WHERE {_tableName}.Id = @Id
+                AND {_tableName}.IsActive='true'";
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Id", id);
         parameters.Add("@IsActive", false);
         parameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int row = await _dbSession.Connection.ExecuteAsync(
+        int row = await DbSession.Connection.ExecuteAsync(
             sqlQuery,
             parameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
 
         return row is not 0;
@@ -55,19 +50,19 @@ public class CustomerRepository : ICustomerRepository
     public async Task<bool> EnableCustomer(int id)
     {
         string sqlQuery =
-            @"UPDATE Persons.Customers 
+            @$"UPDATE {_tableName} 
                 SET IsActive=@IsActive, UpdatedAt=@UpdatedAt
-                WHERE Persons.Customers.Id = @Id 
-                AND Persons.Customers.IsActive='false'";
+                WHERE {_tableName}.Id = @Id 
+                AND {_tableName}.IsActive='false'";
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Id", id);
         parameters.Add("@IsActive", true);
         parameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int row = await _dbSession.Connection.ExecuteAsync(
+        int row = await DbSession.Connection.ExecuteAsync(
             sqlQuery,
             parameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
 
         return row is not 0;
@@ -76,35 +71,65 @@ public class CustomerRepository : ICustomerRepository
     public async Task<Customer?> GetCustomerById(int id)
     {
         string customerSqlQuery =
-            @"SELECT Id, UserId, VatNumber, IsActive, CreatedAt, UpdatedAt 
-                FROM Persons.Customers 
-                WHERE Persons.Customers.Id=@Id";
+            @$"SELECT Id, UserId, VatNumber, IsActive, CreatedAt, UpdatedAt 
+                FROM {_tableName} 
+                WHERE {_tableName}.Id=@Id";
 
         DynamicParameters customerParameters = new DynamicParameters();
         customerParameters.Add("@Id", id);
 
-        return await _dbSession.Connection.QuerySingleOrDefaultAsync<Customer>(
+        return await DbSession.Connection.QuerySingleOrDefaultAsync<Customer>(
             customerSqlQuery,
             customerParameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
+    }
+
+    public async Task<int> GetCustomerUserId(int id)
+    {
+        string customerSqlQuery = @$"SELECT UserId FROM {_tableName} WHERE {_tableName}.Id=@Id";
+
+        DynamicParameters customerParameters = new DynamicParameters();
+        customerParameters.Add("@Id", id);
+
+        return await DbSession.Connection.QuerySingleOrDefaultAsync<int>(
+            customerSqlQuery,
+            customerParameters,
+            DbSession.Transaction
+        );
+    }
+
+    public async Task<bool> IsCustomerExist(int id)
+    {
+        string customerSqlQuery = @$"SELECT Id FROM {_tableName} WHERE {_tableName}.Id=@Id";
+
+        DynamicParameters customerParameters = new DynamicParameters();
+        customerParameters.Add("@Id", id);
+
+        int customerId = await DbSession.Connection.QuerySingleOrDefaultAsync<int>(
+            customerSqlQuery,
+            customerParameters,
+            DbSession.Transaction
+        );
+
+        return customerId is not 0;
     }
 
     public async Task<bool> UpdateCustomer(int id, string? vatNumber)
     {
         string customerSqlQuery =
-            @"UPDATE Persons.Customers 
+            @$"UPDATE {_tableName} 
                 SET VatNumber=@VatNumber, UpdatedAt=@UpdatedAt 
-                WHERE Persons.Customers.Id=@Id";
+                WHERE {_tableName}.Id=@Id";
         DynamicParameters customerParameters = new DynamicParameters();
         customerParameters.Add("@Id", id);
         customerParameters.Add("@VatNumber", vatNumber);
         customerParameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int rows = await _dbSession.Connection.ExecuteAsync(
+        int rows = await DbSession.Connection.ExecuteAsync(
             customerSqlQuery,
             customerParameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
 
         return rows is not 0;

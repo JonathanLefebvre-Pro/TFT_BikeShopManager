@@ -5,19 +5,14 @@ using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services.Repositories;
 
-public class EmployeeRepository : IEmployeeRepository
+public class EmployeeRepository(IDbSession DbSession) : IEmployeeRepository
 {
-    private readonly IDbSession _dbSession;
-
-    public EmployeeRepository(IDbSession dbSession)
-    {
-        _dbSession = dbSession;
-    }
+    private const string _tableName = @"Persons.Employees";
 
     public async Task<int> CreateEmployee(int userId, Employee employee)
     {
         string EmployeeSqlQuery =
-            @"INSERT INTO Persons.Employees (UserId, PasswordHash, SecurityStamp, HiredAt, ContractEndAt) 
+            @$"INSERT INTO {_tableName} (UserId, PasswordHash, SecurityStamp, HiredAt, ContractEndAt) 
                     OUTPUT INSERTED.ID 
                     VALUES (@UserId, @PasswordHash, @SecurityStamp, @HiredAt, @ContractEndAt)";
         DynamicParameters employeeParameters = new DynamicParameters();
@@ -27,29 +22,29 @@ public class EmployeeRepository : IEmployeeRepository
         employeeParameters.Add("@HiredAt", employee.HiredAt);
         employeeParameters.Add("@ContractEndAt", employee.ContractEndAt);
 
-        return await _dbSession.Connection.ExecuteScalarAsync<int>(
+        return await DbSession.Connection.ExecuteScalarAsync<int>(
             EmployeeSqlQuery,
             employeeParameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
     }
 
     public async Task<bool> DisableEmployee(int id)
     {
         string sqlQuery =
-            @"UPDATE Persons.Employees 
+            @$"UPDATE {_tableName} 
                 SET IsActive=@IsActive, UpdatedAt=@UpdatedAt
-                WHERE Persons.Employees.Id = @Id
-                AND Persons.Employees.IsActive='true'";
+                WHERE {_tableName}.Id = @Id
+                AND {_tableName}.IsActive='true'";
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Id", id);
         parameters.Add("@IsActive", false);
         parameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int row = await _dbSession.Connection.ExecuteAsync(
+        int row = await DbSession.Connection.ExecuteAsync(
             sqlQuery,
             parameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
 
         return row is not 0;
@@ -58,19 +53,19 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<bool> EnableEmployee(int id)
     {
         string sqlQuery =
-            @"UPDATE Persons.Employees 
+            @$"UPDATE {_tableName} 
                 SET IsActive=@IsActive, UpdatedAt=@UpdatedAt
-                WHERE Persons.Employees.Id = @Id 
-                AND Persons.Employees.IsActive='false'";
+                WHERE {_tableName}.Id = @Id 
+                AND {_tableName}.IsActive='false'";
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Id", id);
         parameters.Add("@IsActive", true);
         parameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int row = await _dbSession.Connection.ExecuteAsync(
+        int row = await DbSession.Connection.ExecuteAsync(
             sqlQuery,
             parameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
 
         return row is not 0;
@@ -79,27 +74,43 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<Employee?> GetEmployeeById(int id)
     {
         string employeeSqlQuery =
-            @"SELECT Id, UserId, PasswordHash, SecurityStamp, AccessFailedCount, LockoutEnd, HiredAt, ContractEndAt, IsActive, CreatedAt, UpdatedAt
-                FROM Persons.Employees 
-                WHERE Persons.Employees.Id=@Id";
+            @$"SELECT Id, UserId, PasswordHash, SecurityStamp, AccessFailedCount, LockoutEnd, HiredAt, ContractEndAt, IsActive, CreatedAt, UpdatedAt
+                FROM {_tableName} 
+                WHERE {_tableName}.Id=@Id";
 
         DynamicParameters employeeParameters = new DynamicParameters();
         employeeParameters.Add("@Id", id);
 
-        return await _dbSession.Connection.QuerySingleOrDefaultAsync<Employee>(
+        return await DbSession.Connection.QuerySingleOrDefaultAsync<Employee>(
             employeeSqlQuery,
             employeeParameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
+    }
+
+    public async Task<bool> IsEmployeeExist(int id)
+    {
+        string employeeSqlQuery = @$"SELECT Id FROM {_tableName} WHERE {_tableName}.Id=@Id";
+
+        DynamicParameters employeeParameters = new DynamicParameters();
+        employeeParameters.Add("@Id", id);
+
+        int employeeId = await DbSession.Connection.QuerySingleOrDefaultAsync<int>(
+            employeeSqlQuery,
+            employeeParameters,
+            DbSession.Transaction
+        );
+
+        return employeeId is not 0;
     }
 
     public async Task<bool> UpdateEmployee(int id, Employee employee)
     {
         string employeeSqlQuery =
-            @"UPDATE Persons.Employees 
+            @$"UPDATE {_tableName} 
                 SET PasswordHash=@PasswordHash, SecurityStamp=@SecurityStamp, 
                 HiredAt=@HiredAt, ContractEndAt=@ContractEndAt, UpdatedAt=@UpdatedAt
-                WHERE Persons.Employees.Id=@Id";
+                WHERE {_tableName}.Id=@Id";
         DynamicParameters employeeParameters = new DynamicParameters();
         employeeParameters.Add("@Id", id);
         employeeParameters.Add("@PasswordHash", employee.PasswordHash);
@@ -108,10 +119,10 @@ public class EmployeeRepository : IEmployeeRepository
         employeeParameters.Add("@ContractEndAt", employee.ContractEndAt);
         employeeParameters.Add("@UpdatedAt", DateTime.UtcNow);
 
-        int rows = await _dbSession.Connection.ExecuteAsync(
+        int rows = await DbSession.Connection.ExecuteAsync(
             employeeSqlQuery,
             employeeParameters,
-            _dbSession.Transaction
+            DbSession.Transaction
         );
 
         return rows is not 0;
