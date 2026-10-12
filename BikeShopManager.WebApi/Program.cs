@@ -4,8 +4,6 @@ using BikeShopManager.Infrastructure.Extensions;
 using Microsoft.Data.SqlClient;
 using Scalar.AspNetCore;
 
-string myAllowedLocalOrigin = "MyAllowedLocalOrigin";
-
 string conStringTFT = @"GOS-VDI406\TFTIC";
 string conStringJo = @"JONATHAN\DATAVIZ";
 string connectionString =
@@ -14,17 +12,6 @@ string connectionString =
     + @";Initial Catalog=TFT_BikeShopManager_WebApi;Integrated Security=True;Trust Server Certificate=True";
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(
-        name: myAllowedLocalOrigin,
-        policy =>
-        {
-            policy.WithOrigins("https://localhost:4200/");
-        }
-    );
-});
 
 // Add services to the container.
 builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
@@ -47,7 +34,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors(myAllowedLocalOrigin);
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
