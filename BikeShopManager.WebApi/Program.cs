@@ -4,7 +4,7 @@ using BikeShopManager.Infrastructure.Extensions;
 using Microsoft.Data.SqlClient;
 using Scalar.AspNetCore;
 
-string myAllowedLocalOrigin = "MyAllowedLocalOrigin";
+string myAllowedLocalOrigins = "MyAllowedLocalOrigins";
 
 string conStringTFT = @"GOS-VDI406\TFTIC";
 string conStringJo = @"JONATHAN\DATAVIZ";
@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
-        name: myAllowedLocalOrigin,
+        name: myAllowedLocalOrigins,
         policy =>
         {
             policy.WithOrigins("https://localhost:4200/");
@@ -47,7 +47,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors(myAllowedLocalOrigin);
+app.UseCors(myAllowedLocalOrigins);
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
