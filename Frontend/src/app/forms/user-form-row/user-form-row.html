@@ -1,0 +1,18 @@
+<tr>
+    <th scope="row">{{user().Id}}</th>
+    <td>{{user().FirstName}}</td>
+    <td>{{user().LastName}}</td>
+    <td>{{user().Email}}</td>
+    <td>{{user().PhoneNumber}}</td>
+    <td>{{user().Address}}</td>
+    <td>{{user().City}}</td>
+    <td>{{user().ZipCode}}</td>
+    <td>{{user().Country}}</td>
+    <td>{{user().BirthDate | date:'shortDate'}}</td>
+    <td><input type="checkbox" disabled [checked]="user().AllowMarketing"/></td>
+    <td>
+        <button type="button" class="edit">
+            Edit
+        </button>
+    </td>
+</tr>
