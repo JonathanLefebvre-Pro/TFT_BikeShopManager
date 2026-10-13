@@ -4,6 +4,7 @@ namespace BikeShopManager.AppCore.Interfaces.Repositories;
 
 public interface ICustomerRepository
 {
+    Task<IEnumerable<Customer>> GetCustomers();
     Task<int> CreateCustomer(int userId, string? vatNumber);
     Task<Customer?> GetCustomerById(int id);
     Task<int> GetCustomerUserId(int id);
