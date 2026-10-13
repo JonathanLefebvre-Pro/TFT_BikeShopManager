@@ -13,8 +13,8 @@
         </tr>
     </thead>
     <tbody class="customerTableBody">
-        @if(customers$2()) {
-        @for (customer of customers$2(); track customer.Id) {
+        @if(customers()) {
+        @for (customer of customers(); track customer.id) {
             <app-customer-form-row [customer]="customer"/>
         }
     }
@@ -41,9 +41,9 @@
         </tr>
     </thead>
     <tbody class="userTableBody">
-        @if(customers$2()) {
-            @for (customer of customers$2(); track customer.Id) {
-                <app-user-form-row [user]="customer.User"/>
+        @if(customers()) {
+            @for (customer of customers(); track customer.id) {
+                <app-user-form-row [user]="customer.user"/>
             }
         }
     </tbody>

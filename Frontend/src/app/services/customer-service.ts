@@ -13,11 +13,6 @@ export class CustomerService {
         return this.http.get<Customer[]>(url)
     }
 
-    public getCustomersJson() {
-        const url:string = `${this.baseUrl}/${"api/Customer/GetAsync"}`;
-        this.http.get(url).subscribe((data) => {console.log(data)});
-    }
-
     public getCustomerById(id: number) : Observable<Customer> {
         const url:string = `${this.baseUrl}/${"api/Customer/GetAsync"}/${id}`;
         return this.http.get<Customer>(url);

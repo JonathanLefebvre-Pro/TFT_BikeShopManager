@@ -9,9 +9,4 @@ import { Customer } from '../../domain/customer';
 })
 export class CustomerFormRow {
   customer = input.required<Customer>();
-
-  //Debug
-  ngOnInit(){
-    console.log(this.customer());
-  }
 }

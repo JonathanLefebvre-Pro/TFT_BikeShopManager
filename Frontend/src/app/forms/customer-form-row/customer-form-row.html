@@ -1,15 +1,15 @@
 <tr>
-    <th scope="row">{{customer().Id}}</th>
-    <td>{{customer().UserId}}</td>
-    <td><input type="checkbox" disabled [checked]="customer().IsActive"/></td>
-    <td>@if(customer().VatNumber === null 
-    || customer().VatNumber === undefined 
-    || customer().VatNumber === ''){
+    <th scope="row">{{customer().id}}</th>
+    <td>{{customer().userId}}</td>
+    <td><input type="checkbox" disabled [checked]="customer().isActive"/></td>
+    <td>@if(customer().vatNumber === null 
+    || customer().vatNumber === undefined 
+    || customer().vatNumber === ''){
             <span>/</span>
         }
         @else
         {
-            {{customer().VatNumber}}
+            {{customer().vatNumber}}
         }
     </td>
     <td>
