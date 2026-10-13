@@ -1,0 +1,39 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+tr {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+
+    th, td {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .edit, .delete {
+        margin: 1rem;
+        border: none;
+        color: rgb(220, 220, 220);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .edit {
+        background-color: rgb(25, 38, 139);
+    }
+
+    .edit:hover, .delete:hover {
+        background-color: rgb(105, 105, 105);
+    }
+
+    .delete {
+        background-color: rgb(139, 25, 25);
+    }
+}
