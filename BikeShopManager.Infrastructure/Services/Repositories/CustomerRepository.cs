@@ -85,6 +85,18 @@ public class CustomerRepository(IDbSession DbSession) : ICustomerRepository
         );
     }
 
+    public async Task<IEnumerable<Customer>> GetCustomers()
+    {
+        string customerSqlQuery =
+            @$"SELECT Id, UserId, VatNumber, IsActive, CreatedAt, UpdatedAt FROM {_tableName}";
+
+        return await DbSession.Connection.QueryAsync<Customer>(
+            customerSqlQuery,
+            null,
+            DbSession.Transaction
+        );
+    }
+
     public async Task<int> GetCustomerUserId(int id)
     {
         string customerSqlQuery = @$"SELECT UserId FROM {_tableName} WHERE {_tableName}.Id=@Id";
