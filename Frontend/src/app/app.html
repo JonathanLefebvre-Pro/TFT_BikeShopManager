@@ -1,13 +1,12 @@
 <main class="main">
+  <nav>
+    <a [routerLink]="['/']">Customers</a>
+    <a [routerLink]="['employees']">Employees</a>
+    <a [routerLink]="['stock']">Stock</a>
+    <a [routerLink]="['shop']">Shop</a>
+  </nav>
+
   <div class="content">
-    <header>
-      <a [routerLink]="['/']">Customers</a>
-      <a [routerLink]="['employees']">Employees</a>
-      <a [routerLink]="['stock']">Stock</a>
-      <a [routerLink]="['shop']">Shop</a>
-    </header>
-    <body>
       <router-outlet />
-    </body>
   </div>
 </main>
