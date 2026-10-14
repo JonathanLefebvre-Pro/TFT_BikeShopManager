@@ -1,10 +1,10 @@
-import { AddCustomerFormData } from '@/app/domain/forms/addCustomerFormData';
+import { AddCustomerFormData } from '@/app/presentation/forms/addCustomerFormData';
 import { CustomerService } from '@/app/infrastructure/services/customer-service';
 import { Component, inject, signal } from '@angular/core';
 import { email, form, FormField, maxLength, minLength, required, submit } from '@angular/forms/signals';
-import { AddCustomerDto } from '@/app/domain/dtos/addCustomerDto';
-import { CustomerDto } from '@/app/domain/dtos/customerDto';
-import { UserDto } from '@/app/domain/dtos/userDto';
+import { AddCustomerDto } from '@/app/presentation/dtos/addCustomerDto';
+import { CustomerDto } from '@/app/presentation/dtos/customerDto';
+import { UserDto } from '@/app/presentation/dtos/userDto';
 import { DatePipe } from '@angular/common';
 
 @Component({

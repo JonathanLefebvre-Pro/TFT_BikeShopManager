@@ -15,7 +15,7 @@ tr {
         justify-content: center;
     }
 
-    .edit, .delete {
+    .edit, .disable, .enable {
         margin: 1rem;
         border: none;
         color: rgb(220, 220, 220);
@@ -29,11 +29,23 @@ tr {
         background-color: rgb(25, 38, 139);
     }
 
-    .edit:hover, .delete:hover {
-        background-color: rgb(105, 105, 105);
+    .disable {
+        background-color: rgb(126, 25, 139);
     }
 
-    .delete {
-        background-color: rgb(139, 25, 25);
+    .enable {
+        background-color: rgb(29, 139, 25);
+    }
+
+    .edit:disabled {
+        background-color: grey;
+    }
+
+    .edit:disabled:hover {
+        background-color: grey;
+    }
+
+    .edit:hover, .disable:hover, .enable:hover {
+        background-color: rgb(105, 105, 105);
     }
 }

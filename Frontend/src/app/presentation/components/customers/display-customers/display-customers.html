@@ -46,7 +46,7 @@
     <tbody class="userTableBody">
         @if(isLoaded()) {
             @for (customer of customers(); track customer.id) {
-                <app-user-table-row [user]="customer.user"/>
+                <app-user-table-row [customer]="customer"/>
             }
         }
         @else {

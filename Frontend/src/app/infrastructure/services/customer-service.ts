@@ -3,10 +3,11 @@ import { Customer } from '../../domain/customer';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ICustomerRepository } from '@/app/appCore/abstraction/repositories/icustomer-repository';
-import { AddCustomerDto } from '@/app/domain/dtos/addCustomerDto';
+import { AddCustomerDto } from '@/app/presentation/dtos/addCustomerDto';
 
 @Service()
 export class CustomerService implements ICustomerRepository {
+
  
     protected readonly baseUrl = 'https://localhost:7105';
     readonly http = inject(HttpClient);
@@ -24,5 +25,15 @@ export class CustomerService implements ICustomerRepository {
     public addCustomer(customer: AddCustomerDto) : Observable<number> {
         const url:string = `${this.baseUrl}/${"api/Customer/AddAsync"}`;
         return this.http.post<number>(url, customer);
+    }
+
+    public disableCustomer(id: number): Observable<Object> {
+       const url:string = `${this.baseUrl}/${"api/Customer/DisableAsync"}/${id}`;
+       return this.http.patch(url, null);
+    }
+
+    public enableCustomer(id: number): Observable<Object> {
+       const url:string = `${this.baseUrl}/${"api/Customer/EnableAsync"}/${id}`;
+       return this.http.patch(url, null);
     }
 }

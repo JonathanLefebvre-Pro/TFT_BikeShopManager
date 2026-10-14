@@ -13,11 +13,18 @@
         }
     </td>
     <td>
-        <button type="button" class="edit">
+        <button type="button" class="edit" [disabled]="!customer().isActive" (click)="editCustomer()">
             Edit
         </button>
-        <button type="button" class="delete">
-            Delete
-        </button>
+        @if(customer().isActive)
+        {
+            <button type="button" class="disable" (click)="disableCustomer()">
+                Disable
+            </button>
+        }@else {
+            <button type="button" class="enable" (click)="enableCustomer()">
+                Enable
+            </button>
+        }
     </td>
 </tr>
