@@ -8,6 +8,6 @@ export interface User {
     city: string;
     zipCode: string;
     country : string;
-    birthDate: Date;
+    birthDate?: Date;
     allowMarketing: boolean;
 }

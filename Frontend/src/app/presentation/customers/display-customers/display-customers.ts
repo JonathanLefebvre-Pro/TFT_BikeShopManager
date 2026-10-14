@@ -21,12 +21,8 @@ export class DisplayCustomers implements OnInit {
         this.isLoaded.set(false);
         this.customers.set(res);
         this.isLoaded.set(true);
-        //console.log("Result :");
-        //console.log(this.customers());
       },
       error: (error) => {
-        //console.log("Error :");
-        //console.log(error);
         this.isLoaded.set(false);
       }
     })

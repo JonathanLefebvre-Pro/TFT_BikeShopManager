@@ -68,7 +68,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("AddAsync")]
         [HttpPost]
-        public async Task<IActionResult> AddAsyncDispatcher([FromBody] AddCustomerDto customer)
+        public async Task<IActionResult> AddAsync([FromBody] AddCustomerDto customer)
         {
             Result<int> result = await Dispatcher.SendCommandAsync<AddCustomerCommand, int>(
                 new AddCustomerCommand(customer.User.ToEntity(), customer.Customer.ToEntity())
