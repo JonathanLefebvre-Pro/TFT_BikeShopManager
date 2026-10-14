@@ -29,4 +29,12 @@ tr {
     .edit:hover {
         background-color: rgb(105, 105, 105);
     }
+
+    .edit:disabled {
+        background-color: grey;
+    }
+    
+    .edit:disabled:hover {
+        background-color: grey;
+    }
 }

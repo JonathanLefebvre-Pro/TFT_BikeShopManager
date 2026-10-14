@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
-import { User } from '../../../domain/user';
 import { DatePipe } from '@angular/common';
+import { Customer } from '@/app/domain/customer';
 
 @Component({
   imports: [DatePipe],
@@ -9,5 +9,5 @@ import { DatePipe } from '@angular/common';
   templateUrl: './user-table-row.html',
 })
 export class UserTableRow {
-  public user = input.required<User>();
+  public customer = input.required<Customer>();
 }
