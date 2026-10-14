@@ -1,10 +1,12 @@
 import { inject, Service } from '@angular/core';
-import { Customer } from '../domain/customer';
+import { Customer } from '../../domain/customer';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ICustomerRepository } from '@/app/appCore/abstraction/repositories/icustomer-repository';
 
 @Service()
-export class CustomerService {
+export class CustomerService implements ICustomerRepository {
+
     protected readonly baseUrl = 'https://localhost:7105';
     readonly http = inject(HttpClient);
 
@@ -17,4 +19,5 @@ export class CustomerService {
         const url:string = `${this.baseUrl}/${"api/Customer/GetAsync"}/${id}`;
         return this.http.get<Customer>(url);
     }
+    
 }
