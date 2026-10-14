@@ -1,16 +1,15 @@
 import { Component, inject, OnInit, signal, model } from '@angular/core';
 import { CustomerTableRow } from '../customer-table-row/customer-table-row';
-import { UserTableRow } from '../user-table-row/user-table-row';
 import { CustomerService } from '../../../../infrastructure/services/customer-service';
 import { Customer } from '../../../../domain/customer';
 
 @Component({
-  imports: [CustomerTableRow, UserTableRow],
-  selector: 'app-display-customers',
-  styleUrl: './display-customers.scss',
-  templateUrl: './display-customers.html',
+  imports: [CustomerTableRow],
+  selector: 'app-customers-table',
+  styleUrl: './customers-table.scss',
+  templateUrl: './customers-table.html',
 })
-export class DisplayCustomers implements OnInit {
+export class CustomersTable implements OnInit {
   protected readonly customerService : CustomerService = inject(CustomerService);
   readonly customers = signal<Customer[]>([]);
   readonly isLoaded = signal<boolean>(false);

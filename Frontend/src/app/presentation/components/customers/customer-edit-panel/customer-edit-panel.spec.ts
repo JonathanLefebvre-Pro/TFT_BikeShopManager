@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DisplayCustomers } from './display-customers';
+import { CustomerEditPanel } from './customer-edit-panel';
 
-describe('DisplayCustomers', () => {
-  let component: DisplayCustomers;
-  let fixture: ComponentFixture<DisplayCustomers>;
+describe('CustomerEditPanel', () => {
+  let component: CustomerEditPanel;
+  let fixture: ComponentFixture<CustomerEditPanel>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DisplayCustomers],
+      imports: [CustomerEditPanel],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DisplayCustomers);
+    fixture = TestBed.createComponent(CustomerEditPanel);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

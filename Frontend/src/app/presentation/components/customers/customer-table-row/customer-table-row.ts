@@ -1,9 +1,10 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { Customer } from '../../../../domain/customer';
 import { CustomerService } from '@/app/infrastructure/services/customer-service';
+import { DatePipe } from '@angular/common';
 
 @Component({
-  imports: [],
+  imports: [DatePipe],
   selector: 'app-customer-table-row',
   styleUrl: './customer-table-row.scss',
   templateUrl: './customer-table-row.html'

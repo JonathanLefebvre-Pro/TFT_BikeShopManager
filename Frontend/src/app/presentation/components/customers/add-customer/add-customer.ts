@@ -6,9 +6,12 @@ import { AddCustomerDto } from '@/app/presentation/dtos/addCustomerDto';
 import { CustomerDto } from '@/app/presentation/dtos/customerDto';
 import { UserDto } from '@/app/presentation/dtos/userDto';
 import { DatePipe } from '@angular/common';
+import { FormTextInput } from '../../shared/form-text-input/form-text-input';
+import { FormDateInput } from '../../shared/form-date-input/form-date-input';
+import { FormCheckboxInput } from '../../shared/form-checkbox-input/form-checkbox-input';
 
 @Component({
-  imports: [FormField],
+  imports: [FormField, FormTextInput, FormDateInput, FormCheckboxInput],
   selector: 'app-add-customer',
   styleUrl: './add-customer.scss',
   templateUrl: './add-customer.html',

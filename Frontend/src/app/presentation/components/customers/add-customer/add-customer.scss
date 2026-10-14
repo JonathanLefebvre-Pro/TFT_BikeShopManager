@@ -1,15 +1,24 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+
+    margin-top: 1rem;
+    gap: 2rem;
+}
+
 .submitCustomerForm {
     display: flex;
     flex-direction: column;
     max-width: 400px;
+    gap: 0.5rem;
 }
 
 .submitCustomerForm div {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto 200px;
 }
 
 .submitCustomerForm div.formGroup-Submit {
-    justify-content: end;
+    grid-template-columns: auto;
 }

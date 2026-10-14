@@ -6,7 +6,7 @@
 
 tr {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: 0.5rem repeat(13, minmax(0, 1fr));
 
     th, td {
         display: flex;
@@ -15,14 +15,20 @@ tr {
         justify-content: center;
     }
 
+    td.actionButtons {
+        display: flex;
+        flex-direction: column;
+    }
+
     .edit, .save, .disable, .enable {
-        margin: 1rem;
+        margin: 0.5rem;
         border: none;
         color: rgb(220, 220, 220);
         border-radius: 0.5rem;
         padding: 0.5rem;
         padding-left: 1rem;
         padding-right: 1rem;
+        min-width: 90px;
     }
 
     .edit {
