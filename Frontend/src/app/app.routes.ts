@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
-import { DisplayCustomers } from './presentation/customers/display-customers/display-customers';
 import { DisplayEmployees } from './presentation/employees/display-employees/display-employees';
 import { DisplayStock } from './presentation/stock/display-stock/display-stock';
 import { DisplayShop } from './presentation/shop/display-shop/display-shop';
+import { CustomersPage } from './presentation/customers/customers-page/customers-page';
 
 export const routes: Routes = [
     {
         path: '',
-        component: DisplayCustomers,
+        component: CustomersPage,
         title: 'Customers',
     },
     {
