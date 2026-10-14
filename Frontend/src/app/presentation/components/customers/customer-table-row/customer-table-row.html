@@ -1,21 +1,35 @@
 <tr>
     <th scope="row">{{customer().id}}</th>
     <td>{{customer().userId}}</td>
-    <td><input type="checkbox" disabled [checked]="customer().isActive"/></td>
-    <td>@if(customer().vatNumber === null 
-    || customer().vatNumber === undefined 
-    || customer().vatNumber === ''){
-            <span>/</span>
-        }
-        @else
-        {
-            {{customer().vatNumber}}
-        }
-    </td>
+    @if(!isEditModeEnabled()) {
+        <td><input type="checkbox" disabled [checked]="customer().isActive"/></td>
+        <td>
+            @if(customer().vatNumber === null 
+            || customer().vatNumber === undefined 
+            || customer().vatNumber === ''){
+                <span>/</span>
+            }
+            @else
+            {
+                {{customer().vatNumber}}
+            }
+        </td>
+    }@else {
+        <td><input type="checkbox" [checked]="customer().isActive"/></td>
+        <td><input type="text" [value]="customer().vatNumber"/></td>
+    }
     <td>
-        <button type="button" class="edit" [disabled]="!customer().isActive" (click)="editCustomer()">
-            Edit
-        </button>
+        @if(!isEditModeEnabled())
+        {
+            <button type="button" class="edit" [disabled]="!customer().isActive" (click)="editCustomer()">
+                Edit
+            </button>
+        }@else {
+            <button type="button" class="save" (click)="saveCustomer()">
+                Save
+            </button>
+        }
+
         @if(customer().isActive)
         {
             <button type="button" class="disable" (click)="disableCustomer()">

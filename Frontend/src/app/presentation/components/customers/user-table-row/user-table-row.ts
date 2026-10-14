@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Customer } from '@/app/domain/customer';
 
@@ -10,4 +10,13 @@ import { Customer } from '@/app/domain/customer';
 })
 export class UserTableRow {
   public customer = input.required<Customer>();
+  isEditModeEnabled = signal<boolean>(false);
+  
+  editCustomer() {
+    this.isEditModeEnabled.set(true);
+  }
+
+  saveCustomer() {
+    this.isEditModeEnabled.set(false);
+  }
 }

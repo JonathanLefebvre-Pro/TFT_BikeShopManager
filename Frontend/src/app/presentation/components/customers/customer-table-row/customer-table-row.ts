@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { Customer } from '../../../../domain/customer';
 import { CustomerService } from '@/app/infrastructure/services/customer-service';
 
@@ -12,9 +12,9 @@ export class CustomerTableRow {
 
   customerService = inject(CustomerService);
   customer = input.required<Customer>();
+  isEditModeEnabled = signal<boolean>(false);
 
   enableCustomer() {
-    //console.log("Enable customer");
     this.customerService.enableCustomer(this.customer().id).subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res));
@@ -26,7 +26,6 @@ export class CustomerTableRow {
   }
 
   disableCustomer() {
-    //console.log("Disable customer");
     this.customerService.disableCustomer(this.customer().id).subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res));
@@ -37,11 +36,11 @@ export class CustomerTableRow {
     });
   }
 
-  deleteCustomer() {
-    console.log("Delete customer");
+  editCustomer() {
+    this.isEditModeEnabled.set(true);
   }
 
-  editCustomer() {
-    console.log("Edit customer");
+  saveCustomer() {
+    this.isEditModeEnabled.set(false);
   }
 }

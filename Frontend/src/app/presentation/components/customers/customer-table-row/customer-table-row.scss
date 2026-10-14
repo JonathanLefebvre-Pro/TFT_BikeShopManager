@@ -15,7 +15,7 @@ tr {
         justify-content: center;
     }
 
-    .edit, .disable, .enable {
+    .edit, .save, .disable, .enable {
         margin: 1rem;
         border: none;
         color: rgb(220, 220, 220);
@@ -34,6 +34,10 @@ tr {
     }
 
     .enable {
+        background-color: rgb(29, 139, 25);
+    }
+
+    .save {
         background-color: rgb(29, 139, 25);
     }
 

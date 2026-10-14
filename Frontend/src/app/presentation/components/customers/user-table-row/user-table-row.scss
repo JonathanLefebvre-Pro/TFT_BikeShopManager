@@ -15,7 +15,7 @@ tr {
         justify-content: center;
     }
 
-    .edit {
+    .edit, .save {
         background-color: rgb(25, 38, 139);
         color: rgb(220, 220, 220);
         margin: 1rem;
@@ -24,6 +24,10 @@ tr {
         padding: 0.5rem;
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+
+    .save {
+        background-color: rgb(29, 139, 25);
     }
 
     .edit:hover {
