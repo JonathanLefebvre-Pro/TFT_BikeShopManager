@@ -1,4 +1,4 @@
-<div class="formTextInput-{{id()}}">
+<div class="formDateInput-{{id()}}">
     <label [for]="id()">{{label()}}</label>
     <input type="date" [id]="id()" [formField]="field()"/>
     @if (fieldState().invalid() && fieldState().touched()) {
