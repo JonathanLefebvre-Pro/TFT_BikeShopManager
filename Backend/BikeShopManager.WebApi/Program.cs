@@ -10,7 +10,7 @@ string conStringTFT = @"GOS-VDI406\TFTIC";
 string conStringJo = @"JONATHAN\DATAVIZ";
 string connectionString =
     @"Data Source="
-    + conStringJo
+    + conStringTFT
     + @";Initial Catalog=TFT_BikeShopManager_WebApi;Integrated Security=True;Trust Server Certificate=True";
 
 var builder = WebApplication.CreateBuilder(args);

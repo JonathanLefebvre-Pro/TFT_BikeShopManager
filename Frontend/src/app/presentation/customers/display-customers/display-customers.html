@@ -1,4 +1,4 @@
-<h1>Home</h1>
+<h1>Display Customers</h1>
 
 <h2>Customer</h2>
 
@@ -13,11 +13,14 @@
         </tr>
     </thead>
     <tbody class="customerTableBody">
-        @if(customers()) {
-        @for (customer of customers(); track customer.id) {
-            <app-customer-form-row [customer]="customer"/>
+        @if(isLoaded()) {
+            @for (customer of customers(); track customer.id) {
+                <app-customer-table-row [customer]="customer"/>
+            }
         }
-    }
+        @else {
+            <p>There is no customers !</p>
+        }
     </tbody>
 </table>
 
@@ -41,10 +44,13 @@
         </tr>
     </thead>
     <tbody class="userTableBody">
-        @if(customers()) {
+        @if(isLoaded()) {
             @for (customer of customers(); track customer.id) {
-                <app-user-form-row [user]="customer.user"/>
+                <app-user-table-row [user]="customer.user"/>
             }
+        }
+        @else {
+            <p>There is no users !</p>
         }
     </tbody>
 </table>
