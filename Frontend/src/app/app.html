@@ -1,7 +1,13 @@
 <main class="main">
   <div class="content">
-    <app-display-customers/>
+    <header>
+      <a [routerLink]="['/']">Customers</a>
+      <a [routerLink]="['employees']">Employees</a>
+      <a [routerLink]="['stock']">Stock</a>
+      <a [routerLink]="['shop']">Shop</a>
+    </header>
+    <body>
+      <router-outlet />
+    </body>
   </div>
 </main>
-
-<router-outlet />
