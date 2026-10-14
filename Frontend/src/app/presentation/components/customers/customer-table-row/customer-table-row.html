@@ -1,8 +1,8 @@
 <tr>
     <th scope="row">{{customer().id}}</th>
     <td>{{customer().userId}}</td>
+    <td><input type="checkbox" disabled [checked]="customer().isActive"/></td>
     @if(!isEditModeEnabled()) {
-        <td><input type="checkbox" disabled [checked]="customer().isActive"/></td>
         <td>
             @if(customer().vatNumber === null 
             || customer().vatNumber === undefined 
@@ -15,7 +15,6 @@
             }
         </td>
     }@else {
-        <td><input type="checkbox" [checked]="customer().isActive"/></td>
         <td><input type="text" [value]="customer().vatNumber"/></td>
     }
     <td>

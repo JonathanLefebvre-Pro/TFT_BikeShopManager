@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, model } from '@angular/core';
 import { CustomerTableRow } from '../customer-table-row/customer-table-row';
 import { UserTableRow } from '../user-table-row/user-table-row';
 import { CustomerService } from '../../../../infrastructure/services/customer-service';
