@@ -11,14 +11,20 @@ public class GetEmployeeByIdQueryHandler : IQueryHandlerAsync<GetEmployeeByIdQue
 {
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IEmployeeRoleRepository _employeeRoleRepository;
+    private readonly IRoleRepository _roleRepository;
 
     public GetEmployeeByIdQueryHandler(
         IEmployeeRepository employeeRepository,
-        IUserRepository userRepository
+        IUserRepository userRepository,
+        IEmployeeRoleRepository employeeRoleRepository,
+        IRoleRepository roleRepository
     )
     {
         _employeeRepository = employeeRepository;
         _userRepository = userRepository;
+        _employeeRoleRepository = employeeRoleRepository;
+        _roleRepository = roleRepository;
     }
 
     public async Task<Result<Employee>> HandleAsync(GetEmployeeByIdQuery query)
@@ -34,6 +40,18 @@ public class GetEmployeeByIdQueryHandler : IQueryHandlerAsync<GetEmployeeByIdQue
             return Result<Employee>.Failure(UserError.NotFound);
 
         employee.User = user;
+
+        //Get employee role
+        int roleId = await _employeeRoleRepository.GetEmployeeRole(employee.Id);
+        if (roleId is 0)
+            return Result<Employee>.Failure(EmployeeRoleError.NotFound);
+
+        Role? role = await _roleRepository.GetRoleById(roleId);
+        if (role is null)
+            return Result<Employee>.Failure(RoleError.NotFound);
+
+        employee.Role = role;
+
         return employee;
     }
 }

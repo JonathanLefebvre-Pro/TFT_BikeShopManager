@@ -1,11 +1,11 @@
-import { Customer } from "@/app/domain/customer";
-import { AddCustomerDto } from "@/app/presentation/dtos/addCustomerDto";
+import { CustomerAddDto } from "@/app/presentation/dtos/customerAddDto";
+import { CustomerReturnDto } from '@/app/presentation/dtos/customerReturnDto';
 import { Observable } from "rxjs";
 
 export interface ICustomerRepository {
-    getCustomers() : Observable<Customer[]>;
-    getCustomerById(id: number) : Observable<Customer>;
-    addCustomer(customer: AddCustomerDto) : Observable<number>;
+    getCustomers() : Observable<CustomerReturnDto[]>;
+    getCustomerById(id: number) : Observable<CustomerReturnDto>;
+    addCustomer(customer: CustomerAddDto) : Observable<number>;
     disableCustomer(customerId: number) : Observable<Object>;
     enableCustomer(customerId: number) : Observable<Object>;
 }

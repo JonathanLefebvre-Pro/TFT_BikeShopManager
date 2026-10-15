@@ -1,9 +1,9 @@
 import { inject, Service } from '@angular/core';
-import { Customer } from '../../domain/customer';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ICustomerRepository } from '@/app/appCore/abstraction/repositories/icustomer-repository';
-import { AddCustomerDto } from '@/app/presentation/dtos/addCustomerDto';
+import { CustomerAddDto } from '@/app/presentation/dtos/customerAddDto';
+import { CustomerReturnDto } from '@/app/presentation/dtos/customerReturnDto';
 
 @Service()
 export class CustomerService implements ICustomerRepository {
@@ -12,17 +12,17 @@ export class CustomerService implements ICustomerRepository {
     protected readonly baseUrl = 'https://localhost:7105';
     readonly http = inject(HttpClient);
 
-    public getCustomers() : Observable<Customer[]> {
+    public getCustomers() : Observable<CustomerReturnDto[]> {
         const url:string = `${this.baseUrl}/${"api/Customer/GetAsync"}`;
-        return this.http.get<Customer[]>(url)
+        return this.http.get<CustomerReturnDto[]>(url)
     }
 
-    public getCustomerById(id: number) : Observable<Customer> {
+    public getCustomerById(id: number) : Observable<CustomerReturnDto> {
         const url:string = `${this.baseUrl}/${"api/Customer/GetAsync"}/${id}`;
-        return this.http.get<Customer>(url);
+        return this.http.get<CustomerReturnDto>(url);
     }
 
-    public addCustomer(customer: AddCustomerDto) : Observable<number> {
+    public addCustomer(customer: CustomerAddDto) : Observable<number> {
         const url:string = `${this.baseUrl}/${"api/Customer/AddAsync"}`;
         return this.http.post<number>(url, customer);
     }

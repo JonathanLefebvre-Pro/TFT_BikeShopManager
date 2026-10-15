@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { Customer } from '../../../../domain/customer';
 import { CustomerService } from '@/app/infrastructure/services/customer-service';
 import { DatePipe } from '@angular/common';
@@ -15,7 +15,10 @@ export class CustomerTableRow {
   customer = input.required<Customer>();
   isEditModeEnabled = signal<boolean>(false);
 
-  enableCustomer() {
+  onEditCustomerEvent = output<Customer>();
+  onSaveCustomerEvent = output();
+
+  handleEnableCustomer() {
     this.customerService.enableCustomer(this.customer().id).subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res));
@@ -26,22 +29,24 @@ export class CustomerTableRow {
     });
   }
 
-  disableCustomer() {
+  handleDisableCustomer() {
     this.customerService.disableCustomer(this.customer().id).subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res));
       },
-      error(err) {
-        console.log("Error" + err);
+      error(error) {
+        console.error("Error" + error);
       },
     });
   }
 
-  editCustomer() {
+  handleEditCustomer() {
     this.isEditModeEnabled.set(true);
+    this.onEditCustomerEvent.emit(this.customer());
   }
 
-  saveCustomer() {
+  handleSaveCustomer() {
     this.isEditModeEnabled.set(false);
+    this.onSaveCustomerEvent.emit();
   }
 }

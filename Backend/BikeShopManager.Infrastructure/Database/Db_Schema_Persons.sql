@@ -136,6 +136,7 @@ VALUES
 
 GO
 
+USE TFT_BikeShopManager_WebApi;
 SELECT * FROM Persons.Users
 SELECT * FROM Persons.Customers
 SELECT * FROM Persons.Employees

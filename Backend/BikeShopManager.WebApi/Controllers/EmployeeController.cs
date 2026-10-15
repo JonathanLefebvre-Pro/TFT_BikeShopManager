@@ -22,15 +22,19 @@ namespace BikeShopManager.WebApi.Controllers
                 GetEmployeeByIdQuery,
                 Employee
             >(new GetEmployeeByIdQuery(id));
-            return this.FromResult(result);
+
+            if (result.IsSuccess)
+                return this.Ok(result.Data.ToEmployeeReturnDto());
+
+            return this.NotFound(result.Error);
         }
 
         [Route("UpdateAsync/{id}")]
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateEmployeeDto dto)
+        public async Task<IActionResult> UpdateAsync(int id, [FromBody] EmployeeUpdateDto dto)
         {
             Result result = await Dispatcher.SendCommandAsync<UpdateEmployeeCommand>(
-                new UpdateEmployeeCommand(id, dto.User.ToEntity(), dto.Employee.ToEntity())
+                new UpdateEmployeeCommand(id, dto.ToEmployeeEntity(), dto.ToUserEntity())
             );
             return this.FromResult(result);
         }
@@ -57,14 +61,10 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("AddAsync")]
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] AddEmployeeDto Employee)
+        public async Task<IActionResult> AddAsync([FromBody] EmployeeAddDto dto)
         {
             Result<int> result = await Dispatcher.SendCommandAsync<AddEmployeeCommand, int>(
-                new AddEmployeeCommand(
-                    Employee.User.ToEntity(),
-                    Employee.Employee.ToEntity(),
-                    Employee.EmployeeRole.Id
-                )
+                new AddEmployeeCommand(dto.ToEmployeeEntity(), dto.ToUserEntity(), dto.RoleId)
             );
 
             return this.FromResult(result);
@@ -79,7 +79,16 @@ namespace BikeShopManager.WebApi.Controllers
                 IEnumerable<Employee>
             >(new GetEmployeesByRoleIdQuery(id));
 
-            return this.FromResult(result);
+            if (result.IsSuccess)
+            {
+                List<EmployeeReturnDto> dtos = new List<EmployeeReturnDto>();
+                foreach (Employee employee in result.Data)
+                    dtos.Add(employee.ToEmployeeReturnDto());
+
+                return this.Ok(dtos);
+            }
+
+            return this.NotFound(result.Error);
         }
     }
 }

@@ -27,19 +27,31 @@ public class GetEmployeesByRoleIdQueryHandler(
         if (employeeIds is null || employeeIds.Count() <= 0)
             return Result<IEnumerable<Employee>>.Failure(EmployeeError.NotFound);
 
-        //TODO : create a list of employees based on the list of ids
-
+        //reate a list of employees based on the list of ids
         List<Employee> employees = new List<Employee>();
         foreach (int id in employeeIds)
         {
             Employee? emp = await EmployeeRepository.GetEmployeeById(id);
             if (emp is not null)
             {
+                //Get employee user
                 User? user = await UserRepository.GetUserById(emp.UserId);
                 if (user is null)
                     return Result<IEnumerable<Employee>>.Failure(UserError.NotFound);
 
                 emp.User = user;
+
+                //Get employee role
+                int roleId = await EmployeeRoleRepository.GetEmployeeRole(emp.Id);
+                if (roleId is 0)
+                    return Result<IEnumerable<Employee>>.Failure(EmployeeRoleError.NotFound);
+
+                Role? role = await RoleRepository.GetRoleById(roleId);
+                if (role is null)
+                    return Result<IEnumerable<Employee>>.Failure(RoleError.NotFound);
+
+                emp.Role = role;
+
                 employees.Add(emp);
             }
         }

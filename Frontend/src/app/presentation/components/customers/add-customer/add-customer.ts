@@ -1,17 +1,15 @@
 import { AddCustomerFormData } from '@/app/presentation/forms/addCustomerFormData';
 import { CustomerService } from '@/app/infrastructure/services/customer-service';
 import { Component, inject, signal } from '@angular/core';
-import { email, form, FormField, maxLength, minLength, required, submit } from '@angular/forms/signals';
-import { AddCustomerDto } from '@/app/presentation/dtos/addCustomerDto';
-import { CustomerDto } from '@/app/presentation/dtos/customerDto';
-import { UserDto } from '@/app/presentation/dtos/userDto';
+import { email, form, maxLength, minLength, required, submit } from '@angular/forms/signals';
+import { CustomerAddDto } from '@/app/presentation/dtos/customerAddDto';
 import { DatePipe } from '@angular/common';
 import { FormTextInput } from '../../shared/form-text-input/form-text-input';
 import { FormDateInput } from '../../shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '../../shared/form-checkbox-input/form-checkbox-input';
 
 @Component({
-  imports: [FormField, FormTextInput, FormDateInput, FormCheckboxInput],
+  imports: [FormTextInput, FormDateInput, FormCheckboxInput],
   selector: 'app-add-customer',
   styleUrl: './add-customer.scss',
   templateUrl: './add-customer.html',
@@ -59,7 +57,8 @@ export class AddCustomer {
 
       const model = this.customerModel();
 
-      const userDto: UserDto = {
+      const customerAddDto: CustomerAddDto = {
+        vatNumber: model.vatNumber,
         firstName: model.firstName,
         lastName: model.lastName,
         email: (model.email === "") ? null : model.email,
@@ -71,22 +70,15 @@ export class AddCustomer {
         birthDate: (model.birthDate === null) ? null : this.datepipe.transform(model.birthDate, 'yyyy-MM-dd'),
         allowMarketing: model.allowMarketing
       }
-      const customerDto: CustomerDto = {
-        vatNumber: model.vatNumber
-      }
-      const addCustomerDto: AddCustomerDto = {
-        user: userDto,
-        customer: customerDto
-      }
 
-      this.customerService.addCustomer(addCustomerDto).subscribe({
+      this.customerService.addCustomer(customerAddDto).subscribe({
         next: (res) => {
           console.log("Result : " + JSON.stringify(res));
           // JSON.parse()
         },
         error: (error) => {
           console.log("Error : " + JSON.stringify(error));
-          console.log(JSON.stringify(addCustomerDto));
+          console.log(JSON.stringify(customerAddDto));
         }
       });
     });

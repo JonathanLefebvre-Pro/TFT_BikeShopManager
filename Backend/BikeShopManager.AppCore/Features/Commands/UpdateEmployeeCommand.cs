@@ -3,4 +3,4 @@ using BikeShopManager.Domain.Entities;
 
 namespace BikeShopManager.AppCore.Features.Commands;
 
-public record UpdateEmployeeCommand(int Id, User User, Employee Employee) : ICommandDefinition;
+public record UpdateEmployeeCommand(int Id, Employee Employee, User User) : ICommandDefinition;

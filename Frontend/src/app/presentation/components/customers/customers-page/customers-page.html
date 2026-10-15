@@ -1,3 +1,7 @@
-<app-customers-table/>
-<app-customer-edit-panel/>
+<app-customers-table 
+(onEditCustomerEvent)="handleEditCustomer($event)"
+(onSaveCustomerEvent)="handleSaveCustomer()"/>
+@if(lastEditedCustomer() !== null) {
+    <app-customer-edit-panel [customer]="lastEditedCustomer()"/>
+}
 <app-add-customer/>

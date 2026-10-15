@@ -22,7 +22,9 @@
     <tbody class="customerTableBody">
         @if(isLoaded()) {
             @for (customer of customers(); track customer.id) {
-                <app-customer-table-row [customer]="customer"/>
+                <app-customer-table-row [customer]="customer" 
+                (onEditCustomerEvent)="handleCustomerEdit($event)"
+                (onSaveCustomerEvent)="handleCustomerSave()"/>
             }
         }
         @else {

@@ -1,16 +1,21 @@
-<!-- <form>
-        <span>{{customer().id}}</span>
-        <input type="text" [value]="customer().user.firstName"/>
-        <input type="text" [value]="customer().user.lastName"/>
-        <input type="text" [value]="customer().user.email"/>
-        <input type="text" [value]="customer().user.phoneNumber"/>
-        <input type="text" [value]="customer().user.address"/>
-        <input type="text" [value]="customer().user.city"/>
-        <input type="text" [value]="customer().user.zipCode"/>
-        <input type="text" [value]="customer().user.country"/>
-        <input type="date" [value]="customer().user.birthDate | date:'shortDate'"/>
-        <input type="checkbox" [checked]="customer().user.allowMarketing"/>
-        <input type="text" [value]="customer().vatNumber"/>
+<h1>Edit Customer</h1>
 
-        <button type="button" class="disable" (click)="handleSave()">Save</button>
-</form> -->
+<form method="post" class="editCustomerForm" (submit)="handleSubmit($event)">
+
+    <app-form-text-input label="FirstName : " id="FirstName" [field]="customerForm.firstName" [fieldState]="customerForm.firstName()"/>
+    <app-form-text-input label="Lastname : " id="Lastname" [field]="customerForm.lastName" [fieldState]="customerForm.lastName()"/>
+    <app-form-text-input label="VAT : " id="VatNumber" [field]="customerForm.vatNumber" [fieldState]="customerForm.vatNumber()"/>
+    <app-form-text-input label="Email : " id="Email" [field]="customerForm.email" [fieldState]="customerForm.email()" type="email"/>
+    <app-form-text-input label="Phone number : " id="PhoneNumber" [field]="customerForm.phoneNumber" [fieldState]="customerForm.phoneNumber()"/>
+    <app-form-text-input label="Address : " id="Address" [field]="customerForm.address" [fieldState]="customerForm.address()"/>
+    <app-form-text-input label="City : " id="City" [field]="customerForm.city" [fieldState]="customerForm.city()"/>
+    <app-form-text-input label="Zip Code : " id="ZipCode" [field]="customerForm.zipCode" [fieldState]="customerForm.zipCode()"/>
+    <app-form-text-input label="Country : " id="Country" [field]="customerForm.country" [fieldState]="customerForm.country()"/>
+    <app-form-date-input label="Birthdate : " id="Birthdate" [field]="customerForm.birthDate" [fieldState]="customerForm.birthDate()"/>
+    <app-form-checkbox-input label="Allow marketing : " id="AllowMarketing" [field]="customerForm.allowMarketing" [fieldState]="customerForm.allowMarketing()"/>
+    
+    <div class="formGroup-Submit">
+        <input type="submit" value="Save" [disabled]="customerForm().invalid()"/>
+    </div>
+
+</form>

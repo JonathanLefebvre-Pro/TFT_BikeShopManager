@@ -2,8 +2,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BikeShopManager.WebApi.Dtos;
 
-public class UserDto
+public class EmployeeUpdateDto
 {
+    #region Employee
+    [Required]
+    public required string PasswordHash { get; set; }
+
+    [Required]
+    public required string SecurityStamp { get; set; }
+
+    //public int AccessFailedCount { get; set; }
+    //public DateTimeOffset LockoutEnd { get; set; }
+
+    [Required]
+    [DataType(DataType.Date)]
+    public required DateOnly HiredAt { get; set; }
+    public DateOnly? ContractEndAt { get; set; }
+    #endregion
+
+    #region User
     [Required]
     public required string FirstName { get; set; }
 
@@ -27,4 +44,5 @@ public class UserDto
 
     [Required]
     public bool AllowMarketing { get; set; }
+    #endregion
 }

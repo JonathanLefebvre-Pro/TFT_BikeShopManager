@@ -1,4 +1,8 @@
-export interface UserDto {
+export interface CustomerAddDto {
+    //Customer
+    vatNumber: string | null;
+
+    //User
     firstName: string;
     lastName:string;
     email: string | null;
