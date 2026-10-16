@@ -5,18 +5,20 @@ import { FormDateInput } from '../../shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '../../shared/form-checkbox-input/form-checkbox-input';
 import { CustomerService } from '@/app/infrastructure/services/customer-service';
 import { UpdateCustomerFormData } from '@/app/presentation/forms/updateCustomerFormData';
-import { email, form, maxLength, minLength, required, submit } from '@angular/forms/signals';
+import { email, form, maxLength, minLength, required, submit, FormRoot } from '@angular/forms/signals';
 import { CustomerUpdateDto } from '@/app/appCore/dtos/customerUpdateDto';
-import { formatDate } from '@angular/common';
+import { DatePipe } from '@angular/common';
 
 @Component({
-  imports: [FormTextInput, FormDateInput, FormCheckboxInput],
+  imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot],
   selector: 'app-customer-edit-panel',
   styleUrl: './customer-edit-panel.scss',
   templateUrl: './customer-edit-panel.html',
 })
 export class CustomerEditPanel implements OnInit {
 
+  constructor(public datepipe: DatePipe){}
+  
   ngOnInit(): void {
     this.customerModel.set({
       vatNumber: this.customer().vatNumber ?? '',
@@ -37,8 +39,7 @@ export class CustomerEditPanel implements OnInit {
   onUpdateCustomerEvent = output<{id: number, obj: CustomerUpdateDto}>();
   onCancelUpdateCustomerEvent = output();
   
-  customerService = inject(CustomerService);
-  customerModel = signal<UpdateCustomerFormData>({
+  private readonly INITIAL_MODEL = {
       firstName: '',
       lastName: '',
       vatNumber: '',
@@ -50,49 +51,49 @@ export class CustomerEditPanel implements OnInit {
       country: '',
       birthDate: null,
       allowMarketing: true
-  });
+  };
+  customerService = inject(CustomerService);
+  customerModel = signal<UpdateCustomerFormData>({...this.INITIAL_MODEL});
 
-  customerForm = form(this.customerModel, (fieldPath) => {
-    required(fieldPath.firstName, {message: "Firstname is required !"}),
-    minLength(fieldPath.firstName, 5, {message: "Firstname min length : 5 !"}),
-    maxLength(fieldPath.firstName, 100,  {message: "Firstname max length : 100 !"}),
-    required(fieldPath.lastName, {message: "LastName is required !"}),
-    minLength(fieldPath.lastName, 5, {message: "LastName min length : 5 !"}),
-    maxLength(fieldPath.lastName, 100,  {message: "LastName max length : 100 !"}),
-    maxLength(fieldPath.vatNumber, 20, {message: "Vat number max length : 20 !"}),
-    email(fieldPath.email, {message: "Enter a valid email !"}),
-    maxLength(fieldPath.email, 256, { message: "Email max length : 256 !"}),
-    maxLength(fieldPath.phoneNumber, 20, { message: "Phone number max length : 20 !"}),
-    maxLength(fieldPath.address, 200, { message: "Address max length : 200 !"}),
-    maxLength(fieldPath.city, 50, { message: "City max length : 50 !"}),
-    maxLength(fieldPath.zipCode, 10, { message: "ZipCode max length : 10 !"}),
-    maxLength(fieldPath.country, 50, { message: "Country max length : 50 !"})
-  });
+  customerForm = form(this.customerModel, (schemaPath) => {
+    required(schemaPath.firstName, {message: "Firstname is required !"}),
+    minLength(schemaPath.firstName, 5, {message: "Firstname min length : 5 !"}),
+    maxLength(schemaPath.firstName, 100,  {message: "Firstname max length : 100 !"}),
+    required(schemaPath.lastName, {message: "LastName is required !"}),
+    minLength(schemaPath.lastName, 5, {message: "LastName min length : 5 !"}),
+    maxLength(schemaPath.lastName, 100,  {message: "LastName max length : 100 !"}),
+    maxLength(schemaPath.vatNumber, 20, {message: "Vat number max length : 20 !"}),
+    email(schemaPath.email, {message: "Enter a valid email !"}),
+    maxLength(schemaPath.email, 256, { message: "Email max length : 256 !"}),
+    maxLength(schemaPath.phoneNumber, 20, { message: "Phone number max length : 20 !"}),
+    maxLength(schemaPath.address, 200, { message: "Address max length : 200 !"}),
+    maxLength(schemaPath.city, 50, { message: "City max length : 50 !"}),
+    maxLength(schemaPath.zipCode, 10, { message: "ZipCode max length : 10 !"}),
+    maxLength(schemaPath.country, 50, { message: "Country max length : 50 !"})
+  },
+  {
+    submission: {
+      action: async (model) => {
+        const customerUpdateDto: CustomerUpdateDto = {
+          vatNumber: model().value().vatNumber,
+          firstName: model().value().firstName,
+          lastName: model().value().lastName,
+          email: (model().value().email === "") ? null : model().value().email,
+          phoneNumber: (model().value().phoneNumber === "") ? null : model().value().phoneNumber,
+          address: (model().value().address === "") ? null : model().value().address,
+          city: (model().value().city === "") ? null : model().value().city,
+          zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
+          country: (model().value().country === "") ? null : model().value().country,
+          birthDate: (model().value().birthDate === null) ? null : this.datepipe.transform(model().value().birthDate, 'yyyy-MM-dd'),
+          allowMarketing: model().value().allowMarketing
+        }
 
-  handleSubmit(event: Event) {
-    event.preventDefault();
-
-    submit(this.customerForm, async () => {
-
-      const model = this.customerModel();
-
-      const customerUpdateDto: CustomerUpdateDto = {
-        vatNumber: model.vatNumber,
-        firstName: model.firstName,
-        lastName: model.lastName,
-        email: (model.email === "") ? null : model.email,
-        phoneNumber: (model.phoneNumber === "") ? null : model.phoneNumber,
-        address: (model.address === "") ? null : model.address,
-        city: (model.city === "") ? null : model.city,
-        zipCode: (model.zipCode === "") ? null : model.zipCode,
-        country: (model.country === "") ? null : model.country,
-        birthDate: (model.birthDate === null) ? null : formatDate(model.birthDate, 'yyyy-MM-dd', 'en-US'),
-        allowMarketing: model.allowMarketing
+        this.onUpdateCustomerEvent.emit({id: this.customer().id, obj: customerUpdateDto});
+        model().reset({...this.INITIAL_MODEL});
       }
+    }
+  });
 
-      this.onUpdateCustomerEvent.emit({id: this.customer().id, obj: customerUpdateDto});
-    });
-  }
   handleCancel(event: Event) {
     event.preventDefault();
 

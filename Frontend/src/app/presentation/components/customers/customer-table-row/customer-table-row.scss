@@ -43,15 +43,11 @@ tr {
         background-color: rgb(29, 139, 25);
     }
 
-    .save {
-        background-color: rgb(29, 139, 25);
-    }
-
-    .edit:disabled {
+    .edit:disabled, .disable:disabled, .enable:disabled {
         background-color: grey;
     }
 
-    .edit:disabled:hover {
+    .edit:disabled:hover, .disable:disabled:hover, .enable:disabled:hover {
         background-color: grey;
     }
 

@@ -8,7 +8,7 @@
     <td>{{customer().user.city}}</td>
     <td>{{customer().user.zipCode}}</td>
     <td>{{customer().user.country}}</td>
-    <td>{{customer().user.birthDate | date:'dd MM yyyy'}}</td>
+    <td>{{customer().user.birthDate | date:'dd/MM/yyyy'}}</td>
     
     <td><input type="checkbox" disabled [checked]="customer().user.allowMarketing"/></td>
     <td><input type="checkbox" disabled [checked]="customer().isActive"/></td>
@@ -29,11 +29,11 @@
         <div>
             @if(customer().isActive)
             {
-                <button type="button" class="disable" (click)="handleDisableCustomer()">
+                <button type="button" class="disable" [disabled]="isEditModeEnabled()" (click)="handleDisableCustomer()">
                     Disable
                 </button>
             }@else {
-                <button type="button" class="enable" (click)="handleEnableCustomer()">
+                <button type="button" class="enable" [disabled]="isEditModeEnabled()" (click)="handleEnableCustomer()">
                     Enable
                 </button>
             }

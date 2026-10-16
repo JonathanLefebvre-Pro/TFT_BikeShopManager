@@ -34,7 +34,7 @@ export class CustomersPage implements OnInit {
         this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
       },
       error: (error) => {
-        console.error(error);
+        //console.error(error);
       }
     })
   }

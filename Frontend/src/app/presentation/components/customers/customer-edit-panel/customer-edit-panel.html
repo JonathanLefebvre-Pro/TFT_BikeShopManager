@@ -1,6 +1,6 @@
 <h1>Edit Customer</h1>
 
-<form method="post" class="editCustomerForm" (submit)="handleSubmit($event)">
+<form method="post" class="editCustomerForm" [formRoot]="customerForm">
 
     <app-form-text-input label="FirstName : " id="FirstName" [field]="customerForm.firstName" [fieldState]="customerForm.firstName()"/>
     <app-form-text-input label="Lastname : " id="Lastname" [field]="customerForm.lastName" [fieldState]="customerForm.lastName()"/>
