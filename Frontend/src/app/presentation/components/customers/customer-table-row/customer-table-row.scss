@@ -7,12 +7,15 @@
 tr {
     display: grid;
     grid-template-columns: 0.5rem repeat(13, minmax(0, 1fr));
+    gap: 1rem;
 
     th, td {
         display: flex;
         flex-grow: 1;
         align-items: center;
-        justify-content: center;
+        justify-content: start;
+        word-break: break-word;
+        word-wrap: break-word;
     }
 
     td.actionButtons {
@@ -32,15 +35,15 @@ tr {
     }
 
     .edit {
-        background-color: rgb(25, 38, 139);
+        background-color: oklch(0.4023 0.1518 258.91)
     }
 
     .disable {
-        background-color: rgb(126, 25, 139);
+        background-color: oklch(0.4023 0.1518 31.7)
     }
 
     .enable {
-        background-color: rgb(29, 139, 25);
+        background-color: oklch(0.4023 0.1518 150.58)
     }
 
     .edit:disabled, .disable:disabled, .enable:disabled {

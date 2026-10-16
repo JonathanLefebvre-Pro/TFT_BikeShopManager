@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot],
@@ -17,6 +18,8 @@ import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox
 export class CustomerAddPanel {
 
   customerService = inject(CustomerService);
+  routerService = inject(Router);
+
   onAddCustomerEvent = output<number>();
 
   constructor(public datepipe: DatePipe){}
@@ -74,6 +77,7 @@ export class CustomerAddPanel {
             console.log("Result : " + JSON.stringify(res));
             model().reset({...this.INITIAL_MODEL});
             this.onAddCustomerEvent.emit(res);
+            this.routerService.navigate(['edit']);
           },
           error: (error) => {
             console.log("Error : " + JSON.stringify(error));

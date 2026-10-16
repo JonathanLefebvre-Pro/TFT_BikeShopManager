@@ -22,11 +22,12 @@
             display: grid;
             grid-template-columns: 0.5rem repeat(13, minmax(0, 1fr));
             flex: 1;
+            gap: 1rem;
             
             th {
                 display: flex;
                 flex-grow: 1;
-                justify-content: center;
+                justify-content: start;
             }
         }
     }
