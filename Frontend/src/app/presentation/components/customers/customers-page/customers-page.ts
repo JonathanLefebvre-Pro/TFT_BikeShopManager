@@ -22,14 +22,18 @@ export class CustomersPage implements OnInit {
   protected readonly lastEditedCustomer = signal<Customer | null>(null);
 
   ngOnInit(): void {
+    this.init();
+  }
+
+  init(){
+    this.lastEditedCustomer.set(null);
+    this.isLoaded.set(false);
     this.customerService.getCustomers().subscribe({
       next : (res) => {
-        this.isLoaded.set(false);
         this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
         this.isLoaded.set(true);
       },
       error: (error) => {
-        this.isLoaded.set(false);
         console.error(error);
       }
     })
@@ -39,6 +43,7 @@ export class CustomersPage implements OnInit {
     this.customerService.enableCustomer(customerId).subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res.status));
+        this.init();
       },
       error(err) {
         console.log("Error" + err);
@@ -49,6 +54,7 @@ export class CustomersPage implements OnInit {
     this.customerService.disableCustomer(customerId).subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res.status));
+        this.init();
       },
       error(error) {
         console.error("Error" + error);
@@ -72,7 +78,7 @@ export class CustomersPage implements OnInit {
     this.customerService.updateCustomer(event.id, event.obj).subscribe({
         next: (res) => {
           console.log("Result : " + JSON.stringify(res));
-          // JSON.parse()
+          this.init();
         },
         error: (error) => {
           console.log("Error : " + JSON.stringify(error));

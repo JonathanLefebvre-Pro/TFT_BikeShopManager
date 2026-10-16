@@ -21,7 +21,10 @@
     </thead>
     <tbody class="customerTableBody">
         @for (customer of customers(); track customer.id) {
-            <app-customer-table-row [customer]="customer" 
+            <app-customer-table-row 
+            [customer]="customer" 
+            (onEnableCustomerEvent)="handleCustomerEnable($event)"
+            (onDisableCustomerEvent)="handleCustomerDisable($event)"
             (onEditCustomerEvent)="handleCustomerEdit($event)"/>
         }
     </tbody>
