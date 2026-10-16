@@ -2,8 +2,9 @@ import { inject, Service } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ICustomerRepository } from '@/app/appCore/abstraction/repositories/icustomer-repository';
-import { CustomerAddDto } from '@/app/presentation/dtos/customerAddDto';
-import { CustomerReturnDto } from '@/app/presentation/dtos/customerReturnDto';
+import { CustomerAddDto } from '@/app/appCore/dtos/customerAddDto';
+import { CustomerReturnDto } from '@/app/appCore/dtos/customerReturnDto';
+import { CustomerUpdateDto } from '@/app/appCore/dtos/customerUpdateDto';
 
 @Service()
 export class CustomerService implements ICustomerRepository {
@@ -35,5 +36,9 @@ export class CustomerService implements ICustomerRepository {
     public enableCustomer(id: number): Observable<HttpResponse<Object>> {
        const url:string = `${this.baseUrl}/${"api/Customer/EnableAsync"}/${id}`;
        return this.http.patch(url, null, { observe: 'response' });
+    }
+    public updateCustomer(id: number, customer: CustomerUpdateDto) : Observable<HttpResponse<Object>> {
+        const url:string = `${this.baseUrl}/${"api/Customer/UpdateAsync"}/${id}`;
+        return this.http.put(url, customer, { observe: 'response' });
     }
 }

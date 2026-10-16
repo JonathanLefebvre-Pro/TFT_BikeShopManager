@@ -1,13 +1,13 @@
 import { Customer } from '@/app/domain/customer';
-import { DatePipe } from '@angular/common';
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormTextInput } from '../../shared/form-text-input/form-text-input';
 import { FormDateInput } from '../../shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '../../shared/form-checkbox-input/form-checkbox-input';
 import { CustomerService } from '@/app/infrastructure/services/customer-service';
 import { UpdateCustomerFormData } from '@/app/presentation/forms/updateCustomerFormData';
 import { email, form, maxLength, minLength, required, submit } from '@angular/forms/signals';
-import { CustomerUpdateDto } from '@/app/presentation/dtos/customerUpdateDto';
+import { CustomerUpdateDto } from '@/app/appCore/dtos/customerUpdateDto';
+import { formatDate } from '@angular/common';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormCheckboxInput],
@@ -17,25 +17,24 @@ import { CustomerUpdateDto } from '@/app/presentation/dtos/customerUpdateDto';
 })
 export class CustomerEditPanel implements OnInit {
 
-  constructor(public datepipe: DatePipe){}
-
   ngOnInit(): void {
-    /*this.customerModel.set({
-      firstName: this.customer()?.user.firstName,
-      lastName: '',
-      vatNumber: '',
-      email: '',
-      phoneNumber: '',
-      address: '',
-      city: '',
-      zipCode: '',
-      country: '',
-      birthDate: null,
+    this.customerModel.set({
+      vatNumber: this.customer().vatNumber ?? '',
+      firstName: this.customer().user.firstName,
+      lastName: this.customer().user.lastName,
+      email: this.customer().user.email ?? '',
+      phoneNumber: this.customer().user.phoneNumber ?? '',
+      address: this.customer().user.address ?? '',
+      city: this.customer().user.city ?? '',
+      zipCode: this.customer().user.zipCode ?? '',
+      country: this.customer().user.country ?? '',
+      birthDate: this.customer().user.birthDate ?? null,
       allowMarketing: true
-    });*/
+    });
   }
 
-  customer = input.required<Customer | null>();
+  customer = input.required<Customer>();
+  onUpdateCustomerEvent = output<{id: number, obj: CustomerUpdateDto}>();
   
   customerService = inject(CustomerService);
   customerModel = signal<UpdateCustomerFormData>({
@@ -86,20 +85,11 @@ export class CustomerEditPanel implements OnInit {
         city: (model.city === "") ? null : model.city,
         zipCode: (model.zipCode === "") ? null : model.zipCode,
         country: (model.country === "") ? null : model.country,
-        birthDate: (model.birthDate === null) ? null : this.datepipe.transform(model.birthDate, 'yyyy-MM-dd'),
+        birthDate: (model.birthDate === null) ? null : formatDate(model.birthDate, 'yyyy-MM-dd', 'en-US'),
         allowMarketing: model.allowMarketing
       }
 
-      /*this.customerService.updateCustomer(updateCustomerDto).subscribe({
-        next: (res) => {
-          console.log("Result : " + JSON.stringify(res));
-          // JSON.parse()
-        },
-        error: (error) => {
-          console.log("Error : " + JSON.stringify(error));
-          console.log(JSON.stringify(updateCustomerDto));
-        }
-      });*/
+      this.onUpdateCustomerEvent.emit({id: this.customer().id, obj: customerUpdateDto});
     });
   }
 }

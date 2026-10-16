@@ -2,7 +2,7 @@ import { AddCustomerFormData } from '@/app/presentation/forms/addCustomerFormDat
 import { CustomerService } from '@/app/infrastructure/services/customer-service';
 import { Component, inject, signal } from '@angular/core';
 import { email, form, maxLength, minLength, required, submit } from '@angular/forms/signals';
-import { CustomerAddDto } from '@/app/presentation/dtos/customerAddDto';
+import { CustomerAddDto } from '@/app/appCore/dtos/customerAddDto';
 import { DatePipe } from '@angular/common';
 import { FormTextInput } from '../../shared/form-text-input/form-text-input';
 import { FormDateInput } from '../../shared/form-date-input/form-date-input';

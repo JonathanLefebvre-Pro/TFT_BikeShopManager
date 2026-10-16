@@ -5,6 +5,7 @@ import { CustomerEditPanel } from '../customer-edit-panel/customer-edit-panel';
 import { Customer } from '@/app/domain/customer';
 import { CustomerService } from '@/app/infrastructure/services/customer-service';
 import { CustomerDtoMapper } from '@/app/presentation/mappers/customer-dto-mapper';
+import { CustomerUpdateDto } from '@/app/appCore/dtos/customerUpdateDto';
 
 @Component({
   imports: [CustomersTable, AddCustomer, CustomerEditPanel],
@@ -18,7 +19,7 @@ export class CustomersPage implements OnInit {
 
   protected readonly customers = signal<Customer[]>([]);
   protected readonly isLoaded = signal<boolean>(false);
-  protected readonly lastEditedCustomerId = signal<Customer | null>(null);
+  protected readonly lastEditedCustomer = signal<Customer | null>(null);
 
   ngOnInit(): void {
     this.customerService.getCustomers().subscribe({
@@ -55,6 +56,8 @@ export class CustomersPage implements OnInit {
     });
   }
   handleEditCustomer(customerId: number) {
+    this.lastEditedCustomer.set(null);
+
     if(!this.isLoaded())
       return;
 
@@ -63,9 +66,18 @@ export class CustomersPage implements OnInit {
 
     const customer: Customer | undefined = this.customers().find(c => c.id === customerId);
     if(customer !== null && customer !== undefined)
-      this.lastEditedCustomerId.set(customer);
+      this.lastEditedCustomer.set(customer);
   }
-  handleSaveCustomer() {
-
+  handleUpdateCustomer(event : {id: number, obj: CustomerUpdateDto}) {
+    this.customerService.updateCustomer(event.id, event.obj).subscribe({
+        next: (res) => {
+          console.log("Result : " + JSON.stringify(res));
+          // JSON.parse()
+        },
+        error: (error) => {
+          console.log("Error : " + JSON.stringify(error));
+          console.log(JSON.stringify(event.obj));
+        }
+    });
   }
 }

@@ -1,15 +1,18 @@
 @if(isLoaded()) {
     <app-customers-table 
     [customers]="customers()"
-    (onEditCustomerEvent)="handleEditCustomer($event)"
-    (onSaveCustomerEvent)="handleSaveCustomer()"/>
+    (onEnableCustomerEvent)="handleEnableCustomer($event)"
+    (onDisableCustomerEvent)="handleDisableCustomer($event)"
+    (onEditCustomerEvent)="handleEditCustomer($event)"/>
 }
 @else {
     <p>There is no customers !</p>
 }
 
-@if(isLoaded() && lastEditedCustomerId() !== null) {
-    <app-customer-edit-panel [customer]="lastEditedCustomerId()"/>
+@if(isLoaded() && lastEditedCustomer() !== null) {
+    <app-customer-edit-panel 
+    [customer]="lastEditedCustomer()!" 
+    (onUpdateCustomerEvent)="handleUpdateCustomer($event)"/>
 }
 
 <app-add-customer/>
