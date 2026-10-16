@@ -1,10 +1,12 @@
 <div class="formCheckboxInput-{{id()}}">
     <label [for]="id()">{{label()}}</label>
-    <input type="checkbox" [id]="id()" [formField]="field()"/>
+
+        <input type="checkbox" [id]="id()" [formField]="field()"/>
+
     @if (fieldState().invalid() && fieldState().touched()) {
         <div class="error">
         @for (error of fieldState().errors(); track error.kind) {
-            <span>{{ error.message }}</span>
+            <span class="error-message">{{ error.message }}</span>
         }
         </div>
     }
