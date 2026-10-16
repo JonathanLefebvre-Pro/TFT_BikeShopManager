@@ -1,6 +1,6 @@
 import { AddCustomerFormData } from '@/app/presentation/forms/addCustomerFormData';
 import { CustomerService } from '@/app/infrastructure/services/customer-service';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { email, form, maxLength, minLength, required, submit } from '@angular/forms/signals';
 import { CustomerAddDto } from '@/app/appCore/dtos/customerAddDto';
 import { DatePipe } from '@angular/common';
@@ -16,6 +16,8 @@ import { FormCheckboxInput } from '../../shared/form-checkbox-input/form-checkbo
 })
 export class AddCustomer {
 
+  onAddCustomerEvent = output<number>();
+  
   customerService = inject(CustomerService);
   customerModel = signal<AddCustomerFormData>({
       firstName: '',
@@ -74,7 +76,9 @@ export class AddCustomer {
       this.customerService.addCustomer(customerAddDto).subscribe({
         next: (res) => {
           console.log("Result : " + JSON.stringify(res));
-          // JSON.parse()
+          this.onAddCustomerEvent.emit(res);
+          //TODO : Clear form fields
+
         },
         error: (error) => {
           console.log("Error : " + JSON.stringify(error));

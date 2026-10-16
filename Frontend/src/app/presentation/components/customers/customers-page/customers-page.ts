@@ -88,6 +88,8 @@ export class CustomersPage implements OnInit {
   }
   handleCancelUpdateCustomer() {
     this.init();
-    //this.lastEditedCustomer.set(null);
+  }
+  handleAddCustomer($customerId: number) {
+    this.init();
   }
 }
