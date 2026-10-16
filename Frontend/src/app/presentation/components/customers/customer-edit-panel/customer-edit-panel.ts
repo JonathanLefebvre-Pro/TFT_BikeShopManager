@@ -29,7 +29,7 @@ export class CustomerEditPanel implements OnInit {
       zipCode: this.customer().user.zipCode ?? '',
       country: this.customer().user.country ?? '',
       birthDate: this.customer().user.birthDate ?? null,
-      allowMarketing: true
+      allowMarketing: this.customer().user.allowMarketing
     });
   }
 
