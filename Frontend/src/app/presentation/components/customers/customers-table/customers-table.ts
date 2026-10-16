@@ -1,8 +1,6 @@
-import { Component, inject, OnInit, signal, model, output } from '@angular/core';
+import { Component, output, input } from '@angular/core';
 import { CustomerTableRow } from '../customer-table-row/customer-table-row';
-import { CustomerService } from '../../../../infrastructure/services/customer-service';
 import { Customer } from '../../../../domain/customer';
-import { CustomerDtoMapper } from '@/app/presentation/mappers/customer-dto-mapper';
 
 @Component({
   imports: [CustomerTableRow],
@@ -10,36 +8,20 @@ import { CustomerDtoMapper } from '@/app/presentation/mappers/customer-dto-mappe
   styleUrl: './customers-table.scss',
   templateUrl: './customers-table.html',
 })
-export class CustomersTable implements OnInit {
-  protected readonly customerService : CustomerService = inject(CustomerService);
-  protected readonly customerDtoMapper : CustomerDtoMapper = inject(CustomerDtoMapper);
-  readonly customers = signal<Customer[]>([]);
-  readonly isLoaded = signal<boolean>(false);
+export class CustomersTable {
+  readonly customers = input.required<Customer[]>();
 
-  onEditCustomerEvent = output<Customer>();
-  onSaveCustomerEvent = output();
+  onEnableCustomerEvent = output<number>();
+  onDisableCustomerEvent = output<number>();
+  onEditCustomerEvent = output<number>();
 
-  ngOnInit(): void {
-    this.customerService.getCustomers().subscribe({
-      next : (res) => {
-        this.isLoaded.set(false);
-        this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
-        this.isLoaded.set(true);
-      },
-      error: (error) => {
-        this.isLoaded.set(false);
-        console.error(error);
-      }
-    })
+  handleCustomerEnable(customerId: number){
+    this.onEnableCustomerEvent.emit(customerId);
   }
-
-  handleCustomerEdit(customer: Customer) {
-    //console.log("handle edit log from customers table : " + customer.id);
-    this.onEditCustomerEvent.emit(customer);
+  handleCustomerDisable(customerId: number){
+    this.onDisableCustomerEvent.emit(customerId);
   }
-
-  handleCustomerSave() {
-    //console.log("Handle save log from customers table");
-    this.onSaveCustomerEvent.emit();
+  handleCustomerEdit(customerId: number) {
+    this.onEditCustomerEvent.emit(customerId);
   }
 }

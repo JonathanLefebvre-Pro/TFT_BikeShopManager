@@ -1,5 +1,5 @@
 import { inject, Service } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ICustomerRepository } from '@/app/appCore/abstraction/repositories/icustomer-repository';
 import { CustomerAddDto } from '@/app/presentation/dtos/customerAddDto';
@@ -27,13 +27,13 @@ export class CustomerService implements ICustomerRepository {
         return this.http.post<number>(url, customer);
     }
 
-    public disableCustomer(id: number): Observable<Object> {
+    public disableCustomer(id: number): Observable<HttpResponse<Object>> {
        const url:string = `${this.baseUrl}/${"api/Customer/DisableAsync"}/${id}`;
-       return this.http.patch(url, null);
+       return this.http.patch(url, null, { observe: 'response' });
     }
 
-    public enableCustomer(id: number): Observable<Object> {
+    public enableCustomer(id: number): Observable<HttpResponse<Object>> {
        const url:string = `${this.baseUrl}/${"api/Customer/EnableAsync"}/${id}`;
-       return this.http.patch(url, null);
+       return this.http.patch(url, null, { observe: 'response' });
     }
 }

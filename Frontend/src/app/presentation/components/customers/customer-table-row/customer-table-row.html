@@ -40,16 +40,9 @@
         </div>
 
         <div>
-            @if(!isEditModeEnabled())
-            {
-                <button type="button" class="edit" [disabled]="!customer().isActive" (click)="handleEditCustomer()">
-                    Edit
-                </button>
-            }@else {
-                <button type="button" class="save" (click)="handleSaveCustomer()">
-                    Save
-                </button>
-            }
+            <button type="button" class="edit" [disabled]="!customer().isActive || isEditModeEnabled()" (click)="handleEditCustomer()">
+                Edit
+            </button>
         </div>
     </td>
 </tr>

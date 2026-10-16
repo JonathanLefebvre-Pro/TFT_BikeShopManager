@@ -1,6 +1,6 @@
 import { Customer } from '@/app/domain/customer';
 import { DatePipe } from '@angular/common';
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormTextInput } from '../../shared/form-text-input/form-text-input';
 import { FormDateInput } from '../../shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '../../shared/form-checkbox-input/form-checkbox-input';
@@ -15,26 +15,42 @@ import { CustomerUpdateDto } from '@/app/presentation/dtos/customerUpdateDto';
   styleUrl: './customer-edit-panel.scss',
   templateUrl: './customer-edit-panel.html',
 })
-export class CustomerEditPanel {
+export class CustomerEditPanel implements OnInit {
 
   constructor(public datepipe: DatePipe){}
+
+  ngOnInit(): void {
+    /*this.customerModel.set({
+      firstName: this.customer()?.user.firstName,
+      lastName: '',
+      vatNumber: '',
+      email: '',
+      phoneNumber: '',
+      address: '',
+      city: '',
+      zipCode: '',
+      country: '',
+      birthDate: null,
+      allowMarketing: true
+    });*/
+  }
 
   customer = input.required<Customer | null>();
   
   customerService = inject(CustomerService);
-    customerModel = signal<UpdateCustomerFormData>({
-        firstName: '',
-        lastName: '',
-        vatNumber: '',
-        email: '',
-        phoneNumber: '',
-        address: '',
-        city: '',
-        zipCode: '',
-        country: '',
-        birthDate: null,
-        allowMarketing: true
-    });
+  customerModel = signal<UpdateCustomerFormData>({
+      firstName: '',
+      lastName: '',
+      vatNumber: '',
+      email: '',
+      phoneNumber: '',
+      address: '',
+      city: '',
+      zipCode: '',
+      country: '',
+      birthDate: null,
+      allowMarketing: true
+  });
 
   customerForm = form(this.customerModel, (fieldPath) => {
     required(fieldPath.firstName, {message: "Firstname is required !"}),

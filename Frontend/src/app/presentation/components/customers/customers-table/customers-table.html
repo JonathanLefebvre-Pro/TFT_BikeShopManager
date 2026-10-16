@@ -20,15 +20,9 @@
         </tr>
     </thead>
     <tbody class="customerTableBody">
-        @if(isLoaded()) {
-            @for (customer of customers(); track customer.id) {
-                <app-customer-table-row [customer]="customer" 
-                (onEditCustomerEvent)="handleCustomerEdit($event)"
-                (onSaveCustomerEvent)="handleCustomerSave()"/>
-            }
-        }
-        @else {
-            <p>There is no customers !</p>
+        @for (customer of customers(); track customer.id) {
+            <app-customer-table-row [customer]="customer" 
+            (onEditCustomerEvent)="handleCustomerEdit($event)"/>
         }
     </tbody>
 </table>
