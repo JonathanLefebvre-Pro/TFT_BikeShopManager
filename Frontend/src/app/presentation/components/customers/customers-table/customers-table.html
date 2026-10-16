@@ -24,7 +24,7 @@
         {
 
             @for (customer of customers(); track customer.id) {
-                <app-customer-table-row 
+                <app-customer-table-row #customerTableRow
                 [customer]="customer" 
                 (onEnableCustomerEvent)="handleCustomerEnable($event)"
                 (onDisableCustomerEvent)="handleCustomerDisable($event)"

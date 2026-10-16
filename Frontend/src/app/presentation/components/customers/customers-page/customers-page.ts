@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { CustomersTable } from '../customers-table/customers-table';
 import { AddCustomer } from '../add-customer/add-customer';
 import { CustomerEditPanel } from '../customer-edit-panel/customer-edit-panel';
@@ -19,6 +19,9 @@ export class CustomersPage implements OnInit {
 
   protected readonly customers = signal<Customer[]>([]);
   protected readonly lastEditedCustomer = signal<Customer | null>(null);
+
+  protected readonly customersTableElement = viewChild(CustomersTable);
+  protected readonly editPanelElement = viewChild(CustomerEditPanel);
 
   ngOnInit(): void {
     this.init();
@@ -66,7 +69,10 @@ export class CustomersPage implements OnInit {
 
     const customer: Customer | undefined = this.customers().find(c => c.id === customerId);
     if(customer !== null && customer !== undefined)
+    {
+      this.customersTableElement()?.notifyEditModeEnabled();
       this.lastEditedCustomer.set(customer);
+    }
   }
   handleUpdateCustomer(event : {id: number, obj: CustomerUpdateDto}) {
     this.customerService.updateCustomer(event.id, event.obj).subscribe({
@@ -79,5 +85,9 @@ export class CustomersPage implements OnInit {
           console.log(JSON.stringify(event.obj));
         }
     });
+  }
+  handleCancelUpdateCustomer() {
+    this.init();
+    //this.lastEditedCustomer.set(null);
   }
 }

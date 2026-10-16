@@ -1,4 +1,4 @@
-import { Component, output, input } from '@angular/core';
+import { Component, output, input, signal, viewChildren } from '@angular/core';
 import { CustomerTableRow } from '../customer-table-row/customer-table-row';
 import { Customer } from '../../../../domain/customer';
 
@@ -15,6 +15,8 @@ export class CustomersTable {
   onDisableCustomerEvent = output<number>();
   onEditCustomerEvent = output<number>();
 
+  protected readonly customerTableRowElements = viewChildren(CustomerTableRow);
+
   handleCustomerEnable(customerId: number){
     this.onEnableCustomerEvent.emit(customerId);
   }
@@ -23,5 +25,27 @@ export class CustomersTable {
   }
   handleCustomerEdit(customerId: number) {
     this.onEditCustomerEvent.emit(customerId);
+  }
+
+  notifyEditModeEnabled() {
+    if(this.customerTableRowElements() !== null && 
+      this.customerTableRowElements().length > 0)
+      {
+        for (let index = 0; index < this.customerTableRowElements().length; index++) {
+          const element = this.customerTableRowElements()[index];
+          element.disableEditMode();
+        }
+      }
+  }
+  notifyEditModeDisabled() {
+    if(this.customerTableRowElements() !== null && 
+      this.customerTableRowElements().length > 0)
+      {
+        for (let index = 0; index < this.customerTableRowElements().length; index++) {
+          const element = this.customerTableRowElements()[index];
+          if(element.customer().isActive)
+            element.enableEditMode();
+        }
+      }
   }
 }

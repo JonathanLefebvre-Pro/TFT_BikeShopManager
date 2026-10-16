@@ -16,6 +16,7 @@
     
     <div class="formGroup-Submit">
         <input type="submit" value="Save" [disabled]="customerForm().invalid()"/>
+        <input type="button" value="Cancel" (click)="handleCancel($event)"/>
     </div>
 
 </form>

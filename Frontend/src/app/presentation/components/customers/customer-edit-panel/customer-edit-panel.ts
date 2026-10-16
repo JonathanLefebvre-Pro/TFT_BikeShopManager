@@ -35,6 +35,7 @@ export class CustomerEditPanel implements OnInit {
 
   customer = input.required<Customer>();
   onUpdateCustomerEvent = output<{id: number, obj: CustomerUpdateDto}>();
+  onCancelUpdateCustomerEvent = output();
   
   customerService = inject(CustomerService);
   customerModel = signal<UpdateCustomerFormData>({
@@ -91,5 +92,10 @@ export class CustomerEditPanel implements OnInit {
 
       this.onUpdateCustomerEvent.emit({id: this.customer().id, obj: customerUpdateDto});
     });
+  }
+  handleCancel(event: Event) {
+    event.preventDefault();
+
+    this.onCancelUpdateCustomerEvent.emit();
   }
 }
