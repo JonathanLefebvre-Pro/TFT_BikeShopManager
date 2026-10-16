@@ -1,20 +1,20 @@
-import { AddCustomerFormData } from '@/app/presentation/forms/addCustomerFormData';
-import { CustomerService } from '@/app/infrastructure/services/customer-service';
+import { AddCustomerFormData } from '@presentation/forms/addCustomerFormData';
+import { CustomerService } from '@infrastructure/services/customer-service';
 import { Component, inject, output, signal } from '@angular/core';
 import { email, form, maxLength, minLength, required, FormRoot } from '@angular/forms/signals';
-import { CustomerAddDto } from '@/app/appCore/dtos/customerAddDto';
+import { CustomerAddDto } from '@appCore/dtos/customerAddDto';
 import { DatePipe } from '@angular/common';
-import { FormTextInput } from '../../shared/form-text-input/form-text-input';
-import { FormDateInput } from '../../shared/form-date-input/form-date-input';
-import { FormCheckboxInput } from '../../shared/form-checkbox-input/form-checkbox-input';
+import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
+import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
+import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot],
-  selector: 'app-add-customer',
-  styleUrl: './add-customer.scss',
-  templateUrl: './add-customer.html',
+  selector: 'app-customer-add-panel',
+  styleUrl: './customer-add-panel.scss',
+  templateUrl: './customer-add-panel.html',
 })
-export class AddCustomer {
+export class CustomerAddPanel {
 
   customerService = inject(CustomerService);
   onAddCustomerEvent = output<number>();

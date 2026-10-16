@@ -1,6 +1,6 @@
 import { Component, output, input, signal, viewChildren } from '@angular/core';
-import { CustomerTableRow } from '../customer-table-row/customer-table-row';
-import { Customer } from '../../../../domain/customer';
+import { CustomerTableRow } from '@presentation/components/customers/customer-table-row/customer-table-row';
+import { Customer } from '@domain/customer';
 
 @Component({
   imports: [CustomerTableRow],

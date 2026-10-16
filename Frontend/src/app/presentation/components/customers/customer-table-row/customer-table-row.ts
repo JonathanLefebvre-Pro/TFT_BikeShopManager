@@ -1,5 +1,5 @@
 import { Component, input, OnChanges, output, signal, SimpleChanges } from '@angular/core';
-import { Customer } from '../../../../domain/customer';
+import { Customer } from '@domain/customer';
 import { DatePipe } from '@angular/common';
 
 @Component({

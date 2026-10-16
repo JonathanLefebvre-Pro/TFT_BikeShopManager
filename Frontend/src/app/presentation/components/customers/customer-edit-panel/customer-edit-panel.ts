@@ -1,12 +1,12 @@
-import { Customer } from '@/app/domain/customer';
+import { Customer } from '@domain/customer';
 import { Component, inject, input, OnInit, output, signal } from '@angular/core';
-import { FormTextInput } from '../../shared/form-text-input/form-text-input';
-import { FormDateInput } from '../../shared/form-date-input/form-date-input';
-import { FormCheckboxInput } from '../../shared/form-checkbox-input/form-checkbox-input';
-import { CustomerService } from '@/app/infrastructure/services/customer-service';
-import { UpdateCustomerFormData } from '@/app/presentation/forms/updateCustomerFormData';
+import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
+import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
+import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
+import { CustomerService } from '@infrastructure/services/customer-service';
+import { UpdateCustomerFormData } from '@presentation/forms/updateCustomerFormData';
 import { email, form, maxLength, minLength, required, submit, FormRoot } from '@angular/forms/signals';
-import { CustomerUpdateDto } from '@/app/appCore/dtos/customerUpdateDto';
+import { CustomerUpdateDto } from '@appCore/dtos/customerUpdateDto';
 import { DatePipe } from '@angular/common';
 
 @Component({

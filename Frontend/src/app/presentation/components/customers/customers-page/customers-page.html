@@ -1,14 +1,8 @@
-<app-customers-table #customersTable
-[customers]="customers()"
-(onEnableCustomerEvent)="handleEnableCustomer($event)"
-(onDisableCustomerEvent)="handleDisableCustomer($event)"
-(onEditCustomerEvent)="handleEditCustomer($event)"/>
+  <nav>
+    <a [routerLink]="['edit']">Edit</a>
+    <a [routerLink]="['add']">Add</a>
+  </nav>
 
-@if(lastEditedCustomer() !== null) {
-    <app-customer-edit-panel #editPanel
-    [customer]="lastEditedCustomer()!"
-    (onUpdateCustomerEvent)="handleUpdateCustomer($event)"
-    (onCancelUpdateCustomerEvent)="handleCancelUpdateCustomer()"/>
-}
-
-<app-add-customer (onAddCustomerEvent)="handleAddCustomer($event)"/>
+  <div class="customers-content">
+      <router-outlet />
+  </div>
