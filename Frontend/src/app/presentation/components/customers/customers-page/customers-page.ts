@@ -18,7 +18,6 @@ export class CustomersPage implements OnInit {
   protected readonly customerDtoMapper : CustomerDtoMapper = inject(CustomerDtoMapper);
 
   protected readonly customers = signal<Customer[]>([]);
-  protected readonly isLoaded = signal<boolean>(false);
   protected readonly lastEditedCustomer = signal<Customer | null>(null);
 
   ngOnInit(): void {
@@ -27,11 +26,9 @@ export class CustomersPage implements OnInit {
 
   init(){
     this.lastEditedCustomer.set(null);
-    this.isLoaded.set(false);
     this.customerService.getCustomers().subscribe({
       next : (res) => {
         this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
-        this.isLoaded.set(true);
       },
       error: (error) => {
         console.error(error);
@@ -63,9 +60,6 @@ export class CustomersPage implements OnInit {
   }
   handleEditCustomer(customerId: number) {
     this.lastEditedCustomer.set(null);
-
-    if(!this.isLoaded())
-      return;
 
     if(this.customers() === null || this.customers().length <= 0)
       return;

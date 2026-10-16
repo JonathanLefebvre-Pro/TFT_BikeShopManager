@@ -20,12 +20,18 @@
         </tr>
     </thead>
     <tbody class="customerTableBody">
-        @for (customer of customers(); track customer.id) {
-            <app-customer-table-row 
-            [customer]="customer" 
-            (onEnableCustomerEvent)="handleCustomerEnable($event)"
-            (onDisableCustomerEvent)="handleCustomerDisable($event)"
-            (onEditCustomerEvent)="handleCustomerEdit($event)"/>
+        @if(customers() !== null && customers().length > 0)
+        {
+
+            @for (customer of customers(); track customer.id) {
+                <app-customer-table-row 
+                [customer]="customer" 
+                (onEnableCustomerEvent)="handleCustomerEnable($event)"
+                (onDisableCustomerEvent)="handleCustomerDisable($event)"
+                (onEditCustomerEvent)="handleCustomerEdit($event)"/>
+            }
+        }@else {
+            <p>There is no customers !</p>
         }
     </tbody>
 </table>
