@@ -1,3 +1,4 @@
 <label>Search :</label>
 <input type="text" [value]="inputValue()" (change)="inputValue.set($event.target.value)"/>
 <input type="button" value="Send" (click)="handleSubmit()"/>
+<input type="button" value="Clear" (click)="handleClear()"/>

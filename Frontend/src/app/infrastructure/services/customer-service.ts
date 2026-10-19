@@ -9,7 +9,6 @@ import { CustomerUpdateDto } from '@/app/appCore/dtos/customerUpdateDto';
 @Service()
 export class CustomerService implements ICustomerRepository {
 
- 
     protected readonly baseUrl = 'https://localhost:7105';
     readonly http = inject(HttpClient);
 
@@ -21,6 +20,11 @@ export class CustomerService implements ICustomerRepository {
     public getCustomerById(id: number) : Observable<CustomerReturnDto> {
         const url:string = `${this.baseUrl}/${"api/Customer/GetAsync"}/${id}`;
         return this.http.get<CustomerReturnDto>(url);
+    }
+
+    public getCustomersByKeyword(keyword: string): Observable<CustomerReturnDto[]> {
+        const url: string = `${this.baseUrl}/${"api/Customer/GetAsyncByKeyword"}`;
+        return this.http.post<CustomerReturnDto[]>(url, { keyword: keyword });
     }
 
     public addCustomer(customer: CustomerAddDto) : Observable<number> {

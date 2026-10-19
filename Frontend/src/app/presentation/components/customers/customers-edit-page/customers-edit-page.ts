@@ -36,7 +36,7 @@ export class CustomersEditPage implements OnInit {
       error: (error) => {
         //console.error(error);
       }
-    })
+    });
   }
 
   protected handleEnableCustomer(customerId: number) {
@@ -87,6 +87,20 @@ export class CustomersEditPage implements OnInit {
     });
   }
   protected handleCancelUpdateCustomer() {
+    this.init();
+  }
+
+  protected handleSearchCustomers(keyword : string) {
+      this.customerService.getCustomersByKeyword(keyword).subscribe({
+        next: (res) => {
+          this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
+  }
+  protected onClearSearchCustomers() {
     this.init();
   }
 }

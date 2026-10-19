@@ -1,6 +1,8 @@
 <h1>View & Edit Customers</h1>
 
-<app-customer-search-input />
+<app-customer-search-input 
+(onSearchCustomers)="handleSearchCustomers($event)" 
+(onClearSearchCustomers)="onClearSearchCustomers()" />
 
 <app-customers-table #customersTable
 [customers]="customers()"

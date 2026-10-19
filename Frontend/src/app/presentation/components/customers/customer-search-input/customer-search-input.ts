@@ -8,12 +8,16 @@ import { Component, model, output } from '@angular/core';
 })
 export class CustomerSearchInput {
 
-  public onSearchCustomer = output<string>();
+  public onSearchCustomers = output<string>();
+  public onClearSearchCustomers = output();
   
   protected inputValue = model<string>('');
 
   protected handleSubmit() {
-    this.onSearchCustomer.emit(this.inputValue());
-    console.log("Search input value : " + this.inputValue());
+    this.onSearchCustomers.emit(this.inputValue());
+  }
+  protected handleClear() {
+    this.inputValue.set('');
+    this.onClearSearchCustomers.emit();
   }
 }
