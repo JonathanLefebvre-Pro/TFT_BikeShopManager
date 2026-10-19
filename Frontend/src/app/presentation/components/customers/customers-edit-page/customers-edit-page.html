@@ -1,5 +1,7 @@
 <h1>View & Edit Customers</h1>
 
+<app-customer-search-input />
+
 <app-customers-table #customersTable
 [customers]="customers()"
 (onEnableCustomerEvent)="handleEnableCustomer($event)"

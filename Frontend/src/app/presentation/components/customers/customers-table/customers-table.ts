@@ -9,25 +9,25 @@ import { Customer } from '@domain/customer';
   templateUrl: './customers-table.html',
 })
 export class CustomersTable {
-  readonly customers = input.required<Customer[]>();
+  public readonly customers = input.required<Customer[]>();
 
-  onEnableCustomerEvent = output<number>();
-  onDisableCustomerEvent = output<number>();
-  onEditCustomerEvent = output<number>();
+  public onEnableCustomerEvent = output<number>();
+  public onDisableCustomerEvent = output<number>();
+  public onEditCustomerEvent = output<number>();
 
   protected readonly customerTableRowElements = viewChildren(CustomerTableRow);
 
-  handleCustomerEnable(customerId: number){
+  protected handleCustomerEnable(customerId: number){
     this.onEnableCustomerEvent.emit(customerId);
   }
-  handleCustomerDisable(customerId: number){
+  protected handleCustomerDisable(customerId: number){
     this.onDisableCustomerEvent.emit(customerId);
   }
-  handleCustomerEdit(customerId: number) {
+  protected handleCustomerEdit(customerId: number) {
     this.onEditCustomerEvent.emit(customerId);
   }
 
-  notifyEditModeEnabled() {
+  public notifyEditModeEnabled() {
     if(this.customerTableRowElements() !== null && 
       this.customerTableRowElements().length > 0)
       {
@@ -37,7 +37,7 @@ export class CustomersTable {
         }
       }
   }
-  notifyEditModeDisabled() {
+  public notifyEditModeDisabled() {
     if(this.customerTableRowElements() !== null && 
       this.customerTableRowElements().length > 0)
       {

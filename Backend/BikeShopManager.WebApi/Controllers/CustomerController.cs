@@ -36,6 +36,28 @@ namespace BikeShopManager.WebApi.Controllers
             return this.NotFound(result.Error);
         }
 
+        [Route("GetAsyncByKeyword")]
+        [HttpPost]
+        public async Task<IActionResult> GetAsyncByKeyword([FromBody] string[] keywords)
+        {
+            Result<IEnumerable<Customer>> result = await Dispatcher.SendQueryAsync<
+                GetCustomersQuery,
+                IEnumerable<Customer>
+            >(new GetCustomersQuery());
+
+            if (result.IsSuccess)
+            {
+                //Convert domain object list to list of dto's
+                List<CustomerReturnDto> dtos = new List<CustomerReturnDto>();
+                foreach (Customer customer in result.Data)
+                    dtos.Add(customer.ToCustomerReturnDto());
+
+                return this.Ok(dtos);
+            }
+
+            return this.NotFound(result.Error);
+        }
+
         [Route("GetAsync/{id}")]
         [HttpGet]
         public async Task<IActionResult> GetByIdAsync(int id)

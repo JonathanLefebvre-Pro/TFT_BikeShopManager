@@ -19,7 +19,7 @@ export class CustomerEditPanel implements OnInit {
 
   constructor(public datepipe: DatePipe){}
   
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.customerModel.set({
       vatNumber: this.customer().vatNumber ?? '',
       firstName: this.customer().user.firstName,
@@ -35,9 +35,9 @@ export class CustomerEditPanel implements OnInit {
     });
   }
 
-  customer = input.required<Customer>();
-  onUpdateCustomerEvent = output<{id: number, obj: CustomerUpdateDto}>();
-  onCancelUpdateCustomerEvent = output();
+  public customer = input.required<Customer>();
+  public onUpdateCustomerEvent = output<{id: number, obj: CustomerUpdateDto}>();
+  public onCancelUpdateCustomerEvent = output();
   
   private readonly INITIAL_MODEL = {
       firstName: '',
@@ -52,10 +52,10 @@ export class CustomerEditPanel implements OnInit {
       birthDate: null,
       allowMarketing: true
   };
-  customerService = inject(CustomerService);
-  customerModel = signal<UpdateCustomerFormData>({...this.INITIAL_MODEL});
+  private customerService = inject(CustomerService);
+  protected customerModel = signal<UpdateCustomerFormData>({...this.INITIAL_MODEL});
 
-  customerForm = form(this.customerModel, (schemaPath) => {
+  protected customerForm = form(this.customerModel, (schemaPath) => {
     required(schemaPath.firstName, {message: "Firstname is required !"}),
     minLength(schemaPath.firstName, 5, {message: "Firstname min length : 5 !"}),
     maxLength(schemaPath.firstName, 100,  {message: "Firstname max length : 100 !"}),
@@ -94,7 +94,7 @@ export class CustomerEditPanel implements OnInit {
     }
   });
 
-  handleCancel(event: Event) {
+  protected handleCancel(event: Event) {
     event.preventDefault();
 
     this.onCancelUpdateCustomerEvent.emit();
