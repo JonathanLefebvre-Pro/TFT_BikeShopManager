@@ -7,8 +7,9 @@ import { CustomersEditPage } from '@presentation/components/customers/customers-
 import { CustomersAddPage } from './presentation/components/customers/customers-add-page/customers-add-page';
 
 export const routes: Routes = [
+
     {
-        path: '',
+        path: 'customers',
         component: CustomersPage,
         title: 'Customers',
         children: [
@@ -20,6 +21,11 @@ export const routes: Routes = [
                 path: 'add',
                 component: CustomersAddPage,
             },
+            {
+                path: '',
+                redirectTo: 'edit',
+                pathMatch: 'full'
+            }
         ]
     },
     {
@@ -36,5 +42,14 @@ export const routes: Routes = [
         path: 'shop',
         component: DisplayShop,
         title: 'Shop',
+    },
+    {
+        path: '',
+        redirectTo: '/customers/edit',
+        pathMatch: 'full'
+    },
+    {
+        path: '**',
+        redirectTo: ''
     }
 ];
