@@ -7,6 +7,7 @@ public interface ICustomerRepository
     Task<IEnumerable<Customer>> GetCustomers();
     Task<int> CreateCustomer(int userId, string? vatNumber);
     Task<Customer?> GetCustomerById(int id);
+    Task<Customer?> GetCustomerByUserId(int id);
     Task<int> GetCustomerUserId(int id);
     Task<bool> DisableCustomer(int id);
     Task<bool> EnableCustomer(int id);

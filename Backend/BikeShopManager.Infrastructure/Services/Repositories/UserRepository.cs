@@ -89,17 +89,17 @@ public class UserRepository(IDbSession DbSession) : IUserRepository
         string getUserSqlQuery =
             @$"SELECT Id, FirstName, LastName , Email , PhoneNumber , Address , City , ZipCode , Country , BirthDate , AllowMarketing, CreatedAt, UpdatedAt 
                     FROM {_tableName}
-                    WHERE FirstName LIKE %@Keyword%
-                    OR LastName LIKE %@Keyword%
-                    OR Email LIKE %@Keyword%
-                    OR PhoneNumber LIKE %@Keyword%
-                    OR Address LIKE %@Keyword%
-                    OR City LIKE %@Keyword%
-                    OR ZipCode LIKE %@Keyword%
-                    OR Country LIKE %@Keyword%
-                    OR BirthDate LIKE %@Keyword%";
+                    WHERE FirstName LIKE @Keyword
+                    OR LastName LIKE @Keyword
+                    OR Email LIKE @Keyword
+                    OR PhoneNumber LIKE @Keyword
+                    OR Address LIKE @Keyword
+                    OR City LIKE @Keyword
+                    OR ZipCode LIKE @Keyword
+                    OR Country LIKE @Keyword
+                    OR BirthDate LIKE @Keyword";
         DynamicParameters getUserParameters = new DynamicParameters();
-        getUserParameters.Add("@Keyword", keyword);
+        getUserParameters.Add("@Keyword", "%" + keyword + "%");
 
         return await DbSession.Connection.QueryAsync<User>(
             getUserSqlQuery,

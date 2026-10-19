@@ -38,12 +38,12 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("GetAsyncByKeyword")]
         [HttpPost]
-        public async Task<IActionResult> GetAsyncByKeyword([FromBody] string[] keywords)
+        public async Task<IActionResult> GetAsyncByKeyword([FromBody] CustomerKeywordDto dto)
         {
             Result<IEnumerable<Customer>> result = await Dispatcher.SendQueryAsync<
-                GetCustomersQuery,
+                GetCustomersByKeywordQuery,
                 IEnumerable<Customer>
-            >(new GetCustomersQuery());
+            >(new GetCustomersByKeywordQuery(dto.Keyword));
 
             if (result.IsSuccess)
             {
