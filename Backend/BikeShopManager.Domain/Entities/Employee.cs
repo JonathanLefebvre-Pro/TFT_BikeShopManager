@@ -13,4 +13,5 @@ public class Employee : Audit
     public bool IsActive { get; set; } = true;
 
     public User User { get; set; } = default!;
+    public Role Role { get; set; } = default!;
 }

@@ -1,14 +1,32 @@
 import { Routes } from '@angular/router';
-import { DisplayEmployees } from './presentation/components/employees/display-employees/display-employees';
-import { DisplayStock } from './presentation/components/stock/display-stock/display-stock';
-import { DisplayShop } from './presentation/components/shop/display-shop/display-shop';
-import { CustomersPage } from './presentation/components/customers/customers-page/customers-page';
+import { CustomersPage } from '@presentation/components/customers/customers-page/customers-page';
+import { DisplayEmployees } from '@presentation/components/employees/display-employees/display-employees';
+import { DisplayStock } from '@presentation/components/stock/display-stock/display-stock';
+import { DisplayShop } from '@presentation/components/shop/display-shop/display-shop';
+import { CustomersEditPage } from '@presentation/components/customers/customers-edit-page/customers-edit-page';
+import { CustomersAddPage } from './presentation/components/customers/customers-add-page/customers-add-page';
 
 export const routes: Routes = [
+
     {
-        path: '',
+        path: 'customers',
         component: CustomersPage,
         title: 'Customers',
+        children: [
+            {
+                path: 'edit',
+                component: CustomersEditPage,
+            },
+            {
+                path: 'add',
+                component: CustomersAddPage,
+            },
+            {
+                path: '',
+                redirectTo: 'edit',
+                pathMatch: 'full'
+            }
+        ]
     },
     {
         path: 'employees',
@@ -24,5 +42,14 @@ export const routes: Routes = [
         path: 'shop',
         component: DisplayShop,
         title: 'Shop',
+    },
+    {
+        path: '',
+        redirectTo: '/customers/edit',
+        pathMatch: 'full'
+    },
+    {
+        path: '**',
+        redirectTo: ''
     }
 ];

@@ -1,47 +1,43 @@
-import { Component, inject, input } from '@angular/core';
-import { Customer } from '../../../../domain/customer';
-import { CustomerService } from '@/app/infrastructure/services/customer-service';
+import { Component, input, OnChanges, output, signal, SimpleChanges } from '@angular/core';
+import { Customer } from '@domain/customer';
+import { DatePipe } from '@angular/common';
 
 @Component({
-  imports: [],
+  imports: [DatePipe],
   selector: 'app-customer-table-row',
   styleUrl: './customer-table-row.scss',
   templateUrl: './customer-table-row.html'
 })
-export class CustomerTableRow {
-
-  customerService = inject(CustomerService);
+export class CustomerTableRow implements OnChanges {
+  
   customer = input.required<Customer>();
+  isEditModeEnabled = signal<boolean>(false);
+  
+  onEnableCustomerEvent = output<number>();
+  onDisableCustomerEvent = output<number>();
+  onEditCustomerEvent = output<number>();
 
-  enableCustomer() {
-    //console.log("Enable customer");
-    this.customerService.enableCustomer(this.customer().id).subscribe({
-      next: (res) => {
-        console.log("Result : " + JSON.stringify(res));
-      },
-      error(err) {
-        console.log("Error" + err);
-      },
-    });
+  ngOnChanges(changes: SimpleChanges): void {
+    this.isEditModeEnabled.set(false);
   }
 
-  disableCustomer() {
-    //console.log("Disable customer");
-    this.customerService.disableCustomer(this.customer().id).subscribe({
-      next: (res) => {
-        console.log("Result : " + JSON.stringify(res));
-      },
-      error(err) {
-        console.log("Error" + err);
-      },
-    });
+  handleEnableCustomer() {
+    this.onEnableCustomerEvent.emit(this.customer().id);
   }
 
-  deleteCustomer() {
-    console.log("Delete customer");
+  handleDisableCustomer() {
+    this.onDisableCustomerEvent.emit(this.customer().id);
   }
 
-  editCustomer() {
-    console.log("Edit customer");
+  handleEditCustomer() {
+    this.isEditModeEnabled.set(true);
+    this.onEditCustomerEvent.emit(this.customer().id);
+  }
+
+  disableEditMode() {
+    this.isEditModeEnabled.set(true);
+  }
+  enableEditMode() {
+    this.isEditModeEnabled.set(false);
   }
 }

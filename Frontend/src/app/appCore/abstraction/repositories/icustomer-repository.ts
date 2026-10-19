@@ -1,11 +1,14 @@
-import { Customer } from "@/app/domain/customer";
-import { AddCustomerDto } from "@/app/presentation/dtos/addCustomerDto";
+import { CustomerAddDto } from "@/app/appCore/dtos/customerAddDto";
+import { CustomerReturnDto } from '@/app/appCore/dtos/customerReturnDto';
+import { CustomerUpdateDto } from "@/app/appCore/dtos/customerUpdateDto";
+import { HttpResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 export interface ICustomerRepository {
-    getCustomers() : Observable<Customer[]>;
-    getCustomerById(id: number) : Observable<Customer>;
-    addCustomer(customer: AddCustomerDto) : Observable<number>;
-    disableCustomer(customerId: number) : Observable<Object>;
-    enableCustomer(customerId: number) : Observable<Object>;
+    getCustomers() : Observable<CustomerReturnDto[]>;
+    getCustomerById(id: number) : Observable<CustomerReturnDto>;
+    addCustomer(customer: CustomerAddDto) : Observable<number>;
+    disableCustomer(id: number) : Observable<HttpResponse<Object>>;
+    enableCustomer(id: number) : Observable<HttpResponse<Object>>;
+    updateCustomer(id: number, customer: CustomerUpdateDto) : Observable<HttpResponse<Object>>;
 }

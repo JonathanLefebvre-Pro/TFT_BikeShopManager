@@ -22,7 +22,18 @@ namespace BikeShopManager.WebApi.Controllers
                 GetCustomersQuery,
                 IEnumerable<Customer>
             >(new GetCustomersQuery());
-            return this.FromResult(result);
+
+            if (result.IsSuccess)
+            {
+                //Convert domain object list to list of dto's
+                List<CustomerReturnDto> dtos = new List<CustomerReturnDto>();
+                foreach (Customer customer in result.Data)
+                    dtos.Add(customer.ToCustomerReturnDto());
+
+                return this.Ok(dtos);
+            }
+
+            return this.NotFound(result.Error);
         }
 
         [Route("GetAsync/{id}")]
@@ -33,15 +44,20 @@ namespace BikeShopManager.WebApi.Controllers
                 GetCustomerByIdQuery,
                 Customer
             >(new GetCustomerByIdQuery(id));
-            return this.FromResult(result);
+
+            //Convert data to dto
+            if (result.IsSuccess)
+                return this.Ok(result.Data.ToCustomerReturnDto());
+
+            return this.NotFound(result.Error);
         }
 
         [Route("UpdateAsync/{id}")]
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateCustomerDto dto)
+        public async Task<IActionResult> UpdateAsync(int id, [FromBody] CustomerUpdateDto dto)
         {
             Result result = await Dispatcher.SendCommandAsync<UpdateCustomerCommand>(
-                new UpdateCustomerCommand(id, dto.User.ToEntity(), dto.Customer.ToEntity())
+                new UpdateCustomerCommand(id, dto.ToCustomerEntity(), dto.ToUserEntity())
             );
             return this.FromResult(result);
         }
@@ -68,10 +84,10 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("AddAsync")]
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] AddCustomerDto customer)
+        public async Task<IActionResult> AddAsync([FromBody] CustomerAddDto dto)
         {
             Result<int> result = await Dispatcher.SendCommandAsync<AddCustomerCommand, int>(
-                new AddCustomerCommand(customer.User.ToEntity(), customer.Customer.ToEntity())
+                new AddCustomerCommand(dto.ToCustomerEntity(), dto.ToUserEntity())
             );
 
             return this.FromResult(result);

@@ -1,10 +1,22 @@
 <tr>
     <th scope="row">{{customer().id}}</th>
-    <td>{{customer().userId}}</td>
+    <td>{{customer().user.firstName}}</td>
+    <td>{{customer().user.lastName}}</td>
+    <td>{{customer().user.email}}</td>
+    <td>{{customer().user.phoneNumber}}</td>
+    <td>{{customer().user.address}}</td>
+    <td>{{customer().user.city}}</td>
+    <td>{{customer().user.zipCode}}</td>
+    <td>{{customer().user.country}}</td>
+    <td>{{customer().user.birthDate | date:'dd/MM/yyyy'}}</td>
+    
+    <td><input type="checkbox" disabled [checked]="customer().user.allowMarketing"/></td>
     <td><input type="checkbox" disabled [checked]="customer().isActive"/></td>
-    <td>@if(customer().vatNumber === null 
-    || customer().vatNumber === undefined 
-    || customer().vatNumber === ''){
+
+    <td>
+        @if(customer().vatNumber === null 
+        || customer().vatNumber === undefined 
+        || customer().vatNumber === ''){
             <span>/</span>
         }
         @else
@@ -12,19 +24,27 @@
             {{customer().vatNumber}}
         }
     </td>
-    <td>
-        <button type="button" class="edit" [disabled]="!customer().isActive" (click)="editCustomer()">
-            Edit
-        </button>
-        @if(customer().isActive)
-        {
-            <button type="button" class="disable" (click)="disableCustomer()">
-                Disable
+
+    <td class="actionButtons">
+        <div>
+            @if(customer().isActive)
+            {
+                <button type="button" class="disable" [disabled]="isEditModeEnabled()" (click)="handleDisableCustomer()">
+                    Disable
+                </button>
+            }@else {
+                <button type="button" class="enable" [disabled]="isEditModeEnabled()" (click)="handleEnableCustomer()">
+                    Enable
+                </button>
+            }
+        </div>
+
+        <div>
+            <button type="button" class="edit" 
+            [disabled]="isEditModeEnabled() || !customer().isActive" 
+            (click)="handleEditCustomer()">
+                Edit
             </button>
-        }@else {
-            <button type="button" class="enable" (click)="enableCustomer()">
-                Enable
-            </button>
-        }
+        </div>
     </td>
 </tr>

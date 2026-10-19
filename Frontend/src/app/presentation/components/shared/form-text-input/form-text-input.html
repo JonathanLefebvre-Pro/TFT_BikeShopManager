@@ -1,0 +1,11 @@
+<div class="formTextInput-{{id()}}">
+    <label [for]="id()">{{label()}}</label>
+    <input [type]="type()" [id]="id()" [formField]="field()"/>
+    @if (fieldState().invalid() && fieldState().touched()) {
+        <div class="error">
+        @for (error of fieldState().errors(); track error.kind) {
+            <span class="error-message">{{ error.message }}</span>
+        }
+        </div>
+    }
+</div>

@@ -1,2 +1,8 @@
-<app-display-customers/>
-<app-add-customer/>
+  <nav>
+    <a [routerLink]="['edit']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Edit</a>
+    <a [routerLink]="['add']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Add</a>
+  </nav>
+
+  <div class="customers-content">
+      <router-outlet />
+  </div>

@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { DisplayCustomers } from '../display-customers/display-customers';
-import { AddCustomer } from '../add-customer/add-customer';
+import { RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
 
 @Component({
-  imports: [DisplayCustomers, AddCustomer],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   selector: 'app-customers-page',
   styleUrl: './customers-page.scss',
   templateUrl: './customers-page.html',

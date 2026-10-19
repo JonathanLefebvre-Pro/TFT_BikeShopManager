@@ -1,0 +1,43 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+
+    margin-top: 1rem;
+    gap: 2rem;
+}
+
+.customerTable {
+    display: flex;
+    flex-direction: column;
+    background-color: grey;
+    border-radius: 1rem;
+
+    .customerTableHead {
+        display: flex;
+        flex-direction: row;
+        padding: 1rem;
+
+        tr {
+            display: grid;
+            grid-template-columns: 0.5rem repeat(13, minmax(0, 1fr));
+            flex: 1;
+            gap: 1rem;
+            
+            th {
+                display: flex;
+                flex-grow: 1;
+                justify-content: start;
+            }
+        }
+    }
+
+    .customerTableBody {
+        display: flex;
+        flex-direction: column;
+        background-color: rgb(204, 204, 204);
+        border-bottom-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        padding: 1rem;
+    }
+}
