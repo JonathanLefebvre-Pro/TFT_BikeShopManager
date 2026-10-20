@@ -16,12 +16,12 @@ namespace BikeShopManager.WebApi.Controllers
     {
         [Route("GetAsync")]
         [HttpGet]
-        public async Task<IActionResult> GetAsync([FromQuery] int offset, [FromQuery] int next)
+        public async Task<IActionResult> GetAsync([FromQuery] int offset, [FromQuery] int limit)
         {
             Result<IEnumerable<Customer>> result = await Dispatcher.SendQueryAsync<
                 GetCustomersQuery,
                 IEnumerable<Customer>
-            >(new GetCustomersQuery(offset, next));
+            >(new GetCustomersQuery(offset, limit));
 
             if (result.IsSuccess)
             {
@@ -34,6 +34,17 @@ namespace BikeShopManager.WebApi.Controllers
             }
 
             return this.NotFound(result.Error);
+        }
+
+        [Route("GetCountAsync")]
+        [HttpGet]
+        public async Task<IActionResult> GetCountAsync()
+        {
+            Result<int> result = await Dispatcher.SendQueryAsync<GetCustomersCountQuery, int>(
+                new GetCustomersCountQuery()
+            );
+
+            return this.FromResult(result);
         }
 
         [Route("GetAsyncByKeywords")]

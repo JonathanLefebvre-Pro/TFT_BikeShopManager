@@ -25,7 +25,7 @@ public class GetCustomersQueryHandler : IQueryHandlerAsync<GetCustomersQuery, IE
     {
         IEnumerable<Customer> customers = await _customerRepository.GetCustomers(
             query.Offset,
-            query.Next
+            query.Limit
         );
 
         if (customers is null || customers.Count() <= 0)

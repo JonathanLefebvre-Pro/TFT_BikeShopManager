@@ -17,6 +17,9 @@ export class CustomerSearchInput {
     this.onSearchCustomers.emit(this.inputValue());
   }
   protected handleClear() {
+    if(this.inputValue() === '')
+      return;
+    
     this.inputValue.set('');
     this.onClearSearchCustomers.emit();
   }
