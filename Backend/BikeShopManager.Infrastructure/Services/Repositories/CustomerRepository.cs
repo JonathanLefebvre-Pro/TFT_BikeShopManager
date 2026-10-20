@@ -102,12 +102,29 @@ public class CustomerRepository(IDbSession DbSession) : ICustomerRepository
         );
     }
 
-    public async Task<IEnumerable<Customer>> GetCustomers()
+    public async Task<IEnumerable<Customer>> GetCustomers(int offset, int next)
     {
         string customerSqlQuery =
-            @$"SELECT Id, UserId, VatNumber, IsActive, CreatedAt, UpdatedAt FROM {_tableName}";
+            @$"SELECT Id, UserId, VatNumber, IsActive, CreatedAt, UpdatedAt 
+                FROM {_tableName}
+                ORDER BY Id
+                OFFSET @Offset ROWS FETCH NEXT @Next ROWS ONLY";
+
+        DynamicParameters customerParameters = new DynamicParameters();
+        customerParameters.Add("@Offset", offset);
+        customerParameters.Add("@Next", next);
 
         return await DbSession.Connection.QueryAsync<Customer>(
+            customerSqlQuery,
+            customerParameters,
+            DbSession.Transaction
+        );
+    }
+
+    public async Task<int> GetCustomersCount()
+    {
+        string customerSqlQuery = @$"SELECT COUNT(*) FROM {_tableName}";
+        return await DbSession.Connection.ExecuteScalarAsync<int>(
             customerSqlQuery,
             null,
             DbSession.Transaction

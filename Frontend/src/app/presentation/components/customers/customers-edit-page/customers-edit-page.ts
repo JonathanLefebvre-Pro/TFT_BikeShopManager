@@ -19,6 +19,9 @@ export class CustomersEditPage implements OnInit {
 
   protected readonly customers = signal<Customer[]>([]);
   protected readonly lastEditedCustomer = signal<Customer | null>(null);
+  protected readonly maxPagesNumber = signal<number>(0);
+  protected readonly currentPageNumber = signal<number>(0);
+  protected readonly itemsPerPage: number = 4;
 
   protected readonly customersTableElement = viewChild(CustomersTable);
   protected readonly editPanelElement = viewChild(CustomerEditPanel);
@@ -29,7 +32,18 @@ export class CustomersEditPage implements OnInit {
 
   protected init(){
     this.lastEditedCustomer.set(null);
-    this.customerService.getCustomers().subscribe({
+
+    this.customerService.getCustomersCount().subscribe({
+      next: (res) => { 
+        this.maxPagesNumber.set(Math.ceil(res/this.itemsPerPage));
+        this.currentPageNumber.set(1);
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+
+    this.customerService.getCustomers(0,this.itemsPerPage).subscribe({
       next : (res) => {
         this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
       },
@@ -89,11 +103,10 @@ export class CustomersEditPage implements OnInit {
   protected handleCancelUpdateCustomer() {
     this.init();
   }
-
   protected handleSearchCustomers(keyword : string) {
 
-      let keywords: string[] = keyword.trim().match(/\S+/g) || [];
-      console.log(keywords);
+      let keywords: string[] = keyword.trim().replace(/ +(?= )/g,'').match(/\S+/g) || [];
+      //console.log(keyword.trim().replace(/ +(?= )/g,''));
 
       this.customerService.getCustomersByKeywords(keywords).subscribe({
         next: (res) => {
@@ -106,7 +119,35 @@ export class CustomersEditPage implements OnInit {
         }
       });
   }
-  protected onClearSearchCustomers() {
+  protected handleClearSearchCustomers() {
     this.init();
+  }
+  protected handleNextCustomerPage() {
+      if(this.currentPageNumber()+1 <= this.maxPagesNumber())
+      {
+        this.customerService.getCustomers(this.currentPageNumber() * this.itemsPerPage,this.itemsPerPage).subscribe({
+          next : (res) => {
+            this.currentPageNumber.update((num) => num+1);
+            this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
+          },
+          error: (error) => {
+            //console.error(error);
+          }
+        });
+      }
+  }
+  protected handlePreviousCustomerPage() {
+      if(this.currentPageNumber()-1 >= 1)
+      {
+        this.customerService.getCustomers(((this.currentPageNumber()-1) * this.itemsPerPage) - this.itemsPerPage,this.itemsPerPage).subscribe({
+          next : (res) => {
+            this.currentPageNumber.update((num) => num-1);
+            this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
+          },
+          error: (error) => {
+            //console.error(error);
+          }
+        });
+      }
   }
 }

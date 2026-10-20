@@ -23,7 +23,10 @@ public class GetCustomersQueryHandler : IQueryHandlerAsync<GetCustomersQuery, IE
 
     public async Task<Result<IEnumerable<Customer>>> HandleAsync(GetCustomersQuery query)
     {
-        IEnumerable<Customer> customers = await _customerRepository.GetCustomers();
+        IEnumerable<Customer> customers = await _customerRepository.GetCustomers(
+            query.Offset,
+            query.Next
+        );
 
         if (customers is null || customers.Count() <= 0)
             return Result<IEnumerable<Customer>>.Failure(CustomerError.NotFound);

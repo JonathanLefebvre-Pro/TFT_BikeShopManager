@@ -2,13 +2,17 @@
 
 <app-customer-search-input 
 (onSearchCustomers)="handleSearchCustomers($event)" 
-(onClearSearchCustomers)="onClearSearchCustomers()" />
+(onClearSearchCustomers)="handleClearSearchCustomers()" />
 
 <app-customers-table #customersTable
 [customers]="customers()"
+[currentPageNumber]="currentPageNumber()"
+[maxPagesNumber]="maxPagesNumber()"
 (onEnableCustomerEvent)="handleEnableCustomer($event)"
 (onDisableCustomerEvent)="handleDisableCustomer($event)"
-(onEditCustomerEvent)="handleEditCustomer($event)"/>
+(onEditCustomerEvent)="handleEditCustomer($event)"
+(onNextPageEvent)="handleNextCustomerPage()"
+(onPreviousPageEvent)="handlePreviousCustomerPage()"/>
 
 @if(lastEditedCustomer() !== null) {
     <app-customer-edit-panel #editPanel

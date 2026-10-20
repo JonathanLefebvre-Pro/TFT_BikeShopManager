@@ -5,7 +5,8 @@ import { HttpResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 export interface ICustomerRepository {
-    getCustomers() : Observable<CustomerReturnDto[]>;
+    getCustomers(offset: number, limit: number) : Observable<CustomerReturnDto[]>;
+    getCustomersCount() : Observable<number>;
     getCustomerById(id: number) : Observable<CustomerReturnDto>;
     addCustomer(customer: CustomerAddDto) : Observable<number>;
     disableCustomer(id: number) : Observable<HttpResponse<Object>>;

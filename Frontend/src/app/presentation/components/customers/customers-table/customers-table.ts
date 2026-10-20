@@ -1,4 +1,4 @@
-import { Component, output, input, signal, viewChildren } from '@angular/core';
+import { Component, output, input, viewChildren } from '@angular/core';
 import { CustomerTableRow } from '@presentation/components/customers/customer-table-row/customer-table-row';
 import { Customer } from '@domain/customer';
 
@@ -10,10 +10,14 @@ import { Customer } from '@domain/customer';
 })
 export class CustomersTable {
   public readonly customers = input.required<Customer[]>();
+  public readonly currentPageNumber = input.required<number>();
+  public readonly maxPagesNumber = input.required<number>();
 
   public onEnableCustomerEvent = output<number>();
   public onDisableCustomerEvent = output<number>();
   public onEditCustomerEvent = output<number>();
+  public onNextPageEvent = output();
+  public onPreviousPageEvent = output();
 
   protected readonly customerTableRowElements = viewChildren(CustomerTableRow);
 
@@ -25,6 +29,12 @@ export class CustomersTable {
   }
   protected handleCustomerEdit(customerId: number) {
     this.onEditCustomerEvent.emit(customerId);
+  }
+  protected handleNextPage() {
+    this.onNextPageEvent.emit();
+  }
+  protected handlePreviousPage() {
+    this.onPreviousPageEvent.emit();
   }
 
   public notifyEditModeEnabled() {
