@@ -37,18 +37,18 @@ export class CustomersEditPage implements OnInit {
       next: (res) => { 
         this.maxPagesNumber.set(Math.ceil(res/this.itemsPerPage));
         this.currentPageNumber.set(1);
+
+        this.customerService.getCustomers(this.getCurrentPageOffset(),this.itemsPerPage).subscribe({
+          next : (res) => {
+            this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
+        },
+          error: (error) => {
+            //console.error(error);
+          }
+        });
       },
       error: (error) => {
         console.error(error);
-      }
-    });
-
-    this.customerService.getCustomers(0,this.itemsPerPage).subscribe({
-      next : (res) => {
-        this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
-      },
-      error: (error) => {
-        //console.error(error);
       }
     });
   }
@@ -122,32 +122,36 @@ export class CustomersEditPage implements OnInit {
   protected handleClearSearchCustomers() {
     this.init();
   }
+
+  private getCurrentPageOffset() {
+    return (this.currentPageNumber()-1) * this.itemsPerPage;
+  }
   protected handleNextCustomerPage() {
-      if(this.currentPageNumber()+1 <= this.maxPagesNumber())
-      {
-        this.customerService.getCustomers(this.currentPageNumber() * this.itemsPerPage,this.itemsPerPage).subscribe({
-          next : (res) => {
-            this.currentPageNumber.update((num) => num+1);
-            this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
-          },
-          error: (error) => {
-            //console.error(error);
-          }
-        });
-      }
+    if(this.currentPageNumber()+1 <= this.maxPagesNumber())
+    {
+      this.currentPageNumber.update((num) => num+1);
+      this.customerService.getCustomers(this.getCurrentPageOffset(), this.itemsPerPage).subscribe({
+        next : (res) => {
+          this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
+        },
+        error: (error) => {
+          //console.error(error);
+        }
+      });
+    }
   }
   protected handlePreviousCustomerPage() {
-      if(this.currentPageNumber()-1 >= 1)
-      {
-        this.customerService.getCustomers(((this.currentPageNumber()-1) * this.itemsPerPage) - this.itemsPerPage,this.itemsPerPage).subscribe({
-          next : (res) => {
-            this.currentPageNumber.update((num) => num-1);
-            this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
-          },
-          error: (error) => {
-            //console.error(error);
-          }
-        });
-      }
+    if(this.currentPageNumber()-1 >= 1)
+    {
+      this.currentPageNumber.update((num) => num-1);
+      this.customerService.getCustomers(this.getCurrentPageOffset(), this.itemsPerPage).subscribe({
+        next : (res) => {
+          this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
+        },
+        error: (error) => {
+          //console.error(error);
+        }
+      });
+    }
   }
 }
