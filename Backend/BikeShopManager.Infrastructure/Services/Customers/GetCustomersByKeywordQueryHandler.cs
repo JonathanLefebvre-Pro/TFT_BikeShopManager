@@ -8,7 +8,7 @@ using BikeShopManager.Domain.Entities;
 namespace BikeShopManager.Infrastructure.Services.Customers;
 
 public class GetCustomersByKeywordQueryHandler
-    : IQueryHandlerAsync<GetCustomersByKeywordQuery, IEnumerable<Customer>>
+    : IQueryHandlerAsync<GetCustomersByKeywordsQuery, IEnumerable<Customer>>
 {
     private readonly ICustomerRepository _customerRepository;
     private readonly IUserRepository _userRepository;
@@ -22,13 +22,13 @@ public class GetCustomersByKeywordQueryHandler
         _userRepository = userRepository;
     }
 
-    public async Task<Result<IEnumerable<Customer>>> HandleAsync(GetCustomersByKeywordQuery query)
+    public async Task<Result<IEnumerable<Customer>>> HandleAsync(GetCustomersByKeywordsQuery query)
     {
-        IEnumerable<User> users = await _userRepository.GetUsersByKeyword(query.keyword);
+        IEnumerable<User> users = await _userRepository.GetUsersByKeywords(query.keywords);
         if (users is null || users.Count() <= 0)
             return Result<IEnumerable<Customer>>.Failure(UserError.NotFound);
 
-        //TODO : For each users, get his customer
+        //For each users, get his customer
         List<Customer> customers = new List<Customer>();
         foreach (User user in users)
         {

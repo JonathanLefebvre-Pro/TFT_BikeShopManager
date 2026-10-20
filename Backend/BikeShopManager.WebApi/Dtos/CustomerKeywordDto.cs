@@ -1,6 +1,6 @@
 namespace BikeShopManager.WebApi.Dtos;
 
-public class CustomerKeywordDto
+public class CustomerKeywordsDto
 {
-    public required string Keyword { get; set; }
+    public required string[] Keywords { get; set; }
 }

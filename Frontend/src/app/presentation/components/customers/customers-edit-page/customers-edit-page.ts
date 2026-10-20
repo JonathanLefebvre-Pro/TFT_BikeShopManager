@@ -91,12 +91,18 @@ export class CustomersEditPage implements OnInit {
   }
 
   protected handleSearchCustomers(keyword : string) {
-      this.customerService.getCustomersByKeyword(keyword).subscribe({
+
+      let keywords: string[] = keyword.trim().match(/\S+/g) || [];
+      console.log(keywords);
+
+      this.customerService.getCustomersByKeywords(keywords).subscribe({
         next: (res) => {
           this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
         },
         error: (error) => {
-          console.error(error);
+          //If the search return an error (there is no customers related to these keywords, display a empty list !)
+          this.customers.set([]);
+          //console.error(error);
         }
       });
   }

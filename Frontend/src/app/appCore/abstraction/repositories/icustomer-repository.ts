@@ -11,5 +11,5 @@ export interface ICustomerRepository {
     disableCustomer(id: number) : Observable<HttpResponse<Object>>;
     enableCustomer(id: number) : Observable<HttpResponse<Object>>;
     updateCustomer(id: number, customer: CustomerUpdateDto) : Observable<HttpResponse<Object>>;
-    getCustomersByKeyword(keyword: string) : Observable<CustomerReturnDto[]>;
+    getCustomersByKeywords(keywords: string[]) : Observable<CustomerReturnDto[]>;
 }

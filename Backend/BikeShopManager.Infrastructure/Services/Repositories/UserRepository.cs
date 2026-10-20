@@ -73,6 +73,8 @@ public class UserRepository(IDbSession DbSession) : IUserRepository
         if (string.IsNullOrWhiteSpace(keyword))
             return Enumerable.Empty<User>();
 
+        string getUserSqlQuery = @$"SELECT Id, ";
+
         string[] headers =
         [
             "FirstName",
@@ -85,21 +87,81 @@ public class UserRepository(IDbSession DbSession) : IUserRepository
             "Country",
             "BirthDate",
         ];
+        for (int i = 0; i < headers.Length; i++)
+            getUserSqlQuery += headers[i] + ", ";
 
-        string getUserSqlQuery =
-            @$"SELECT Id, FirstName, LastName , Email , PhoneNumber , Address , City , ZipCode , Country , BirthDate , AllowMarketing, CreatedAt, UpdatedAt 
-                    FROM {_tableName}
-                    WHERE FirstName LIKE @Keyword
-                    OR LastName LIKE @Keyword
-                    OR Email LIKE @Keyword
-                    OR PhoneNumber LIKE @Keyword
-                    OR Address LIKE @Keyword
-                    OR City LIKE @Keyword
-                    OR ZipCode LIKE @Keyword
-                    OR Country LIKE @Keyword
-                    OR BirthDate LIKE @Keyword";
+        getUserSqlQuery += @$"AllowMarketing, CreatedAt, UpdatedAt FROM {_tableName} WHERE ";
+
+        for (int i = 0; i < headers.Length; i++)
+        {
+            if (i == 0)
+            {
+                getUserSqlQuery += headers[i] + @" LIKE @Keyword ";
+                continue;
+            }
+
+            getUserSqlQuery += @"OR " + headers[i] + @" LIKE @Keyword ";
+        }
+
         DynamicParameters getUserParameters = new DynamicParameters();
         getUserParameters.Add("@Keyword", "%" + keyword + "%");
+
+        return await DbSession.Connection.QueryAsync<User>(
+            getUserSqlQuery,
+            getUserParameters,
+            DbSession.Transaction
+        );
+    }
+
+    public async Task<IEnumerable<User>> GetUsersByKeywords(string[] keywords)
+    {
+        if (keywords is null || keywords.Length is 0)
+            return Enumerable.Empty<User>();
+
+        string getUserSqlQuery = @$"SELECT Id, ";
+
+        string[] headers =
+        [
+            "FirstName",
+            "LastName",
+            "Email",
+            "PhoneNumber",
+            "Address",
+            "City",
+            "ZipCode",
+            "Country",
+            "BirthDate",
+        ];
+        for (int i = 0; i < headers.Length; i++)
+            getUserSqlQuery += headers[i] + ", ";
+
+        getUserSqlQuery += @$"AllowMarketing, CreatedAt, UpdatedAt FROM {_tableName} WHERE (";
+
+        for (int k = 0; k < keywords.Length; k++)
+        {
+            if (k > 0)
+                getUserSqlQuery += @"AND (";
+
+            for (int i = 0; i < headers.Length; i++)
+            {
+                if (i == 0)
+                {
+                    getUserSqlQuery += headers[i] + @$" LIKE @Keyword{k} ";
+                    continue;
+                }
+
+                getUserSqlQuery += @"OR " + headers[i] + @$" LIKE @Keyword{k} ";
+
+                if (i == headers.Length - 1)
+                    getUserSqlQuery += @")";
+            }
+        }
+
+        DynamicParameters getUserParameters = new DynamicParameters();
+        for (int k = 0; k < keywords.Length; k++)
+        {
+            getUserParameters.Add(@$"@Keyword{k}", "%" + keywords[k] + "%");
+        }
 
         return await DbSession.Connection.QueryAsync<User>(
             getUserSqlQuery,

@@ -22,9 +22,9 @@ export class CustomerService implements ICustomerRepository {
         return this.http.get<CustomerReturnDto>(url);
     }
 
-    public getCustomersByKeyword(keyword: string): Observable<CustomerReturnDto[]> {
-        const url: string = `${this.baseUrl}/${"api/Customer/GetAsyncByKeyword"}`;
-        return this.http.post<CustomerReturnDto[]>(url, { keyword: keyword });
+    public getCustomersByKeywords(keywords: string[]): Observable<CustomerReturnDto[]> {
+        const url: string = `${this.baseUrl}/${"api/Customer/GetAsyncByKeywords"}`;
+        return this.http.post<CustomerReturnDto[]>(url, { keywords: keywords });
     }
 
     public addCustomer(customer: CustomerAddDto) : Observable<number> {
