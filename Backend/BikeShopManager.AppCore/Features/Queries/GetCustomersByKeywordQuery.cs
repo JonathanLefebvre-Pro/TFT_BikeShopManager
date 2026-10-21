@@ -3,5 +3,5 @@ using BikeShopManager.Domain.Entities;
 
 namespace BikeShopManager.AppCore.Features.Queries;
 
-public record GetCustomersByKeywordsQuery(int PageNumber, int PageSize, string[] keywords)
+public record GetCustomersByKeywordsQuery(int PageNumber, int PageSize, string[] Keywords)
     : IQueryDefinition<PageResponse<Customer>>;

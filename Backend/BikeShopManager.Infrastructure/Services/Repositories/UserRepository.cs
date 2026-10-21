@@ -68,7 +68,7 @@ public class UserRepository(IDbSession DbSession) : IUserRepository
         );
     }
 
-    public async Task<IEnumerable<User>> GetUsersByKeyword(string keyword)
+    public async Task<IEnumerable<User>> GetUsers(string keyword)
     {
         if (string.IsNullOrWhiteSpace(keyword))
             return Enumerable.Empty<User>();
@@ -113,11 +113,7 @@ public class UserRepository(IDbSession DbSession) : IUserRepository
         );
     }
 
-    public async Task<IEnumerable<User>> GetUsersByKeywords(
-        int offset,
-        int limit,
-        string[] keywords
-    )
+    public async Task<IEnumerable<User>> GetUsers(int offset, int limit, string[] keywords)
     {
         if (keywords is null || keywords.Length is 0)
             return Enumerable.Empty<User>();
@@ -181,7 +177,7 @@ public class UserRepository(IDbSession DbSession) : IUserRepository
         );
     }
 
-    public async Task<int> GetUsersCountByKeywords(string[] keywords)
+    public async Task<int> GetUsersCount(string[] keywords)
     {
         if (keywords is null || keywords.Length is 0)
             return 0;
@@ -232,6 +228,17 @@ public class UserRepository(IDbSession DbSession) : IUserRepository
         return await DbSession.Connection.ExecuteScalarAsync<int>(
             getUserSqlQuery,
             getUserParameters,
+            DbSession.Transaction
+        );
+    }
+
+    public async Task<int> GetUsersCount()
+    {
+        string getUserSqlQuery = @$"SELECT COUNT(*) FROM {_tableName}";
+
+        return await DbSession.Connection.ExecuteScalarAsync<int>(
+            getUserSqlQuery,
+            null,
             DbSession.Transaction
         );
     }

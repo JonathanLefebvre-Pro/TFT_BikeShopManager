@@ -30,12 +30,8 @@ public class GetCustomersByKeywordQueryHandler
         int offset = (pageNumber - 1) * pageSize;
         int limit = pageSize;
 
-        int totalRecords = await _userRepository.GetUsersCountByKeywords(query.keywords);
-        IEnumerable<User> users = await _userRepository.GetUsersByKeywords(
-            offset,
-            limit,
-            query.keywords
-        );
+        int totalRecords = await _userRepository.GetUsersCount(query.Keywords);
+        IEnumerable<User> users = await _userRepository.GetUsers(offset, limit, query.Keywords);
         if (users is null || users.Count() <= 0)
             return Result<PageResponse<Customer>>.Failure(UserError.NotFound);
 
