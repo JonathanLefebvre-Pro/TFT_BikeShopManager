@@ -3,8 +3,9 @@ import { CustomersPage } from '@presentation/components/customers/customers-page
 import { DisplayEmployees } from '@presentation/components/employees/display-employees/display-employees';
 import { DisplayStock } from '@presentation/components/stock/display-stock/display-stock';
 import { DisplayShop } from '@presentation/components/shop/display-shop/display-shop';
+import { CustomersListPage } from '@presentation/components/customers/customers-list-page/customers-list-page';
 import { CustomersEditPage } from '@presentation/components/customers/customers-edit-page/customers-edit-page';
-import { CustomersAddPage } from './presentation/components/customers/customers-add-page/customers-add-page';
+import { CustomersAddPage } from '@presentation/components/customers/customers-add-page/customers-add-page';
 
 export const routes: Routes = [
 
@@ -13,6 +14,10 @@ export const routes: Routes = [
         component: CustomersPage,
         title: 'Customers',
         children: [
+            {
+                path: 'list',
+                component: CustomersListPage,
+            },
             {
                 path: 'edit',
                 component: CustomersEditPage,
@@ -23,7 +28,7 @@ export const routes: Routes = [
             },
             {
                 path: '',
-                redirectTo: 'edit',
+                redirectTo: 'list',
                 pathMatch: 'full'
             }
         ]
@@ -45,7 +50,7 @@ export const routes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/customers/edit',
+        redirectTo: '/customers/list',
         pathMatch: 'full'
     },
     {

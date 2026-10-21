@@ -77,7 +77,7 @@ export class CustomerAddPanel {
             console.log("Result : " + JSON.stringify(res));
             model().reset({...this.INITIAL_MODEL});
             this.onAddCustomerEvent.emit(res);
-            this.routerService.navigate(['/customers/edit']);
+            this.routerService.navigate(['/customers/list']);
           },
           error: (error) => {
             console.log("Error : " + JSON.stringify(error));
