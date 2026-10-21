@@ -20,6 +20,7 @@ export class CustomersEditPage implements OnInit {
   protected readonly customers = signal<Customer[]>([]);
   protected readonly lastEditedCustomer = signal<Customer | null>(null);
 
+  protected readonly keywords = signal<string>('');
   protected readonly totalPages = signal<number>(0);
   protected readonly pageNumber = signal<number>(0);
   protected readonly hasNextPage = signal<boolean>(false);
@@ -36,6 +37,7 @@ export class CustomersEditPage implements OnInit {
   protected init(){
     this.lastEditedCustomer.set(null);
     this.pageNumber.set(1);
+    this.keywords.set('');
     this.getCustomers();
   }
 
@@ -89,21 +91,11 @@ export class CustomersEditPage implements OnInit {
   protected handleCancelUpdateCustomer() {
     this.init();
   }
-  protected handleSearchCustomers(keyword : string) {
+  protected handleSearchCustomers(keywords : string) {
 
-      let keywords: string[] = keyword.trim().replace(/ +(?= )/g,'').match(/\S+/g) || [];
-      //console.log(keyword.trim().replace(/ +(?= )/g,''));
-
-      this.customerService.getCustomersByKeywords(keywords).subscribe({
-        next: (res) => {
-          this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
-        },
-        error: (error) => {
-          //If the search return an error (there is no customers related to these keywords, display a empty list !)
-          this.customers.set([]);
-          //console.error(error);
-        }
-      });
+      this.keywords.set(keywords);
+      this.pageNumber.set(1);
+      this.getCustomers();
   }
   protected handleClearSearchCustomers() {
     this.init();
@@ -125,9 +117,8 @@ export class CustomersEditPage implements OnInit {
   }
 
   private getCustomers() {
-    this.customerService.getCustomers(this.pageNumber(),this.pageSize).subscribe({
+    this.customerService.getCustomers(this.pageNumber(),this.pageSize, this.keywords()).subscribe({
       next : (res) => {
-        //console.log(res);
         this.totalPages.set(res.totalPages);
         this.pageNumber.set(res.pageNumber);
         this.hasNextPage.set(res.hasNextPage);
@@ -136,6 +127,8 @@ export class CustomersEditPage implements OnInit {
     },
       error: (error) => {
         console.error(error);
+        //If the search returned an error (there is no customers related to these keywords, display a empty list !)
+        this.customers.set([]);
       }
     });
   }

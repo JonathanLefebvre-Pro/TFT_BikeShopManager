@@ -13,14 +13,14 @@ export class CustomerService implements ICustomerRepository {
     protected readonly baseUrl = 'https://localhost:7105';
     readonly http = inject(HttpClient);
     
-    public getCustomers(pageNumber: number, pageSize: number) : Observable<PageResponseDto<CustomerReturnDto>> {
-        const url:string = `${this.baseUrl}/${"api/Customer/GetAsync"}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
-        return this.http.get<PageResponseDto<CustomerReturnDto>>(url)
+    public getCustomers(pageNumber: number, pageSize: number, keywords: string | null) : Observable<PageResponseDto<CustomerReturnDto>> {
+        const url:string = `${this.baseUrl}/${"api/Customer/GetAsync"}?keywords=${keywords}&pageNumber=${pageNumber}&pageSize=${pageSize}`;
+        return this.http.get<PageResponseDto<CustomerReturnDto>>(url);
     }
 
     public getCustomersCount(): Observable<number> {
         const url:string = `${this.baseUrl}/${"api/Customer/GetCountAsync"}`;
-        return this.http.get<number>(url)
+        return this.http.get<number>(url);
     }
     
     public getCustomerById(id: number) : Observable<CustomerReturnDto> {
@@ -28,9 +28,9 @@ export class CustomerService implements ICustomerRepository {
         return this.http.get<CustomerReturnDto>(url);
     }
 
-    public getCustomersByKeywords(keywords: string[]): Observable<CustomerReturnDto[]> {
-        const url: string = `${this.baseUrl}/${"api/Customer/GetAsyncByKeywords"}`;
-        return this.http.post<CustomerReturnDto[]>(url, { keywords: keywords });
+    public getCustomersByKeywords(pageNumber: number, pageSize: number, keywords: string[]): Observable<PageResponseDto<CustomerReturnDto>> {
+        const url: string = `${this.baseUrl}/${"api/Customer/GetAsyncByKeywords"}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+        return this.http.post<PageResponseDto<CustomerReturnDto>>(url, { keywords: keywords });
     }
 
     public addCustomer(customer: CustomerAddDto) : Observable<number> {
