@@ -8,7 +8,7 @@ using BikeShopManager.Domain.Entities;
 namespace BikeShopManager.Infrastructure.Services.Customers;
 
 public class GetCustomersByKeywordQueryHandler
-    : IQueryHandlerAsync<GetCustomersByKeywordsQuery, IEnumerable<Customer>>
+    : IQueryHandlerAsync<GetCustomersByKeywordsQuery, PageResponse<Customer>>
 {
     private readonly ICustomerRepository _customerRepository;
     private readonly IUserRepository _userRepository;
@@ -22,11 +22,22 @@ public class GetCustomersByKeywordQueryHandler
         _userRepository = userRepository;
     }
 
-    public async Task<Result<IEnumerable<Customer>>> HandleAsync(GetCustomersByKeywordsQuery query)
+    public async Task<Result<PageResponse<Customer>>> HandleAsync(GetCustomersByKeywordsQuery query)
     {
-        IEnumerable<User> users = await _userRepository.GetUsersByKeywords(query.keywords);
+        int pageNumber = Math.Max(1, query.PageNumber);
+        int pageSize = Math.Clamp(query.PageSize, 1, 50);
+
+        int offset = (pageNumber - 1) * pageSize;
+        int limit = pageSize;
+
+        int totalRecords = await _userRepository.GetUsersCountByKeywords(query.keywords);
+        IEnumerable<User> users = await _userRepository.GetUsersByKeywords(
+            offset,
+            limit,
+            query.keywords
+        );
         if (users is null || users.Count() <= 0)
-            return Result<IEnumerable<Customer>>.Failure(UserError.NotFound);
+            return Result<PageResponse<Customer>>.Failure(UserError.NotFound);
 
         //For each users, get his customer
         List<Customer> customers = new List<Customer>();
@@ -41,8 +52,17 @@ public class GetCustomersByKeywordQueryHandler
         }
 
         if (customers.Count() is 0)
-            return Result<IEnumerable<Customer>>.Failure(CustomerError.NotFound);
+            return Result<PageResponse<Customer>>.Failure(CustomerError.NotFound);
 
-        return Result<IEnumerable<Customer>>.Success(customers);
+        PageResponse<Customer> response = new PageResponse<Customer>()
+        {
+            Data = customers,
+            PageSize = pageSize,
+            PageNumber = pageNumber,
+            TotalRecords = totalRecords,
+            TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
+        };
+
+        return Result<PageResponse<Customer>>.Success(response);
     }
 }

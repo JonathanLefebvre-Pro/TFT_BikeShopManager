@@ -113,7 +113,11 @@ public class UserRepository(IDbSession DbSession) : IUserRepository
         );
     }
 
-    public async Task<IEnumerable<User>> GetUsersByKeywords(string[] keywords)
+    public async Task<IEnumerable<User>> GetUsersByKeywords(
+        int offset,
+        int limit,
+        string[] keywords
+    )
     {
         if (keywords is null || keywords.Length is 0)
             return Enumerable.Empty<User>();
@@ -135,7 +139,71 @@ public class UserRepository(IDbSession DbSession) : IUserRepository
         for (int i = 0; i < headers.Length; i++)
             getUserSqlQuery += headers[i] + ", ";
 
-        getUserSqlQuery += @$"AllowMarketing, CreatedAt, UpdatedAt FROM {_tableName} WHERE (";
+        getUserSqlQuery +=
+            @$"AllowMarketing, CreatedAt, UpdatedAt 
+                FROM {_tableName}
+                WHERE (";
+
+        for (int k = 0; k < keywords.Length; k++)
+        {
+            if (k > 0)
+                getUserSqlQuery += @"AND (";
+
+            for (int i = 0; i < headers.Length; i++)
+            {
+                if (i == 0)
+                {
+                    getUserSqlQuery += headers[i] + @$" LIKE @Keyword{k} ";
+                    continue;
+                }
+
+                getUserSqlQuery += @"OR " + headers[i] + @$" LIKE @Keyword{k} ";
+
+                if (i == headers.Length - 1)
+                    getUserSqlQuery += @")";
+            }
+        }
+
+        getUserSqlQuery +=
+            @$"ORDER BY Id
+            OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";
+
+        DynamicParameters getUserParameters = new DynamicParameters();
+        getUserParameters.Add("@Offset", offset);
+        getUserParameters.Add("@Limit", limit);
+        for (int k = 0; k < keywords.Length; k++)
+            getUserParameters.Add(@$"@Keyword{k}", "%" + keywords[k] + "%");
+
+        return await DbSession.Connection.QueryAsync<User>(
+            getUserSqlQuery,
+            getUserParameters,
+            DbSession.Transaction
+        );
+    }
+
+    public async Task<int> GetUsersCountByKeywords(string[] keywords)
+    {
+        if (keywords is null || keywords.Length is 0)
+            return 0;
+
+        string getUserSqlQuery = @$"SELECT COUNT(*) ";
+
+        string[] headers =
+        [
+            "FirstName",
+            "LastName",
+            "Email",
+            "PhoneNumber",
+            "Address",
+            "City",
+            "ZipCode",
+            "Country",
+            "BirthDate",
+        ];
+
+        getUserSqlQuery +=
+            @$"FROM {_tableName}
+                WHERE (";
 
         for (int k = 0; k < keywords.Length; k++)
         {
@@ -159,11 +227,9 @@ public class UserRepository(IDbSession DbSession) : IUserRepository
 
         DynamicParameters getUserParameters = new DynamicParameters();
         for (int k = 0; k < keywords.Length; k++)
-        {
             getUserParameters.Add(@$"@Keyword{k}", "%" + keywords[k] + "%");
-        }
 
-        return await DbSession.Connection.QueryAsync<User>(
+        return await DbSession.Connection.ExecuteScalarAsync<int>(
             getUserSqlQuery,
             getUserParameters,
             DbSession.Transaction

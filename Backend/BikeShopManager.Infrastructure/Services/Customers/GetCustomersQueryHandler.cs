@@ -30,8 +30,8 @@ public class GetCustomersQueryHandler
         int offset = (pageNumber - 1) * pageSize;
         int limit = pageSize;
 
-        IEnumerable<Customer> customers = await _customerRepository.GetCustomers(offset, limit);
         int totalRecords = await _customerRepository.GetCustomersCount();
+        IEnumerable<Customer> customers = await _customerRepository.GetCustomers(offset, limit);
 
         if (customers is null || customers.Count() <= 0)
             return Result<PageResponse<Customer>>.Failure(CustomerError.NotFound);

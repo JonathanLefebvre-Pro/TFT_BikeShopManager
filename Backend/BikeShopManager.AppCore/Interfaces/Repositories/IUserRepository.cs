@@ -6,7 +6,8 @@ public interface IUserRepository
 {
     Task<ExistingUser?> GetUserByMail(string email);
     Task<IEnumerable<User>> GetUsersByKeyword(string keyword);
-    Task<IEnumerable<User>> GetUsersByKeywords(string[] keywords);
+    Task<IEnumerable<User>> GetUsersByKeywords(int offset, int limit, string[] keywords);
+    Task<int> GetUsersCountByKeywords(string[] keywords);
     Task<User?> GetUserById(int id);
     Task<int> CreateUser(User user);
     Task<bool> UpdateUser(int id, User user);

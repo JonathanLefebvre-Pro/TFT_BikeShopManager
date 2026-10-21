@@ -57,21 +57,30 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("GetAsyncByKeywords")]
         [HttpPost]
-        public async Task<IActionResult> GetAsyncByKeywords([FromBody] CustomerKeywordsDto dto)
+        public async Task<IActionResult> GetAsyncByKeywords(
+            [FromBody] CustomerKeywordsDto dto,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10
+        )
         {
-            Result<IEnumerable<Customer>> result = await Dispatcher.SendQueryAsync<
+            Result<PageResponse<Customer>> result = await Dispatcher.SendQueryAsync<
                 GetCustomersByKeywordsQuery,
-                IEnumerable<Customer>
-            >(new GetCustomersByKeywordsQuery(dto.Keywords));
+                PageResponse<Customer>
+            >(new GetCustomersByKeywordsQuery(pageNumber, pageSize, dto.Keywords));
 
             if (result.IsSuccess)
             {
-                //Convert domain object list to list of dto's
-                List<CustomerReturnDto> dtos = new List<CustomerReturnDto>();
-                foreach (Customer customer in result.Data)
-                    dtos.Add(customer.ToCustomerReturnDto());
+                PageResponseDto<CustomerReturnDto> responseDto =
+                    new PageResponseDto<CustomerReturnDto>()
+                    {
+                        Data = result.Data.Data.ToIEnumerableCustomerReturnDtos(),
+                        PageSize = result.Data.PageSize,
+                        PageNumber = result.Data.PageNumber,
+                        TotalRecords = result.Data.TotalRecords,
+                        TotalPages = result.Data.TotalPages,
+                    };
 
-                return this.Ok(dtos);
+                return this.Ok(responseDto);
             }
 
             return this.NotFound(result.Error);
