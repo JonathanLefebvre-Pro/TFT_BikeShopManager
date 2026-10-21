@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { PageResponseDto } from "../../dtos/pageResponseDto";
 
 export interface ICustomerRepository {
-    getCustomers(pageNumber: number, pageSize: number, keywords?: string | null) : Observable<PageResponseDto<CustomerReturnDto>>;
+    getCustomers(pageNumber: number, pageSize: number, keywords: string | null) : Observable<PageResponseDto<CustomerReturnDto>>;
     getCustomersCount() : Observable<number>;
     getCustomerById(id: number) : Observable<CustomerReturnDto>;
     addCustomer(customer: CustomerAddDto) : Observable<number>;

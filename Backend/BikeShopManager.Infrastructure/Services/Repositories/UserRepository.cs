@@ -93,7 +93,7 @@ public class UserRepository(IDbSession DbSession) : IUserRepository
 
         if (keywords != null && keywords.Length > 0)
         {
-            getUserSqlQuery += @"WHERE (";
+            getUserSqlQuery += @" WHERE (";
 
             for (int k = 0; k < keywords.Length; k++)
             {
