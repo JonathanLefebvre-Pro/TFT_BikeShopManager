@@ -71,7 +71,7 @@ export class CustomersListPage implements OnInit {
     if(customer !== null && customer !== undefined)
     {
       this.customersTableElement()?.notifyEditModeEnabled();
-      this.routerService.navigate(['/customers/edit'], { state: customer });
+      this.routerService.navigate(['/customers/edit', customer.id]);
     }
   }
 

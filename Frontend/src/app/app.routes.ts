@@ -19,7 +19,7 @@ export const routes: Routes = [
                 component: CustomersListPage,
             },
             {
-                path: 'edit',
+                path: 'edit/:id',
                 component: CustomersEditPage,
             },
             {

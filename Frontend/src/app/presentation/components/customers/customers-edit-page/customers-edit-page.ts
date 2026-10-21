@@ -1,9 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CustomerEditPanel } from '@presentation/components/customers/customer-edit-panel/customer-edit-panel';
 import { Customer } from '@domain/customer';
 import { CustomerService } from '@infrastructure/services/customer-service';
 import { CustomerUpdateDto } from '@appCore/dtos/customerUpdateDto';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CustomerDtoMapper } from '@/app/presentation/mappers/customer-dto-mapper';
 
 @Component({
   imports: [CustomerEditPanel],
@@ -11,31 +12,43 @@ import { Router } from '@angular/router';
   styleUrl: './customers-edit-page.scss',
   templateUrl: './customers-edit-page.html',
 })
-export class CustomersEditPage {
-
+export class CustomersEditPage implements OnInit {
+  
+  private routeService = inject(ActivatedRoute);
   protected routerService = inject(Router);
   protected readonly customerService : CustomerService = inject(CustomerService);
+  protected readonly customerDtoMapper : CustomerDtoMapper = inject(CustomerDtoMapper);
 
   protected readonly lastEditedCustomer = signal<Customer | null>(null);
+  protected readonly errorMessage = signal<string>('');
 
-  constructor() {
-    const nav = this.routerService.currentNavigation();
-    const state = nav?.extras?.state as Customer;
-    console.log(state);
+  ngOnInit(): void {
+    this.routeService.params.subscribe((params) => {
 
-    if(state !== null)
-      this.lastEditedCustomer.set(state);
+      if(Number.isNaN(+params['id']))
+      {
+        this.errorMessage.set("Please select a Customer to edit his details !");
+        return;
+      }
+
+      this.customerService.getCustomerById(+params['id']).subscribe({
+        next: (res) => {
+            this.lastEditedCustomer.set(this.customerDtoMapper.ToCustomerEntity(res))
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
+    });
   }
 
   protected handleUpdateCustomer(event : {id: number, obj: CustomerUpdateDto}) {
     this.customerService.updateCustomer(event.id, event.obj).subscribe({
         next: (res) => {
-          console.log("Result : " + JSON.stringify(res));
           this.exitEdit();
         },
         error: (error) => {
-          console.log("Error : " + JSON.stringify(error));
-          console.log(JSON.stringify(event.obj));
+          console.error(error);
         }
     });
   }

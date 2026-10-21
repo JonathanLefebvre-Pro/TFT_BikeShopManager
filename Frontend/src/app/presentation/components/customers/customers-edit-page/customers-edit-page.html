@@ -1,8 +1,10 @@
-<h1>Edit Selected Customer</h1>
-
 @if(lastEditedCustomer() !== null) {
+    <h1>Edit Selected Customer</h1>
+    
     <app-customer-edit-panel #editPanel
     [customer]="lastEditedCustomer()!"
     (onUpdateCustomerEvent)="handleUpdateCustomer($event)"
     (onCancelUpdateCustomerEvent)="handleCancelUpdateCustomer()"/>
+}@else {
+    <p>{{errorMessage()}}</p>
 }
