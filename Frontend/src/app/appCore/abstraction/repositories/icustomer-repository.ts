@@ -3,9 +3,10 @@ import { CustomerReturnDto } from '@/app/appCore/dtos/customerReturnDto';
 import { CustomerUpdateDto } from "@/app/appCore/dtos/customerUpdateDto";
 import { HttpResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { PageResponseDto } from "../../dtos/pageResponseDto";
 
 export interface ICustomerRepository {
-    getCustomers(offset: number, limit: number) : Observable<CustomerReturnDto[]>;
+    getCustomers(pageNumber: number, pageSize: number) : Observable<PageResponseDto<CustomerReturnDto>>;
     getCustomersCount() : Observable<number>;
     getCustomerById(id: number) : Observable<CustomerReturnDto>;
     addCustomer(customer: CustomerAddDto) : Observable<number>;

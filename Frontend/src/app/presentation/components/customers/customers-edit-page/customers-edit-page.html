@@ -6,8 +6,8 @@
 
 <app-customers-table #customersTable
 [customers]="customers()"
-[currentPageNumber]="currentPageNumber()"
-[maxPagesNumber]="maxPagesNumber()"
+[currentPageNumber]="pageNumber()"
+[maxPagesNumber]="totalPages()"
 (onEnableCustomerEvent)="handleEnableCustomer($event)"
 (onDisableCustomerEvent)="handleDisableCustomer($event)"
 (onEditCustomerEvent)="handleEditCustomer($event)"

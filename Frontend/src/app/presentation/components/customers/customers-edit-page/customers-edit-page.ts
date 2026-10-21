@@ -19,9 +19,12 @@ export class CustomersEditPage implements OnInit {
 
   protected readonly customers = signal<Customer[]>([]);
   protected readonly lastEditedCustomer = signal<Customer | null>(null);
-  protected readonly maxPagesNumber = signal<number>(0);
-  protected readonly currentPageNumber = signal<number>(0);
-  protected readonly itemsPerPage: number = 4;
+
+  protected readonly totalPages = signal<number>(0);
+  protected readonly pageNumber = signal<number>(0);
+  protected readonly hasNextPage = signal<boolean>(false);
+  protected readonly hasPreviousPage = signal<boolean>(false);
+  protected readonly pageSize: number = 2;
 
   protected readonly customersTableElement = viewChild(CustomersTable);
   protected readonly editPanelElement = viewChild(CustomerEditPanel);
@@ -32,25 +35,8 @@ export class CustomersEditPage implements OnInit {
 
   protected init(){
     this.lastEditedCustomer.set(null);
-
-    this.customerService.getCustomersCount().subscribe({
-      next: (res) => { 
-        this.maxPagesNumber.set(Math.ceil(res/this.itemsPerPage));
-        this.currentPageNumber.set(1);
-
-        this.customerService.getCustomers(this.getCurrentPageOffset(),this.itemsPerPage).subscribe({
-          next : (res) => {
-            this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
-        },
-          error: (error) => {
-            //console.error(error);
-          }
-        });
-      },
-      error: (error) => {
-        console.error(error);
-      }
-    });
+    this.pageNumber.set(1);
+    this.getCustomers();
   }
 
   protected handleEnableCustomer(customerId: number) {
@@ -123,35 +109,34 @@ export class CustomersEditPage implements OnInit {
     this.init();
   }
 
-  private getCurrentPageOffset() {
-    return (this.currentPageNumber()-1) * this.itemsPerPage;
-  }
   protected handleNextCustomerPage() {
-    if(this.currentPageNumber()+1 <= this.maxPagesNumber())
+    if(this.hasNextPage())
     {
-      this.currentPageNumber.update((num) => num+1);
-      this.customerService.getCustomers(this.getCurrentPageOffset(), this.itemsPerPage).subscribe({
-        next : (res) => {
-          this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
-        },
-        error: (error) => {
-          //console.error(error);
-        }
-      });
+      this.pageNumber.update((num) => num+1);
+      this.getCustomers();
     }
   }
   protected handlePreviousCustomerPage() {
-    if(this.currentPageNumber()-1 >= 1)
+    if(this.hasPreviousPage())
     {
-      this.currentPageNumber.update((num) => num-1);
-      this.customerService.getCustomers(this.getCurrentPageOffset(), this.itemsPerPage).subscribe({
-        next : (res) => {
-          this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
-        },
-        error: (error) => {
-          //console.error(error);
-        }
-      });
+      this.pageNumber.update((num) => num-1);
+      this.getCustomers();
     }
+  }
+
+  private getCustomers() {
+    this.customerService.getCustomers(this.pageNumber(),this.pageSize).subscribe({
+      next : (res) => {
+        //console.log(res);
+        this.totalPages.set(res.totalPages);
+        this.pageNumber.set(res.pageNumber);
+        this.hasNextPage.set(res.hasNextPage);
+        this.hasPreviousPage.set(res.hasPreviousPage);
+        this.customers.set(this.customerDtoMapper.ToCustomerEntities(res.data));
+    },
+      error: (error) => {
+        console.error(error);
+      }
+    });
   }
 }
