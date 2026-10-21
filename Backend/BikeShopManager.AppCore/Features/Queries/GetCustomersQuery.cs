@@ -3,4 +3,5 @@ using BikeShopManager.Domain.Entities;
 
 namespace BikeShopManager.AppCore.Features.Queries;
 
-public record GetCustomersQuery(int Offset, int Limit) : IQueryDefinition<IEnumerable<Customer>>;
+public record GetCustomersQuery(int PageNumber, int PageSize)
+    : IQueryDefinition<PageResponse<Customer>>;

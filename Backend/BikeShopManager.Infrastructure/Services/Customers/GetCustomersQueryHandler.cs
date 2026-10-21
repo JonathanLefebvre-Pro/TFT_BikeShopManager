@@ -7,7 +7,8 @@ using BikeShopManager.Domain.Entities;
 
 namespace BikeShopManager.Infrastructure.Services.Customers;
 
-public class GetCustomersQueryHandler : IQueryHandlerAsync<GetCustomersQuery, IEnumerable<Customer>>
+public class GetCustomersQueryHandler
+    : IQueryHandlerAsync<GetCustomersQuery, PageResponse<Customer>>
 {
     private readonly ICustomerRepository _customerRepository;
     private readonly IUserRepository _userRepository;
@@ -21,15 +22,19 @@ public class GetCustomersQueryHandler : IQueryHandlerAsync<GetCustomersQuery, IE
         _userRepository = userRepository;
     }
 
-    public async Task<Result<IEnumerable<Customer>>> HandleAsync(GetCustomersQuery query)
+    public async Task<Result<PageResponse<Customer>>> HandleAsync(GetCustomersQuery query)
     {
-        IEnumerable<Customer> customers = await _customerRepository.GetCustomers(
-            query.Offset,
-            query.Limit
-        );
+        int pageNumber = Math.Max(1, query.PageNumber);
+        int pageSize = Math.Clamp(query.PageSize, 1, 50);
+
+        int offset = (pageNumber - 1) * pageSize;
+        int limit = pageSize;
+
+        IEnumerable<Customer> customers = await _customerRepository.GetCustomers(offset, limit);
+        int totalRecords = await _customerRepository.GetCustomersCount();
 
         if (customers is null || customers.Count() <= 0)
-            return Result<IEnumerable<Customer>>.Failure(CustomerError.NotFound);
+            return Result<PageResponse<Customer>>.Failure(CustomerError.NotFound);
 
         foreach (Customer customer in customers)
         {
@@ -41,6 +46,15 @@ public class GetCustomersQueryHandler : IQueryHandlerAsync<GetCustomersQuery, IE
                 customer.User = user;
         }
 
-        return Result<IEnumerable<Customer>>.Success(customers);
+        PageResponse<Customer> response = new PageResponse<Customer>()
+        {
+            Data = customers,
+            PageSize = pageSize,
+            PageNumber = pageNumber,
+            TotalRecords = totalRecords,
+            TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
+        };
+
+        return Result<PageResponse<Customer>>.Success(response);
     }
 }
