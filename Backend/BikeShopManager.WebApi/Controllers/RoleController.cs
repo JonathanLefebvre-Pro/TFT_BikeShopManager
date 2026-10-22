@@ -13,9 +13,9 @@ namespace BikeShopManager.WebApi.Controllers
     [ApiController]
     public class RoleController(IDispatcher Dispatcher) : ControllerBase
     {
-        [Route("GetRolesAsync")]
+        [Route("GetAsync")]
         [HttpGet]
-        public async Task<IActionResult> GetRolesAsync()
+        public async Task<IActionResult> GetAsync()
         {
             Result<IEnumerable<Role>> result = await Dispatcher.SendQueryAsync<
                 GetRolesQuery,
@@ -34,9 +34,9 @@ namespace BikeShopManager.WebApi.Controllers
             return this.NotFound(result.Error);
         }
 
-        [Route("GetRoleByIdAsync/{id}")]
+        [Route("GetByIdAsync/{id}")]
         [HttpGet]
-        public async Task<IActionResult> GetRoleByIdAsync(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
             Result<Role> result = await Dispatcher.SendQueryAsync<GetRoleByIdQuery, Role>(
                 new GetRoleByIdQuery(id)
@@ -48,9 +48,9 @@ namespace BikeShopManager.WebApi.Controllers
             return this.NotFound(result.Error);
         }
 
-        [Route("GetRoleByEmployeeIdAsync/{id}")]
+        [Route("GetByEmployeeIdAsync/{id}")]
         [HttpGet]
-        public async Task<IActionResult> GetRoleByEmployeeIdAsync(int id)
+        public async Task<IActionResult> GetByEmployeeIdAsync(int id)
         {
             Result<Role> result = await Dispatcher.SendQueryAsync<GetRoleByEmployeeIdQuery, Role>(
                 new GetRoleByEmployeeIdQuery(id)

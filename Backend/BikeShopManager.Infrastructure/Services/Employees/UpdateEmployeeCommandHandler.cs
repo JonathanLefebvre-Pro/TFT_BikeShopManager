@@ -23,17 +23,16 @@ public class UpdateEmployeeCommandHandler : ICommandHandlerAsync<UpdateEmployeeC
 
     public async Task<Result> HandleAsync(UpdateEmployeeCommand command)
     {
-        //Get the Employee based on the command Id parameter
-        //Get the user row linked to the Employee UserId
-        Employee? employee = await _employeeRepository.GetEmployeeById(command.Id);
+        //Get the employee userId from the employee id
+        int userId = await _employeeRepository.GetEmployeeUserId(command.Id);
 
-        if (employee is null)
+        if (userId is 0)
             return Result.Failure(EmployeeError.NotFound);
 
         //Update the user row
         try
         {
-            bool isUserUpdated = await _userRepository.UpdateUser(employee.UserId, command.User);
+            bool isUserUpdated = await _userRepository.UpdateUser(userId, command.User);
             if (!isUserUpdated)
                 return Result.Failure(UserError.NotUpdated);
         }

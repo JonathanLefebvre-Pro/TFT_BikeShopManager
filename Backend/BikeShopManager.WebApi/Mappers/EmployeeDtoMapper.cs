@@ -38,12 +38,24 @@ public static class EmployeeDtoMapper
         };
     }
 
+    public static IEnumerable<EmployeeReturnDto> ToIEnumerableEmployeeReturnDtos(
+        this IEnumerable<Employee> entities
+    )
+    {
+        List<EmployeeReturnDto> dtos = new List<EmployeeReturnDto>();
+        foreach (Employee employee in entities)
+            dtos.Add(employee.ToEmployeeReturnDto());
+
+        return dtos;
+    }
+
     public static Employee ToEmployeeEntity(this EmployeeUpdateDto dto)
     {
         return new Employee()
         {
-            PasswordHash = dto.PasswordHash,
-            SecurityStamp = dto.SecurityStamp,
+            //PasswordHash = dto.PasswordHash,
+            //SecurityStamp = dto.SecurityStamp,
+            //Password = dto.Password,
             HiredAt = dto.HiredAt,
             ContractEndAt = dto.ContractEndAt,
         };
@@ -70,8 +82,9 @@ public static class EmployeeDtoMapper
     {
         return new Employee()
         {
-            PasswordHash = dto.PasswordHash,
-            SecurityStamp = dto.SecurityStamp,
+            //PasswordHash = dto.PasswordHash,
+            //SecurityStamp = dto.SecurityStamp,
+            Password = dto.Password,
             HiredAt = dto.HiredAt,
             ContractEndAt = dto.ContractEndAt,
         };

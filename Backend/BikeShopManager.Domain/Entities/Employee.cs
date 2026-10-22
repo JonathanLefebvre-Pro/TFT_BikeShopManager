@@ -4,6 +4,7 @@ public class Employee : Audit
 {
     public int Id { get; set; } = 0;
     public int UserId { get; set; }
+    public string Password { get; set; } = default!;
     public string PasswordHash { get; set; } = default!;
     public string SecurityStamp { get; set; } = default!;
     public int AccessFailedCount { get; set; }

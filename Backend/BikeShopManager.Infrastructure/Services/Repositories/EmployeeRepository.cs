@@ -71,6 +71,20 @@ public class EmployeeRepository(IDbSession DbSession) : IEmployeeRepository
         return row is not 0;
     }
 
+    public async Task<int> GetEmployeeUserId(int id)
+    {
+        string employeeSqlQuery = @$"SELECT UserId FROM {_tableName} WHERE {_tableName}.Id=@Id";
+
+        DynamicParameters employeeParameters = new DynamicParameters();
+        employeeParameters.Add("@Id", id);
+
+        return await DbSession.Connection.QuerySingleOrDefaultAsync<int>(
+            employeeSqlQuery,
+            employeeParameters,
+            DbSession.Transaction
+        );
+    }
+
     public async Task<Employee?> GetEmployeeById(int id)
     {
         string employeeSqlQuery =
@@ -84,6 +98,52 @@ public class EmployeeRepository(IDbSession DbSession) : IEmployeeRepository
         return await DbSession.Connection.QuerySingleOrDefaultAsync<Employee>(
             employeeSqlQuery,
             employeeParameters,
+            DbSession.Transaction
+        );
+    }
+
+    public async Task<Employee?> GetEmployeeByUserId(int id)
+    {
+        string employeesSqlQuery =
+            @$"SELECT Id, UserId, PasswordHash, SecurityStamp, AccessFailedCount, LockoutEnd, HiredAt, ContractEndAt, IsActive, CreatedAt, UpdatedAt 
+                FROM {_tableName} 
+                WHERE {_tableName}.UserId=@Id";
+
+        DynamicParameters employeesParameters = new DynamicParameters();
+        employeesParameters.Add("@Id", id);
+
+        return await DbSession.Connection.QuerySingleOrDefaultAsync<Employee>(
+            employeesSqlQuery,
+            employeesParameters,
+            DbSession.Transaction
+        );
+    }
+
+    public async Task<IEnumerable<Employee>> GetEmployees(int offset, int limit)
+    {
+        string employeesSqlQuery =
+            @$"SELECT Id, UserId, PasswordHash, SecurityStamp, AccessFailedCount, LockoutEnd, HiredAt, ContractEndAt, IsActive, CreatedAt, UpdatedAt  
+                FROM {_tableName}
+                ORDER BY Id
+                OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";
+
+        DynamicParameters employeesParameters = new DynamicParameters();
+        employeesParameters.Add("@Offset", offset);
+        employeesParameters.Add("@Limit", limit);
+
+        return await DbSession.Connection.QueryAsync<Employee>(
+            employeesSqlQuery,
+            employeesParameters,
+            DbSession.Transaction
+        );
+    }
+
+    public async Task<int> GetEmployeesCount()
+    {
+        string employeesSqlQuery = @$"SELECT COUNT(*) FROM {_tableName}";
+        return await DbSession.Connection.ExecuteScalarAsync<int>(
+            employeesSqlQuery,
+            null,
             DbSession.Transaction
         );
     }
@@ -108,13 +168,10 @@ public class EmployeeRepository(IDbSession DbSession) : IEmployeeRepository
     {
         string employeeSqlQuery =
             @$"UPDATE {_tableName} 
-                SET PasswordHash=@PasswordHash, SecurityStamp=@SecurityStamp, 
-                HiredAt=@HiredAt, ContractEndAt=@ContractEndAt, UpdatedAt=@UpdatedAt
+                SET HiredAt=@HiredAt, ContractEndAt=@ContractEndAt, UpdatedAt=@UpdatedAt
                 WHERE {_tableName}.Id=@Id";
         DynamicParameters employeeParameters = new DynamicParameters();
         employeeParameters.Add("@Id", id);
-        employeeParameters.Add("@PasswordHash", employee.PasswordHash);
-        employeeParameters.Add("@SecurityStamp", employee.SecurityStamp);
         employeeParameters.Add("@HiredAt", employee.HiredAt);
         employeeParameters.Add("@ContractEndAt", employee.ContractEndAt);
         employeeParameters.Add("@UpdatedAt", DateTime.UtcNow);
