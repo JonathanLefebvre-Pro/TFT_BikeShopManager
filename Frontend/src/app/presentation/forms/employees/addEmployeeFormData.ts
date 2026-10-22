@@ -1,6 +1,9 @@
-export interface UpdateCustomerFormData {
-    //Customer
-    vatNumber: string;
+export interface AddEmployeeFormData {
+    //Employee
+    password: string;
+    hiredAt: Date | string;
+    contractEndAt: Date | string | null;
+    
     //User
     firstName: string;
     lastName: string;

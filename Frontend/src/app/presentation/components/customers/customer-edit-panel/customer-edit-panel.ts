@@ -4,9 +4,9 @@ import { FormTextInput } from '@presentation/components/shared/form-text-input/f
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
 import { CustomerService } from '@infrastructure/services/customer-service';
-import { UpdateCustomerFormData } from '@presentation/forms/updateCustomerFormData';
+import { UpdateCustomerFormData } from '@/app/presentation/forms/customers/updateCustomerFormData';
 import { email, form, maxLength, minLength, required, submit, FormRoot } from '@angular/forms/signals';
-import { CustomerUpdateDto } from '@appCore/dtos/customerUpdateDto';
+import { CustomerUpdateDto } from '@/app/appCore/dtos/customers/customerUpdateDto';
 import { DatePipe } from '@angular/common';
 
 @Component({

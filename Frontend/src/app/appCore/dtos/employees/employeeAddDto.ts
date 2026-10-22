@@ -1,6 +1,8 @@
-export interface CustomerUpdateDto {
-    //Customer
-    vatNumber: string | null;
+export interface EmployeeAddDto {
+    //Employee
+    password: string;
+    hiredAt: Date | string;
+    contractEndAt: Date | string | null;
 
     //User
     firstName: string;

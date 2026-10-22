@@ -6,10 +6,10 @@ export interface Employee
     userId: number;
     passwordHash: string;
     securityStamp: string; 
-    accessFailedCount: number;
-    lockoutEnd: Date;
-    hiredAt: Date;
-    contractEndAt: Date; 
+    //accessFailedCount: number | null;
+    //lockoutEnd: Date | null;
+    hiredAt: Date | string;
+    contractEndAt: Date | string | null; 
     isActive: boolean;
 
     user: User;

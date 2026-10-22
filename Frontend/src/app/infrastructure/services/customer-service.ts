@@ -2,10 +2,10 @@ import { inject, Service } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ICustomerRepository } from '@/app/appCore/abstraction/repositories/icustomer-repository';
-import { CustomerAddDto } from '@/app/appCore/dtos/customerAddDto';
-import { CustomerReturnDto } from '@/app/appCore/dtos/customerReturnDto';
-import { CustomerUpdateDto } from '@/app/appCore/dtos/customerUpdateDto';
-import { PageResponseDto } from '@/app/appCore/dtos/pageResponseDto';
+import { CustomerAddDto } from '@/app/appCore/dtos/customers/customerAddDto';
+import { CustomerReturnDto } from '@/app/appCore/dtos/customers/customerReturnDto';
+import { CustomerUpdateDto } from '@/app/appCore/dtos/customers/customerUpdateDto';
+import { PageResponseDto } from '@/app/appCore/dtos/shared/pageResponseDto';
 
 @Service()
 export class CustomerService implements ICustomerRepository {
@@ -28,10 +28,10 @@ export class CustomerService implements ICustomerRepository {
         return this.http.get<CustomerReturnDto>(url);
     }
 
-    public getCustomersByKeywords(pageNumber: number, pageSize: number, keywords: string[]): Observable<PageResponseDto<CustomerReturnDto>> {
+    /*public getCustomersByKeywords(pageNumber: number, pageSize: number, keywords: string[]): Observable<PageResponseDto<CustomerReturnDto>> {
         const url: string = `${this.baseUrl}/${"api/Customer/GetAsyncByKeywords"}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
         return this.http.post<PageResponseDto<CustomerReturnDto>>(url, { keywords: keywords });
-    }
+    }*/
 
     public addCustomer(customer: CustomerAddDto) : Observable<number> {
         const url:string = `${this.baseUrl}/${"api/Customer/AddAsync"}`;

@@ -1,9 +1,8 @@
 import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
 import { CustomersTable } from '@presentation/components/customers/customers-table/customers-table';
-import { CustomerEditPanel } from '@presentation/components/customers/customer-edit-panel/customer-edit-panel';
 import { Customer } from '@domain/customer';
 import { CustomerService } from '@infrastructure/services/customer-service';
-import { CustomerDtoMapper } from '@presentation/mappers/customer-dto-mapper';
+import { CustomerDtoMapper } from '@presentation/mappers/customers/customer-dto-mapper';
 import { CustomerSearchInput } from '../customer-search-input/customer-search-input';
 import { Router } from '@angular/router';
 

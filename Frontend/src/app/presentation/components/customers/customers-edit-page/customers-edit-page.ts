@@ -2,9 +2,9 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CustomerEditPanel } from '@presentation/components/customers/customer-edit-panel/customer-edit-panel';
 import { Customer } from '@domain/customer';
 import { CustomerService } from '@infrastructure/services/customer-service';
-import { CustomerUpdateDto } from '@appCore/dtos/customerUpdateDto';
+import { CustomerUpdateDto } from '@/app/appCore/dtos/customers/customerUpdateDto';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CustomerDtoMapper } from '@/app/presentation/mappers/customer-dto-mapper';
+import { CustomerDtoMapper } from '@/app/presentation/mappers/customers/customer-dto-mapper';
 
 @Component({
   imports: [CustomerEditPanel],

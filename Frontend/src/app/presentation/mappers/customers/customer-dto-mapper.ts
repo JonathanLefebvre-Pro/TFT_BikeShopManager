@@ -1,6 +1,6 @@
+import { CustomerReturnDto } from '@/app/appCore/dtos/customers/customerReturnDto';
 import { Customer } from '@/app/domain/customer';
 import { User } from '@/app/domain/user';
-import { CustomerReturnDto } from '../../appCore/dtos/customerReturnDto';
 import { Service } from '@angular/core';
 
 @Service()
