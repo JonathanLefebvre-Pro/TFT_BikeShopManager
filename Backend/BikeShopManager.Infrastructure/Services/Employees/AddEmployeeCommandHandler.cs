@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using BikeShopManager.AppCore.Extensions;
 using BikeShopManager.AppCore.Features.Commands;
 using BikeShopManager.AppCore.Features.Errors;
@@ -5,6 +7,7 @@ using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Commands;
 using BikeShopManager.AppCore.Interfaces.Repositories;
 using BikeShopManager.Domain.Entities;
+using BikeShopManager.Infrastructure.Extensions;
 
 namespace BikeShopManager.Infrastructure.Services;
 
@@ -60,6 +63,14 @@ public class AddEmployeeCommandHandler : ICommandHandlerAsync<AddEmployeeCommand
                 return ex;
             }
         }
+
+        //Hash password with Argon2
+        string passwordHash = HashingTools.HashPassword(command.Employee.Password);
+        command.Employee.PasswordHash = passwordHash;
+
+        //Temporary generate SecurityStamp -> TODO : Change this when adding JWT
+        Guid guid = Guid.NewGuid();
+        command.Employee.SecurityStamp = guid.ToString();
 
         //Insert Employee data in Employee table and recover row id
         int employeeRowId;

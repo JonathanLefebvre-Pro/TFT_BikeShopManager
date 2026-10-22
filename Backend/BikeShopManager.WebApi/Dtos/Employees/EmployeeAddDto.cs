@@ -6,10 +6,10 @@ public class EmployeeAddDto
 {
     #region Employee
     [Required]
-    public required string PasswordHash { get; set; }
+    public required string Password { get; set; }
 
-    [Required]
-    public required string SecurityStamp { get; set; }
+    //[Required]
+    //public required string SecurityStamp { get; set; }
 
     //public int AccessFailedCount { get; set; }
     //public DateTimeOffset LockoutEnd { get; set; }

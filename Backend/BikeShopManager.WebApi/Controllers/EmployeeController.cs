@@ -14,6 +14,69 @@ namespace BikeShopManager.WebApi.Controllers
     [ApiController]
     public class EmployeeController(IDispatcher Dispatcher) : ControllerBase
     {
+        [Route("GetAsync")]
+        [HttpGet]
+        public async Task<IActionResult> GetAsync(
+            [FromQuery] string? keywords,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10
+        )
+        {
+            Result<PageResponse<Employee>> result = await Dispatcher.SendQueryAsync<
+                GetEmployeesQuery,
+                PageResponse<Employee>
+            >(new GetEmployeesQuery(pageNumber, pageSize, keywords));
+
+            if (result.IsSuccess)
+            {
+                PageResponseDto<EmployeeReturnDto> responseDto =
+                    new PageResponseDto<EmployeeReturnDto>()
+                    {
+                        Data = result.Data.Data.ToIEnumerableEmployeeReturnDtos(),
+                        PageSize = result.Data.PageSize,
+                        PageNumber = result.Data.PageNumber,
+                        TotalRecords = result.Data.TotalRecords,
+                        TotalPages = result.Data.TotalPages,
+                    };
+
+                return this.Ok(responseDto);
+            }
+
+            return this.NotFound(result.Error);
+        }
+
+        [Route("GetByRoleIdAsync/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetByRoleIdAsync(int id)
+        {
+            Result<IEnumerable<Employee>> result = await Dispatcher.SendQueryAsync<
+                GetEmployeesByRoleIdQuery,
+                IEnumerable<Employee>
+            >(new GetEmployeesByRoleIdQuery(id));
+
+            if (result.IsSuccess)
+            {
+                List<EmployeeReturnDto> dtos = new List<EmployeeReturnDto>();
+                foreach (Employee employee in result.Data)
+                    dtos.Add(employee.ToEmployeeReturnDto());
+
+                return this.Ok(dtos);
+            }
+
+            return this.NotFound(result.Error);
+        }
+
+        [Route("GetCountAsync")]
+        [HttpGet]
+        public async Task<IActionResult> GetCountAsync()
+        {
+            Result<int> result = await Dispatcher.SendQueryAsync<GetEmployeesCountQuery, int>(
+                new GetEmployeesCountQuery()
+            );
+
+            return this.FromResult(result);
+        }
+
         [Route("GetAsync/{id}")]
         [HttpGet]
         public async Task<IActionResult> GetByIdAsync(int id)
@@ -68,27 +131,6 @@ namespace BikeShopManager.WebApi.Controllers
             );
 
             return this.FromResult(result);
-        }
-
-        [Route("GetEmployeesByRoleIdAsync/{id}")]
-        [HttpGet]
-        public async Task<IActionResult> GetEmployeesByRoleIdAsync(int id)
-        {
-            Result<IEnumerable<Employee>> result = await Dispatcher.SendQueryAsync<
-                GetEmployeesByRoleIdQuery,
-                IEnumerable<Employee>
-            >(new GetEmployeesByRoleIdQuery(id));
-
-            if (result.IsSuccess)
-            {
-                List<EmployeeReturnDto> dtos = new List<EmployeeReturnDto>();
-                foreach (Employee employee in result.Data)
-                    dtos.Add(employee.ToEmployeeReturnDto());
-
-                return this.Ok(dtos);
-            }
-
-            return this.NotFound(result.Error);
         }
     }
 }
