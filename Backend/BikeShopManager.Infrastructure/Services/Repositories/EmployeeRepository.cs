@@ -168,13 +168,10 @@ public class EmployeeRepository(IDbSession DbSession) : IEmployeeRepository
     {
         string employeeSqlQuery =
             @$"UPDATE {_tableName} 
-                SET PasswordHash=@PasswordHash, SecurityStamp=@SecurityStamp, 
-                HiredAt=@HiredAt, ContractEndAt=@ContractEndAt, UpdatedAt=@UpdatedAt
+                SET HiredAt=@HiredAt, ContractEndAt=@ContractEndAt, UpdatedAt=@UpdatedAt
                 WHERE {_tableName}.Id=@Id";
         DynamicParameters employeeParameters = new DynamicParameters();
         employeeParameters.Add("@Id", id);
-        employeeParameters.Add("@PasswordHash", employee.PasswordHash);
-        employeeParameters.Add("@SecurityStamp", employee.SecurityStamp);
         employeeParameters.Add("@HiredAt", employee.HiredAt);
         employeeParameters.Add("@ContractEndAt", employee.ContractEndAt);
         employeeParameters.Add("@UpdatedAt", DateTime.UtcNow);

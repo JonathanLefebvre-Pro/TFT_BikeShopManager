@@ -53,8 +53,9 @@ public static class EmployeeDtoMapper
     {
         return new Employee()
         {
-            PasswordHash = dto.PasswordHash,
-            SecurityStamp = dto.SecurityStamp,
+            //PasswordHash = dto.PasswordHash,
+            //SecurityStamp = dto.SecurityStamp,
+            //Password = dto.Password,
             HiredAt = dto.HiredAt,
             ContractEndAt = dto.ContractEndAt,
         };
