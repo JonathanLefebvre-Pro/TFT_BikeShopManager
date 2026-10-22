@@ -68,6 +68,141 @@ public class UserRepository(IDbSession DbSession) : IUserRepository
         );
     }
 
+    public async Task<IEnumerable<User>> GetUsers(int offset, int limit, string[]? keywords = null)
+    {
+        string getUserSqlQuery = @$"SELECT Id, ";
+
+        string[] headers =
+        [
+            "FirstName",
+            "LastName",
+            "Email",
+            "PhoneNumber",
+            "Address",
+            "City",
+            "ZipCode",
+            "Country",
+            "BirthDate",
+        ];
+        for (int i = 0; i < headers.Length; i++)
+            getUserSqlQuery += headers[i] + ", ";
+
+        getUserSqlQuery +=
+            @$"AllowMarketing, CreatedAt, UpdatedAt 
+                FROM {_tableName}";
+
+        if (keywords != null && keywords.Length > 0)
+        {
+            getUserSqlQuery += @" WHERE (";
+
+            for (int k = 0; k < keywords.Length; k++)
+            {
+                if (k > 0)
+                    getUserSqlQuery += @"AND (";
+
+                for (int i = 0; i < headers.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        getUserSqlQuery += headers[i] + @$" LIKE @Keyword{k} ";
+                        continue;
+                    }
+
+                    getUserSqlQuery += @"OR " + headers[i] + @$" LIKE @Keyword{k} ";
+
+                    if (i == headers.Length - 1)
+                        getUserSqlQuery += @")";
+                }
+            }
+        }
+
+        getUserSqlQuery +=
+            @$"ORDER BY Id
+            OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";
+
+        DynamicParameters getUserParameters = new DynamicParameters();
+        getUserParameters.Add("@Offset", offset);
+        getUserParameters.Add("@Limit", limit);
+
+        if (keywords != null && keywords.Length > 0)
+        {
+            for (int k = 0; k < keywords.Length; k++)
+                getUserParameters.Add(@$"@Keyword{k}", "%" + keywords[k] + "%");
+        }
+
+        return await DbSession.Connection.QueryAsync<User>(
+            getUserSqlQuery,
+            getUserParameters,
+            DbSession.Transaction
+        );
+    }
+
+    public async Task<int> GetUsersCount(string[] keywords)
+    {
+        if (keywords is null || keywords.Length is 0)
+            return 0;
+
+        string getUserSqlQuery = @$"SELECT COUNT(*) ";
+
+        string[] headers =
+        [
+            "FirstName",
+            "LastName",
+            "Email",
+            "PhoneNumber",
+            "Address",
+            "City",
+            "ZipCode",
+            "Country",
+            "BirthDate",
+        ];
+
+        getUserSqlQuery +=
+            @$"FROM {_tableName}
+                WHERE (";
+
+        for (int k = 0; k < keywords.Length; k++)
+        {
+            if (k > 0)
+                getUserSqlQuery += @"AND (";
+
+            for (int i = 0; i < headers.Length; i++)
+            {
+                if (i == 0)
+                {
+                    getUserSqlQuery += headers[i] + @$" LIKE @Keyword{k} ";
+                    continue;
+                }
+
+                getUserSqlQuery += @"OR " + headers[i] + @$" LIKE @Keyword{k} ";
+
+                if (i == headers.Length - 1)
+                    getUserSqlQuery += @")";
+            }
+        }
+
+        DynamicParameters getUserParameters = new DynamicParameters();
+        for (int k = 0; k < keywords.Length; k++)
+            getUserParameters.Add(@$"@Keyword{k}", "%" + keywords[k] + "%");
+
+        return await DbSession.Connection.ExecuteScalarAsync<int>(
+            getUserSqlQuery,
+            getUserParameters,
+            DbSession.Transaction
+        );
+    }
+
+    public async Task<int> GetUsersCount()
+    {
+        string getUserSqlQuery = @$"SELECT COUNT(*) FROM {_tableName}";
+
+        return await DbSession.Connection.ExecuteScalarAsync<int>(
+            getUserSqlQuery,
+            null,
+            DbSession.Transaction
+        );
+    }
+
     public async Task<bool> IsUserExist(int id)
     {
         string userSqlQuery = @$"SELECT Id FROM {_tableName} WHERE {_tableName}.Id = @UserId";

@@ -16,24 +16,44 @@ namespace BikeShopManager.WebApi.Controllers
     {
         [Route("GetAsync")]
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> GetAsync(
+            [FromQuery] string? keywords,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10
+        )
         {
-            Result<IEnumerable<Customer>> result = await Dispatcher.SendQueryAsync<
+            Result<PageResponse<Customer>> result = await Dispatcher.SendQueryAsync<
                 GetCustomersQuery,
-                IEnumerable<Customer>
-            >(new GetCustomersQuery());
+                PageResponse<Customer>
+            >(new GetCustomersQuery(pageNumber, pageSize, keywords));
 
             if (result.IsSuccess)
             {
-                //Convert domain object list to list of dto's
-                List<CustomerReturnDto> dtos = new List<CustomerReturnDto>();
-                foreach (Customer customer in result.Data)
-                    dtos.Add(customer.ToCustomerReturnDto());
+                PageResponseDto<CustomerReturnDto> responseDto =
+                    new PageResponseDto<CustomerReturnDto>()
+                    {
+                        Data = result.Data.Data.ToIEnumerableCustomerReturnDtos(),
+                        PageSize = result.Data.PageSize,
+                        PageNumber = result.Data.PageNumber,
+                        TotalRecords = result.Data.TotalRecords,
+                        TotalPages = result.Data.TotalPages,
+                    };
 
-                return this.Ok(dtos);
+                return this.Ok(responseDto);
             }
 
             return this.NotFound(result.Error);
+        }
+
+        [Route("GetCountAsync")]
+        [HttpGet]
+        public async Task<IActionResult> GetCountAsync()
+        {
+            Result<int> result = await Dispatcher.SendQueryAsync<GetCustomersCountQuery, int>(
+                new GetCustomersCountQuery()
+            );
+
+            return this.FromResult(result);
         }
 
         [Route("GetAsync/{id}")]

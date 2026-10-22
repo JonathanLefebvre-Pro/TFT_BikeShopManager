@@ -32,4 +32,9 @@
             <p>There is no customers !</p>
         }
     </tbody>
+    <tfoot class="customerTableFooter">
+        <input type="button" value="<" (click)="handlePreviousPage()"/>
+        {{currentPageNumber()}}/{{maxPagesNumber()}}
+        <input type="button" value=">" (click)="handleNextPage()"/>
+    </tfoot>
 </table>

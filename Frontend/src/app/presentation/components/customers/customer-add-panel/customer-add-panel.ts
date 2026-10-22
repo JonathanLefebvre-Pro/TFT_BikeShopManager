@@ -17,10 +17,10 @@ import { Router } from '@angular/router';
 })
 export class CustomerAddPanel {
 
-  customerService = inject(CustomerService);
-  routerService = inject(Router);
+  protected customerService = inject(CustomerService);
+  protected routerService = inject(Router);
 
-  onAddCustomerEvent = output<number>();
+  public onAddCustomerEvent = output<number>();
 
   constructor(public datepipe: DatePipe){}
 
@@ -37,9 +37,9 @@ export class CustomerAddPanel {
       birthDate: null,
       allowMarketing: true
   };
-  customerModel = signal<AddCustomerFormData>({...this.INITIAL_MODEL});
+  protected customerModel = signal<AddCustomerFormData>({...this.INITIAL_MODEL});
 
-  customerForm = form(this.customerModel, (schemaPath) => {
+  protected customerForm = form(this.customerModel, (schemaPath) => {
     required(schemaPath.firstName, {message: "Firstname is required !"}),
     minLength(schemaPath.firstName, 5, {message: "Firstname min length : 5 !"}),
     maxLength(schemaPath.firstName, 100,  {message: "Firstname max length : 100 !"}),
@@ -77,7 +77,7 @@ export class CustomerAddPanel {
             console.log("Result : " + JSON.stringify(res));
             model().reset({...this.INITIAL_MODEL});
             this.onAddCustomerEvent.emit(res);
-            this.routerService.navigate(['edit']);
+            this.routerService.navigate(['/customers/list']);
           },
           error: (error) => {
             console.log("Error : " + JSON.stringify(error));

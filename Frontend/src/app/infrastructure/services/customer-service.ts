@@ -5,22 +5,32 @@ import { ICustomerRepository } from '@/app/appCore/abstraction/repositories/icus
 import { CustomerAddDto } from '@/app/appCore/dtos/customerAddDto';
 import { CustomerReturnDto } from '@/app/appCore/dtos/customerReturnDto';
 import { CustomerUpdateDto } from '@/app/appCore/dtos/customerUpdateDto';
+import { PageResponseDto } from '@/app/appCore/dtos/pageResponseDto';
 
 @Service()
 export class CustomerService implements ICustomerRepository {
-
- 
+    
     protected readonly baseUrl = 'https://localhost:7105';
     readonly http = inject(HttpClient);
-
-    public getCustomers() : Observable<CustomerReturnDto[]> {
-        const url:string = `${this.baseUrl}/${"api/Customer/GetAsync"}`;
-        return this.http.get<CustomerReturnDto[]>(url)
+    
+    public getCustomers(pageNumber: number, pageSize: number, keywords: string | null) : Observable<PageResponseDto<CustomerReturnDto>> {
+        const url:string = `${this.baseUrl}/${"api/Customer/GetAsync"}?keywords=${keywords}&pageNumber=${pageNumber}&pageSize=${pageSize}`;
+        return this.http.get<PageResponseDto<CustomerReturnDto>>(url);
     }
 
+    public getCustomersCount(): Observable<number> {
+        const url:string = `${this.baseUrl}/${"api/Customer/GetCountAsync"}`;
+        return this.http.get<number>(url);
+    }
+    
     public getCustomerById(id: number) : Observable<CustomerReturnDto> {
         const url:string = `${this.baseUrl}/${"api/Customer/GetAsync"}/${id}`;
         return this.http.get<CustomerReturnDto>(url);
+    }
+
+    public getCustomersByKeywords(pageNumber: number, pageSize: number, keywords: string[]): Observable<PageResponseDto<CustomerReturnDto>> {
+        const url: string = `${this.baseUrl}/${"api/Customer/GetAsyncByKeywords"}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+        return this.http.post<PageResponseDto<CustomerReturnDto>>(url, { keywords: keywords });
     }
 
     public addCustomer(customer: CustomerAddDto) : Observable<number> {
@@ -37,6 +47,7 @@ export class CustomerService implements ICustomerRepository {
        const url:string = `${this.baseUrl}/${"api/Customer/EnableAsync"}/${id}`;
        return this.http.patch(url, null, { observe: 'response' });
     }
+
     public updateCustomer(id: number, customer: CustomerUpdateDto) : Observable<HttpResponse<Object>> {
         const url:string = `${this.baseUrl}/${"api/Customer/UpdateAsync"}/${id}`;
         return this.http.put(url, customer, { observe: 'response' });

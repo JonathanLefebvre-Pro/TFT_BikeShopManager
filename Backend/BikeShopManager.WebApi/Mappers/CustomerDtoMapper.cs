@@ -26,6 +26,16 @@ public static class CustomerDtoMapper
         };
     }
 
+    public static IEnumerable<CustomerReturnDto> ToIEnumerableCustomerReturnDtos(
+        this IEnumerable<Customer> entities
+    )
+    {
+        List<CustomerReturnDto> dtos = new List<CustomerReturnDto>();
+        foreach (Customer customer in entities)
+            dtos.Add(customer.ToCustomerReturnDto());
+        return dtos;
+    }
+
     public static Customer ToCustomerEntity(this CustomerUpdateDto dto)
     {
         return new Customer() { VatNumber = dto.VatNumber };

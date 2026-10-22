@@ -1,4 +1,4 @@
-import { Component, output, input, signal, viewChildren } from '@angular/core';
+import { Component, output, input, viewChildren } from '@angular/core';
 import { CustomerTableRow } from '@presentation/components/customers/customer-table-row/customer-table-row';
 import { Customer } from '@domain/customer';
 
@@ -9,25 +9,35 @@ import { Customer } from '@domain/customer';
   templateUrl: './customers-table.html',
 })
 export class CustomersTable {
-  readonly customers = input.required<Customer[]>();
+  public readonly customers = input.required<Customer[]>();
+  public readonly currentPageNumber = input.required<number>();
+  public readonly maxPagesNumber = input.required<number>();
 
-  onEnableCustomerEvent = output<number>();
-  onDisableCustomerEvent = output<number>();
-  onEditCustomerEvent = output<number>();
+  public onEnableCustomerEvent = output<number>();
+  public onDisableCustomerEvent = output<number>();
+  public onEditCustomerEvent = output<number>();
+  public onNextPageEvent = output();
+  public onPreviousPageEvent = output();
 
   protected readonly customerTableRowElements = viewChildren(CustomerTableRow);
 
-  handleCustomerEnable(customerId: number){
+  protected handleCustomerEnable(customerId: number){
     this.onEnableCustomerEvent.emit(customerId);
   }
-  handleCustomerDisable(customerId: number){
+  protected handleCustomerDisable(customerId: number){
     this.onDisableCustomerEvent.emit(customerId);
   }
-  handleCustomerEdit(customerId: number) {
+  protected handleCustomerEdit(customerId: number) {
     this.onEditCustomerEvent.emit(customerId);
   }
+  protected handleNextPage() {
+    this.onNextPageEvent.emit();
+  }
+  protected handlePreviousPage() {
+    this.onPreviousPageEvent.emit();
+  }
 
-  notifyEditModeEnabled() {
+  public notifyEditModeEnabled() {
     if(this.customerTableRowElements() !== null && 
       this.customerTableRowElements().length > 0)
       {
@@ -37,7 +47,7 @@ export class CustomersTable {
         }
       }
   }
-  notifyEditModeDisabled() {
+  public notifyEditModeDisabled() {
     if(this.customerTableRowElements() !== null && 
       this.customerTableRowElements().length > 0)
       {

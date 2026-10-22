@@ -1,94 +1,63 @@
-import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
-import { CustomersTable } from '@presentation/components/customers/customers-table/customers-table';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CustomerEditPanel } from '@presentation/components/customers/customer-edit-panel/customer-edit-panel';
 import { Customer } from '@domain/customer';
 import { CustomerService } from '@infrastructure/services/customer-service';
-import { CustomerDtoMapper } from '@presentation/mappers/customer-dto-mapper';
 import { CustomerUpdateDto } from '@appCore/dtos/customerUpdateDto';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CustomerDtoMapper } from '@/app/presentation/mappers/customer-dto-mapper';
 
 @Component({
-  imports: [CustomersTable, CustomerEditPanel],
+  imports: [CustomerEditPanel],
   selector: 'app-customers-page',
   styleUrl: './customers-edit-page.scss',
   templateUrl: './customers-edit-page.html',
 })
 export class CustomersEditPage implements OnInit {
+  
+  private routeService = inject(ActivatedRoute);
+  protected routerService = inject(Router);
   protected readonly customerService : CustomerService = inject(CustomerService);
   protected readonly customerDtoMapper : CustomerDtoMapper = inject(CustomerDtoMapper);
 
-  protected readonly customers = signal<Customer[]>([]);
   protected readonly lastEditedCustomer = signal<Customer | null>(null);
-
-  protected readonly customersTableElement = viewChild(CustomersTable);
-  protected readonly editPanelElement = viewChild(CustomerEditPanel);
+  protected readonly errorMessage = signal<string>('');
 
   ngOnInit(): void {
-    this.init();
-  }
+    this.routeService.params.subscribe((params) => {
 
-  init(){
-    this.lastEditedCustomer.set(null);
-    this.customerService.getCustomers().subscribe({
-      next : (res) => {
-        this.customers.set(this.customerDtoMapper.ToCustomerEntities(res));
-      },
-      error: (error) => {
-        //console.error(error);
+      if(Number.isNaN(+params['id']))
+      {
+        this.errorMessage.set("Please select a Customer to edit his details !");
+        return;
       }
-    })
-  }
 
-  handleEnableCustomer(customerId: number) {
-    this.customerService.enableCustomer(customerId).subscribe({
-      next: (res) => {
-        console.log("Result : " + JSON.stringify(res.status));
-        this.init();
-      },
-      error(err) {
-        console.log("Error" + err);
-      },
-    });
-  }
-  handleDisableCustomer(customerId: number) {
-    this.customerService.disableCustomer(customerId).subscribe({
-      next: (res) => {
-        console.log("Result : " + JSON.stringify(res.status));
-        this.init();
-      },
-      error(error) {
-        console.error("Error" + error);
-      },
-    });
-  }
-  handleEditCustomer(customerId: number) {
-    this.lastEditedCustomer.set(null);
-
-    if(this.customers() === null || this.customers().length <= 0)
-      return;
-
-    const customer: Customer | undefined = this.customers().find(c => c.id === customerId);
-    if(customer !== null && customer !== undefined)
-    {
-      this.customersTableElement()?.notifyEditModeEnabled();
-      this.lastEditedCustomer.set(customer);
-    }
-  }
-  handleUpdateCustomer(event : {id: number, obj: CustomerUpdateDto}) {
-    this.customerService.updateCustomer(event.id, event.obj).subscribe({
+      this.customerService.getCustomerById(+params['id']).subscribe({
         next: (res) => {
-          console.log("Result : " + JSON.stringify(res));
-          this.init();
+            this.lastEditedCustomer.set(this.customerDtoMapper.ToCustomerEntity(res))
         },
         error: (error) => {
-          console.log("Error : " + JSON.stringify(error));
-          console.log(JSON.stringify(event.obj));
+          console.error(error);
+        }
+      });
+    });
+  }
+
+  protected handleUpdateCustomer(event : {id: number, obj: CustomerUpdateDto}) {
+    this.customerService.updateCustomer(event.id, event.obj).subscribe({
+        next: (res) => {
+          this.exitEdit();
+        },
+        error: (error) => {
+          console.error(error);
         }
     });
   }
-  handleCancelUpdateCustomer() {
-    this.init();
+  protected handleCancelUpdateCustomer() {
+    this.exitEdit();
   }
-  /*handleAddCustomer($customerId: number) {
-    this.init();
-  }*/
+
+  private exitEdit() {
+    this.lastEditedCustomer.set(null);
+    this.routerService.navigate(['/customers/list']);
+  }
 }

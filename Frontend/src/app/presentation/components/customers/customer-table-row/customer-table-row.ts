@@ -10,34 +10,34 @@ import { DatePipe } from '@angular/common';
 })
 export class CustomerTableRow implements OnChanges {
   
-  customer = input.required<Customer>();
-  isEditModeEnabled = signal<boolean>(false);
+  public customer = input.required<Customer>();
+  protected isEditModeEnabled = signal<boolean>(false);
   
-  onEnableCustomerEvent = output<number>();
-  onDisableCustomerEvent = output<number>();
-  onEditCustomerEvent = output<number>();
+  public onEnableCustomerEvent = output<number>();
+  public onDisableCustomerEvent = output<number>();
+  public onEditCustomerEvent = output<number>();
 
-  ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     this.isEditModeEnabled.set(false);
   }
 
-  handleEnableCustomer() {
+  protected handleEnableCustomer() {
     this.onEnableCustomerEvent.emit(this.customer().id);
   }
 
-  handleDisableCustomer() {
+  protected handleDisableCustomer() {
     this.onDisableCustomerEvent.emit(this.customer().id);
   }
 
-  handleEditCustomer() {
+  protected handleEditCustomer() {
     this.isEditModeEnabled.set(true);
     this.onEditCustomerEvent.emit(this.customer().id);
   }
 
-  disableEditMode() {
+  public disableEditMode() {
     this.isEditModeEnabled.set(true);
   }
-  enableEditMode() {
+  public enableEditMode() {
     this.isEditModeEnabled.set(false);
   }
 }

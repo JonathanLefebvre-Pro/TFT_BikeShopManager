@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace BikeShopManager.WebApi.Dtos;
 
 public class CustomerReturnDto
