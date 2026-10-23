@@ -50,7 +50,6 @@ export class EmployeeService implements IEmployeeRepository {
     }
 
     public updateEmployee(id: number, Employee: EmployeeUpdateDto) : Observable<HttpResponse<Object>> {
-        console.log(Employee);
         const url:string = `${this.baseUrl}/${"api/Employee/UpdateAsync"}/${id}`;
         return this.http.put(url, Employee, { observe: 'response' });
     }
