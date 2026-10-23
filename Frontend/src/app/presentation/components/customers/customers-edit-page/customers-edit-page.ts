@@ -20,22 +20,19 @@ export class CustomersEditPage implements OnInit {
   protected readonly customerDtoMapper : CustomerDtoMapper = inject(CustomerDtoMapper);
 
   protected readonly lastEditedCustomer = signal<Customer | null>(null);
-  protected readonly errorMessage = signal<string>('');
 
   ngOnInit(): void {
     this.routeService.params.subscribe((params) => {
 
       if(Number.isNaN(+params['id']))
-      {
-        this.errorMessage.set("Please select a Customer to edit his details !");
         return;
-      }
 
       this.customerService.getCustomerById(+params['id']).subscribe({
         next: (res) => {
-            this.lastEditedCustomer.set(this.customerDtoMapper.ToCustomerEntity(res))
+          this.lastEditedCustomer.set(this.customerDtoMapper.ToCustomerEntity(res))
         },
         error: (error) => {
+          this.routerService.navigate(['/customers/edit/:id']);
           console.error(error);
         }
       });
@@ -59,5 +56,9 @@ export class CustomersEditPage implements OnInit {
   private exitEdit() {
     this.lastEditedCustomer.set(null);
     this.routerService.navigate(['/customers/list']);
+  }
+
+  private isLoading(): boolean {
+    return this.lastEditedCustomer() !== null;
   }
 }

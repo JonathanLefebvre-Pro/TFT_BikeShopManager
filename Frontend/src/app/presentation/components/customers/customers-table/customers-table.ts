@@ -1,4 +1,4 @@
-import { Component, output, input, viewChildren } from '@angular/core';
+import { Component, output, input, viewChildren, signal } from '@angular/core';
 import { CustomerTableRow } from '@presentation/components/customers/customer-table-row/customer-table-row';
 import { Customer } from '@domain/customer';
 
@@ -20,6 +20,10 @@ export class CustomersTable {
   public onPreviousPageEvent = output();
 
   protected readonly customerTableRowElements = viewChildren(CustomerTableRow);
+
+  private readonly INITIAL_HEADERS : string[] = ['#','FirstName', 'LastName', 'Email', 'PhoneNumber', 
+    'Address', 'City', 'ZipCode', 'Country', 'BirthDate', 'AllowMarketing', 'IsActive', 'VatNumber', 'Actions'];
+  protected readonly headers = signal<string[]>([...this.INITIAL_HEADERS]);
 
   protected handleCustomerEnable(customerId: number){
     this.onEnableCustomerEvent.emit(customerId);
@@ -57,5 +61,9 @@ export class CustomersTable {
             element.enableEditMode();
         }
       }
+  }
+
+  protected isLoading() : boolean {
+    return (this.customers() && this.customers().length > 0);
   }
 }

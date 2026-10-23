@@ -1,26 +1,14 @@
 <table class="customerTable">
     <thead class="customerTableHead">
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">FirstName</th>
-            <th scope="col">LastName</th>
-            <th scope="col">Email</th>
-            <th scope="col">PhoneNumber</th>
-            <th scope="col">Address</th>
-            <th scope="col">City</th>
-            <th scope="col">ZipCode</th>
-            <th scope="col">Country</th>
-            <th scope="col">BirthDate</th>
-            <th scope="col">AllowMarketing</th>
-            <th scope="col">IsActive</th>
-            <th scope="col">VatNumber</th>
-            <th scope="col">Actions</th>
+            @for (header of headers(); track $index) {
+                <th scope="col">{{header}}</th>
+            }
         </tr>
     </thead>
     <tbody class="customerTableBody">
-        @if(customers() !== null && customers().length > 0)
+        @defer(when isLoading())
         {
-
             @for (customer of customers(); track customer.id) {
                 <app-customer-table-row #customerTableRow
                 [customer]="customer" 
@@ -28,13 +16,22 @@
                 (onDisableCustomerEvent)="handleCustomerDisable($event)"
                 (onEditCustomerEvent)="handleCustomerEdit($event)"/>
             }
-        }@else {
-            <p>There is no customers !</p>
+        }
+        @placeholder {
+            <p>Customers are loading !</p>
+        }
+        @loading(after 100ms; minimum 1s) {
+            <p>Customers are loading !</p>
+        }
+        @error {
+            <div>Loading error !</div>
         }
     </tbody>
     <tfoot class="customerTableFooter">
-        <input type="button" value="<" (click)="handlePreviousPage()"/>
-        {{currentPageNumber()}}/{{maxPagesNumber()}}
-        <input type="button" value=">" (click)="handleNextPage()"/>
+        @if(maxPagesNumber() > 0){
+            <input type="button" value="<" (click)="handlePreviousPage()"/>
+            {{currentPageNumber()}}/{{maxPagesNumber()}}
+            <input type="button" value=">" (click)="handleNextPage()"/>
+        }
     </tfoot>
 </table>
