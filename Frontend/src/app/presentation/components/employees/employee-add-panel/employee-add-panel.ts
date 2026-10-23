@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { FormTextInput } from '../../shared/form-text-input/form-text-input';
 import { FormDateInput } from '../../shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '../../shared/form-checkbox-input/form-checkbox-input';
@@ -8,10 +8,10 @@ import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { AddEmployeeFormData } from '@/app/presentation/forms/employees/addEmployeeFormData';
 import { EmployeeAddDto } from '@/app/appCore/dtos/employees/employeeAddDto';
-import { FormNumberInput } from '../../shared/form-number-input/form-number-input';
+import { FormSelectInput } from '../../shared/form-select-input/form-select-input';
 
 @Component({
-  imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormNumberInput, FormRoot],
+  imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot, FormSelectInput],
   selector: 'app-employee-add-panel',
   styleUrl: './employee-add-panel.scss',
   templateUrl: './employee-add-panel.html',
@@ -24,6 +24,7 @@ export class EmployeeAddPanel {
   public onAddEmployeeEvent = output<number>();
 
   constructor(public datepipe: DatePipe){}
+  public roleSelectOptions = input.required<string[]>();
 
   private readonly INITIAL_MODEL = {
       password: '',

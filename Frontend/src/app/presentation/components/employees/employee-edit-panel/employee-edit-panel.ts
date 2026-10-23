@@ -7,10 +7,10 @@ import { DatePipe } from '@angular/common';
 import { Employee } from '@/app/domain/employee';
 import { EmployeeUpdateDto } from '@/app/appCore/dtos/employees/employeeUpdateDto';
 import { UpdateEmployeeFormData } from '@/app/presentation/forms/employees/updateEmployeeFormData';
-import { FormNumberInput } from '../../shared/form-number-input/form-number-input';
+import { FormSelectInput } from '../../shared/form-select-input/form-select-input';
 
 @Component({
-  imports: [FormTextInput, FormDateInput, FormCheckboxInput,FormNumberInput, FormRoot],
+  imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot, FormSelectInput],
   selector: 'app-employee-edit-panel',
   styleUrl: './employee-edit-panel.scss',
   templateUrl: './employee-edit-panel.html',
@@ -37,9 +37,11 @@ export class EmployeeEditPanel implements OnInit {
   }
 
   public employee = input.required<Employee>();
+  public roleSelectOptions = input.required<string[]>();
+
   public onUpdateEmployeeEvent = output<{id: number, obj: EmployeeUpdateDto}>();
   public onCancelUpdateEmployeeEvent = output();
-  
+
   private readonly INITIAL_MODEL = {
       hiredAt: new Date('2023-02-01'),
       contractEndAt: null,

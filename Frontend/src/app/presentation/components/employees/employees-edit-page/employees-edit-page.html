@@ -3,6 +3,7 @@
     
     <app-employee-edit-panel #editPanel
     [employee]="lastEditedEmployee()!"
+    [roleSelectOptions]="roleOptions()"
     (onUpdateEmployeeEvent)="handleUpdateEmployee($event)"
     (onCancelUpdateEmployeeEvent)="handleCancelUpdateEmployee()"/>
 }

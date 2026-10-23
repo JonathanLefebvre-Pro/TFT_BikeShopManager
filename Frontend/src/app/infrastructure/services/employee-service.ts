@@ -10,7 +10,6 @@ import { EmployeeUpdateDto } from '@/app/appCore/dtos/employees/employeeUpdateDt
 @Service()
 export class EmployeeService implements IEmployeeRepository {
 
-    
     protected readonly baseUrl = 'https://localhost:7105';
     readonly http = inject(HttpClient);
     
