@@ -19,4 +19,9 @@ export interface EmployeeReturnDto {
     country: string | null;
     birthDate: Date | null;
     allowMarketing: boolean;
+
+    //Role
+    roleId: number;
+    roleName: string;
+    normalizedRoleName: string;
 }

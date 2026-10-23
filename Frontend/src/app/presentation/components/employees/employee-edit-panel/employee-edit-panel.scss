@@ -1,0 +1,28 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+
+    margin-top: 1rem;
+    gap: 1rem;
+}
+
+.editEmployeeForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    background-color: rgb(204, 204, 204);
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.editEmployeeForm div {
+    display: grid;
+    grid-template-columns: auto 200px;
+}
+
+.editEmployeeForm div.formGroup-Submit {
+    grid-template-columns: auto auto;
+    gap: 1rem;
+}

@@ -34,11 +34,6 @@ export class EmployeeService implements IEmployeeRepository {
         return this.http.get<EmployeeReturnDto>(url);
     }
 
-    /*public getEmployeesByKeywords(pageNumber: number, pageSize: number, keywords: string[]): Observable<PageResponseDto<EmployeeReturnDto>> {
-        const url: string = `${this.baseUrl}/${"api/Employee/GetAsyncByKeywords"}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
-        return this.http.post<PageResponseDto<EmployeeReturnDto>>(url, { keywords: keywords });
-    }*/
-
     public addEmployee(Employee: EmployeeAddDto) : Observable<number> {
         const url:string = `${this.baseUrl}/${"api/Employee/AddAsync"}`;
         return this.http.post<number>(url, Employee);
@@ -55,6 +50,7 @@ export class EmployeeService implements IEmployeeRepository {
     }
 
     public updateEmployee(id: number, Employee: EmployeeUpdateDto) : Observable<HttpResponse<Object>> {
+        console.log(Employee);
         const url:string = `${this.baseUrl}/${"api/Employee/UpdateAsync"}/${id}`;
         return this.http.put(url, Employee, { observe: 'response' });
     }

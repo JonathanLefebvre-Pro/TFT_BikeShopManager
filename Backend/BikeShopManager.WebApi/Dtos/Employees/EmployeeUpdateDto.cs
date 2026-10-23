@@ -45,4 +45,9 @@ public class EmployeeUpdateDto
     [Required]
     public bool AllowMarketing { get; set; }
     #endregion
+
+    #region Role
+    [Required]
+    public required int RoleId { get; set; }
+    #endregion
 }

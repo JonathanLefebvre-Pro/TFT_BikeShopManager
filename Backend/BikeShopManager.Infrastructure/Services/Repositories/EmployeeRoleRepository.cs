@@ -42,4 +42,20 @@ public class EmployeeRoleRepository(IDbSession DbSession) : IEmployeeRoleReposit
 
         return await DbSession.Connection.QueryAsync<int>(sqlQuery, parameters);
     }
+
+    public async Task<bool> UpdateEmployeeRole(int employeeId, int roleId)
+    {
+        string sqlQuery = @$"UPDATE {_tableName} SET RoleId=@RoleId WHERE EmployeeId=@EmployeeId";
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@RoleId", roleId);
+        parameters.Add("@EmployeeId", employeeId);
+
+        int rows = await DbSession.Connection.ExecuteAsync(
+            sqlQuery,
+            parameters,
+            DbSession.Transaction
+        );
+
+        return rows is not 0;
+    }
 }

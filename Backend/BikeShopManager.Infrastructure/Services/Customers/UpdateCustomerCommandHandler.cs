@@ -3,7 +3,6 @@ using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Commands;
 using BikeShopManager.AppCore.Interfaces.Repositories;
-using BikeShopManager.Domain.Entities;
 
 namespace BikeShopManager.Infrastructure.Services;
 

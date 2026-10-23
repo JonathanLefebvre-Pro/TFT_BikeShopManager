@@ -1,0 +1,40 @@
+<tr>
+    <th scope="row">{{employee().id}}</th>
+    <td>{{employee().user.firstName}}</td>
+    <td>{{employee().user.lastName}}</td>
+    <td>{{employee().user.email}}</td>
+    <td>{{employee().user.phoneNumber}}</td>
+    <td>{{employee().user.address}}</td>
+    <td>{{employee().user.city}}</td>
+    <td>{{employee().user.zipCode}}</td>
+    <td>{{employee().user.country}}</td>
+    <td>{{employee().user.birthDate | date:'dd/MM/yyyy'}}</td>
+    
+    <td><input type="checkbox" disabled [checked]="employee().isActive"/></td>
+
+    <td>{{employee().hiredAt}}</td>
+    <td>{{employee().contractEndAt}}</td>
+
+    <td class="actionButtons">
+        <div>
+            @if(employee().isActive)
+            {
+                <button type="button" class="disable" [disabled]="isEditModeEnabled()" (click)="handleDisableEmployee()">
+                    Disable
+                </button>
+            }@else {
+                <button type="button" class="enable" [disabled]="isEditModeEnabled()" (click)="handleEnableEmployee()">
+                    Enable
+                </button>
+            }
+        </div>
+
+        <div>
+            <button type="button" class="edit" 
+            [disabled]="isEditModeEnabled() || !employee().isActive" 
+            (click)="handleEditEmployee()">
+                Edit
+            </button>
+        </div>
+    </td>
+</tr>

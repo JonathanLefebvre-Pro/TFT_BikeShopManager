@@ -2,7 +2,7 @@ export interface AddEmployeeFormData {
     //Employee
     password: string;
     hiredAt: Date | string;
-    contractEndAt: Date | string | null;
+    contractEndAt: Date | string| null;
     
     //User
     firstName: string;
@@ -15,4 +15,7 @@ export interface AddEmployeeFormData {
     country: string;
     birthDate: Date | null;
     allowMarketing: boolean;
+
+    //Role
+    roleId: number;
 }

@@ -1,0 +1,37 @@
+<table class="employeeTable">
+    <thead class="employeeTableHead">
+        <tr>
+            @for (header of headers(); track $index) {
+                <th scope="col">{{header}}</th>
+            }
+        </tr>
+    </thead>
+    <tbody class="employeeTableBody">
+        @defer(when isLoading())
+        {
+            @for (employee of employees(); track employee.id) {
+                <app-employee-table-row #employeeTableRow
+                [employee]="employee" 
+                (onEnableEmployeeEvent)="handleEmployeeEnable($event)"
+                (onDisableEmployeeEvent)="handleEmployeeDisable($event)"
+                (onEditEmployeeEvent)="handleEmployeeEdit($event)"/>
+            }
+        }
+        @placeholder {
+            <p>Employees are loading !</p>
+        }
+        @loading(after 100ms; minimum 1s) {
+            <p>Employees are loading !</p>
+        }
+        @error {
+            <div>Loading error !</div>
+        }
+    </tbody>
+    <tfoot class="employeeTableFooter">
+        @if(maxPagesNumber() > 0){
+            <input type="button" value="<" (click)="handlePreviousPage()"/>
+            {{currentPageNumber()}}/{{maxPagesNumber()}}
+            <input type="button" value=">" (click)="handleNextPage()"/>
+        }
+    </tfoot>
+</table>

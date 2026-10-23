@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { CustomersPage } from '@presentation/components/customers/customers-page/customers-page';
-import { DisplayEmployees } from '@presentation/components/employees/display-employees/display-employees';
+import { EmployeesPage } from '@/app/presentation/components/employees/employees-page/employees-page';
 import { DisplayStock } from '@presentation/components/stock/display-stock/display-stock';
 import { DisplayShop } from '@presentation/components/shop/display-shop/display-shop';
 
@@ -14,8 +14,9 @@ export const routes: Routes = [
     },
     {
         path: 'employees',
-        component: DisplayEmployees,
+        component: EmployeesPage,
         title: 'Employees',
+        loadChildren: () => import('@presentation/components/employees/employees.route').then(m => m.routes)
     },
     {
         path: 'stock',

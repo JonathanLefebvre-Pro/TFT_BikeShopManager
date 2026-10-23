@@ -14,4 +14,7 @@ export interface UpdateEmployeeFormData {
     country: string;
     birthDate: Date | null;
     allowMarketing: boolean;
+
+    //Role
+    roleId: number;
 }

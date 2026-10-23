@@ -97,7 +97,12 @@ namespace BikeShopManager.WebApi.Controllers
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] EmployeeUpdateDto dto)
         {
             Result result = await Dispatcher.SendCommandAsync<UpdateEmployeeCommand>(
-                new UpdateEmployeeCommand(id, dto.ToEmployeeEntity(), dto.ToUserEntity())
+                new UpdateEmployeeCommand(
+                    id,
+                    dto.ToEmployeeEntity(),
+                    dto.ToUserEntity(),
+                    dto.RoleId
+                )
             );
             return this.FromResult(result);
         }
