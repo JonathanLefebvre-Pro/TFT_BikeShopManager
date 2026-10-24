@@ -3,7 +3,6 @@ using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos;
-using BikeShopManager.WebApi.Infrastructure.Extensions;
 using BikeShopManager.WebApi.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +10,7 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class RoleController(IDispatcher Dispatcher) : ControllerBase
     {
         [Route("GetAsync")]
@@ -24,9 +24,9 @@ namespace BikeShopManager.WebApi.Controllers
 
             if (result.IsSuccess)
             {
-                List<RoleReturnDto> dtos = new List<RoleReturnDto>();
+                List<RoleResponseDto> dtos = new List<RoleResponseDto>();
                 foreach (Role role in result.Data)
-                    dtos.Add(role.ToRoleReturnDto());
+                    dtos.Add(role.ToRoleResponseDto());
 
                 return this.Ok(dtos);
             }
@@ -43,7 +43,7 @@ namespace BikeShopManager.WebApi.Controllers
             );
 
             if (result.IsSuccess)
-                return this.Ok(result.Data.ToRoleReturnDto());
+                return this.Ok(result.Data.ToRoleResponseDto());
 
             return this.NotFound(result.Error);
         }
@@ -57,7 +57,7 @@ namespace BikeShopManager.WebApi.Controllers
             );
 
             if (result.IsSuccess)
-                return this.Ok(result.Data.ToRoleReturnDto());
+                return this.Ok(result.Data.ToRoleResponseDto());
 
             return this.NotFound(result.Error);
         }

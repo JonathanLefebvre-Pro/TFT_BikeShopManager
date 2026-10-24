@@ -12,6 +12,7 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class EmployeeController(IDispatcher Dispatcher) : ControllerBase
     {
         [Route("GetAsync")]
@@ -29,10 +30,10 @@ namespace BikeShopManager.WebApi.Controllers
 
             if (result.IsSuccess)
             {
-                PageResponseDto<EmployeeReturnDto> responseDto =
-                    new PageResponseDto<EmployeeReturnDto>()
+                PageResponseDto<EmployeeResponseDto> responseDto =
+                    new PageResponseDto<EmployeeResponseDto>()
                     {
-                        Data = result.Data.Data.ToIEnumerableEmployeeReturnDtos(),
+                        Data = result.Data.Data.ToIEnumerableEmployeeResponseDtos(),
                         PageSize = result.Data.PageSize,
                         PageNumber = result.Data.PageNumber,
                         TotalRecords = result.Data.TotalRecords,
@@ -56,9 +57,9 @@ namespace BikeShopManager.WebApi.Controllers
 
             if (result.IsSuccess)
             {
-                List<EmployeeReturnDto> dtos = new List<EmployeeReturnDto>();
+                List<EmployeeResponseDto> dtos = new List<EmployeeResponseDto>();
                 foreach (Employee employee in result.Data)
-                    dtos.Add(employee.ToEmployeeReturnDto());
+                    dtos.Add(employee.ToEmployeeResponseDto());
 
                 return this.Ok(dtos);
             }
@@ -87,7 +88,7 @@ namespace BikeShopManager.WebApi.Controllers
             >(new GetEmployeeByIdQuery(id));
 
             if (result.IsSuccess)
-                return this.Ok(result.Data.ToEmployeeReturnDto());
+                return this.Ok(result.Data.ToEmployeeResponseDto());
 
             return this.NotFound(result.Error);
         }

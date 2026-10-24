@@ -5,9 +5,9 @@ namespace BikeShopManager.WebApi.Mappers;
 
 public static class CustomerDtoMapper
 {
-    public static CustomerReturnDto ToCustomerReturnDto(this Customer entity)
+    public static CustomerResponseDto ToCustomerResponseDto(this Customer entity)
     {
-        return new CustomerReturnDto()
+        return new CustomerResponseDto()
         {
             CustomerId = entity.Id,
             VatNumber = entity.VatNumber,
@@ -26,13 +26,13 @@ public static class CustomerDtoMapper
         };
     }
 
-    public static IEnumerable<CustomerReturnDto> ToIEnumerableCustomerReturnDtos(
+    public static IEnumerable<CustomerResponseDto> ToIEnumerableCustomerResponseDtos(
         this IEnumerable<Customer> entities
     )
     {
-        List<CustomerReturnDto> dtos = new List<CustomerReturnDto>();
+        List<CustomerResponseDto> dtos = new List<CustomerResponseDto>();
         foreach (Customer customer in entities)
-            dtos.Add(customer.ToCustomerReturnDto());
+            dtos.Add(customer.ToCustomerResponseDto());
         return dtos;
     }
 

@@ -1,6 +1,6 @@
 namespace BikeShopManager.WebApi.Dtos;
 
-public class EmployeeReturnDto
+public class EmployeeResponseDto
 {
     #region Employee
     public int EmployeeId { get; set; }
@@ -28,8 +28,8 @@ public class EmployeeReturnDto
     #endregion
 
     #region Role
-    public int RoleId { get; set; }
-    public string RoleName { get; set; }
-    public string NormalizedRoleName { get; set; }
+    public required int RoleId { get; set; }
+    public string RoleName { get; set; } = default!;
+    public string NormalizedRoleName { get; set; } = default!;
     #endregion
 }

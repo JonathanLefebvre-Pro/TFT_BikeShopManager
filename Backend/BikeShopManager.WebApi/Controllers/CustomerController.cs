@@ -12,10 +12,12 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class CustomerController(IDispatcher Dispatcher) : ControllerBase
     {
         [Route("GetAsync")]
         [HttpGet]
+        //[Authorize(Roles = ("Admin"))]
         public async Task<IActionResult> GetAsync(
             [FromQuery] string? keywords,
             [FromQuery] int pageNumber = 1,
@@ -29,10 +31,10 @@ namespace BikeShopManager.WebApi.Controllers
 
             if (result.IsSuccess)
             {
-                PageResponseDto<CustomerReturnDto> responseDto =
-                    new PageResponseDto<CustomerReturnDto>()
+                PageResponseDto<CustomerResponseDto> responseDto =
+                    new PageResponseDto<CustomerResponseDto>()
                     {
-                        Data = result.Data.Data.ToIEnumerableCustomerReturnDtos(),
+                        Data = result.Data.Data.ToIEnumerableCustomerResponseDtos(),
                         PageSize = result.Data.PageSize,
                         PageNumber = result.Data.PageNumber,
                         TotalRecords = result.Data.TotalRecords,
@@ -67,7 +69,7 @@ namespace BikeShopManager.WebApi.Controllers
 
             //Convert data to dto
             if (result.IsSuccess)
-                return this.Ok(result.Data.ToCustomerReturnDto());
+                return this.Ok(result.Data.ToCustomerResponseDto());
 
             return this.NotFound(result.Error);
         }

@@ -1,6 +1,6 @@
 namespace BikeShopManager.WebApi.Dtos;
 
-public class RoleReturnDto
+public class RoleResponseDto
 {
     public int Id { get; set; }
     public required string Name { get; set; }

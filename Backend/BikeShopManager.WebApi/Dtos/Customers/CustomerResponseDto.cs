@@ -1,6 +1,6 @@
 namespace BikeShopManager.WebApi.Dtos;
 
-public class CustomerReturnDto
+public class CustomerResponseDto
 {
     #region Customer
     public int CustomerId { get; set; }

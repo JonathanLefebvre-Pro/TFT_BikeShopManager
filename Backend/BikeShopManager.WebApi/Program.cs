@@ -1,10 +1,9 @@
 using System.Data;
 using BikeShopManager.AppCore.Extensions;
 using BikeShopManager.Infrastructure.Extensions;
+using BikeShopManager.WebApi.Extensions;
 using Microsoft.Data.SqlClient;
 using Scalar.AspNetCore;
-
-string myAllowedLocalOrigins = "MyAllowedLocalOrigins";
 
 string conStringTFT = @"GOS-VDI406\TFTIC";
 string conStringJo = @"JONATHAN\DATAVIZ";
@@ -15,24 +14,13 @@ string connectionString =
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(
-        name: myAllowedLocalOrigins,
-        policy =>
-        {
-            policy.WithOrigins("http://127.0.0.1:4200").AllowAnyHeader().AllowAnyMethod();
-            policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
-        }
-    );
-});
-
-// Add services to the container.
+builder.Services.ConfigureCors();
 builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
-
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
+builder.Services.ConfigureJwt();
 
+builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -48,7 +36,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors(myAllowedLocalOrigins);
+app.UseCors(CorsExtension.AllowedLocalOrigins);
 app.UseAuthorization();
+app.UseAuthorization();
+
 app.MapControllers();
 app.Run();
