@@ -1,9 +1,9 @@
-import { CustomerAddDto } from "@/app/appCore/dtos/customerAddDto";
-import { CustomerReturnDto } from '@/app/appCore/dtos/customerReturnDto';
-import { CustomerUpdateDto } from "@/app/appCore/dtos/customerUpdateDto";
+import { CustomerAddDto } from "@/app/appCore/dtos/customers/customerAddDto";
+import { CustomerReturnDto } from '@/app/appCore/dtos/customers/customerReturnDto';
+import { CustomerUpdateDto } from "@/app/appCore/dtos/customers/customerUpdateDto";
 import { HttpResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { PageResponseDto } from "../../dtos/pageResponseDto";
+import { PageResponseDto } from "../../dtos/shared/pageResponseDto";
 
 export interface ICustomerRepository {
     getCustomers(pageNumber: number, pageSize: number, keywords: string | null) : Observable<PageResponseDto<CustomerReturnDto>>;

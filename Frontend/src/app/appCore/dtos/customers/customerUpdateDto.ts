@@ -1,5 +1,5 @@
 export interface CustomerUpdateDto {
-    //Customer
+    //Employee
     vatNumber: string | null;
 
     //User

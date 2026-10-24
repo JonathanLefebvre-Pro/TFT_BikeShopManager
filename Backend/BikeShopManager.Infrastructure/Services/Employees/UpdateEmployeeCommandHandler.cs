@@ -3,7 +3,6 @@ using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Commands;
 using BikeShopManager.AppCore.Interfaces.Repositories;
-using BikeShopManager.Domain.Entities;
 
 namespace BikeShopManager.Infrastructure.Services;
 
@@ -11,14 +10,17 @@ public class UpdateEmployeeCommandHandler : ICommandHandlerAsync<UpdateEmployeeC
 {
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IEmployeeRoleRepository _employeeRoleRepository;
 
     public UpdateEmployeeCommandHandler(
         IEmployeeRepository employeeRepository,
-        IUserRepository userRepository
+        IUserRepository userRepository,
+        IEmployeeRoleRepository employeeRoleRepository
     )
     {
         _employeeRepository = employeeRepository;
         _userRepository = userRepository;
+        _employeeRoleRepository = employeeRoleRepository;
     }
 
     public async Task<Result> HandleAsync(UpdateEmployeeCommand command)
@@ -50,6 +52,21 @@ public class UpdateEmployeeCommandHandler : ICommandHandlerAsync<UpdateEmployeeC
             );
             if (!isEmployeeUpdated)
                 return Result.Failure(EmployeeError.NotUpdated);
+        }
+        catch (Exception ex)
+        {
+            return ex;
+        }
+
+        //Update the role id
+        try
+        {
+            bool isRoleUpdated = await _employeeRoleRepository.UpdateEmployeeRole(
+                command.Id,
+                command.RoleId
+            );
+            if (!isRoleUpdated)
+                return Result.Failure(RoleError.NotUpdated);
         }
         catch (Exception ex)
         {

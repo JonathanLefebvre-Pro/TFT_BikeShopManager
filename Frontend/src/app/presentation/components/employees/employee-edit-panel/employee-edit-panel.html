@@ -1,0 +1,24 @@
+<form method="post" class="editEmployeeForm" [formRoot]="employeeForm">
+
+    <app-form-date-input label="Hired At : " id="Password" [field]="employeeForm.hiredAt" [fieldState]="employeeForm.hiredAt()"/>
+    <app-form-date-input label="Contract End At : " id="Password" [field]="employeeForm.contractEndAt" [fieldState]="employeeForm.contractEndAt()"/>
+
+    <app-form-text-input label="FirstName : " id="FirstName" [field]="employeeForm.firstName" [fieldState]="employeeForm.firstName()"/>
+    <app-form-text-input label="Lastname : " id="Lastname" [field]="employeeForm.lastName" [fieldState]="employeeForm.lastName()"/>
+    <app-form-text-input label="Email : " id="Email" [field]="employeeForm.email" [fieldState]="employeeForm.email()" type="email"/>
+    <app-form-text-input label="Phone number : " id="PhoneNumber" [field]="employeeForm.phoneNumber" [fieldState]="employeeForm.phoneNumber()"/>
+    <app-form-text-input label="Address : " id="Address" [field]="employeeForm.address" [fieldState]="employeeForm.address()"/>
+    <app-form-text-input label="City : " id="City" [field]="employeeForm.city" [fieldState]="employeeForm.city()"/>
+    <app-form-text-input label="Zip Code : " id="ZipCode" [field]="employeeForm.zipCode" [fieldState]="employeeForm.zipCode()"/>
+    <app-form-text-input label="Country : " id="Country" [field]="employeeForm.country" [fieldState]="employeeForm.country()"/>
+    <app-form-date-input label="Birthdate : " id="Birthdate" [field]="employeeForm.birthDate" [fieldState]="employeeForm.birthDate()"/>
+    <app-form-checkbox-input label="Allow marketing : " id="AllowMarketing" [field]="employeeForm.allowMarketing" [fieldState]="employeeForm.allowMarketing()"/>
+    
+    <app-form-select-input label="Role : " id="RoleId" [fieldState]="employeeForm.roleId()" [options]="roleSelectOptions()"/>
+    
+    <div class="formGroup-Submit">
+        <input type="submit" value="Save" [disabled]="employeeForm().invalid()"/>
+        <input type="button" value="Cancel" (click)="handleCancel($event)"/>
+    </div>
+
+</form>

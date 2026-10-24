@@ -1,7 +1,10 @@
 export interface AddCustomerFormData {
+    //Customer
+    vatNumber: string;
+    
+    //User
     firstName: string;
     lastName: string;
-    vatNumber: string;
     email: string;
     phoneNumber: string;
     address: string;

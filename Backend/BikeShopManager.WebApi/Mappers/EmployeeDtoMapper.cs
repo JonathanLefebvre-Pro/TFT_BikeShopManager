@@ -10,6 +10,7 @@ public static class EmployeeDtoMapper
         return new EmployeeReturnDto()
         {
             #region Employee
+            EmployeeId = entity.Id,
             PasswordHash = entity.PasswordHash,
             SecurityStamp = entity.SecurityStamp,
             HiredAt = entity.HiredAt,

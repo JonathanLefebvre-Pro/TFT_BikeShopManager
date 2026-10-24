@@ -3,6 +3,7 @@ namespace BikeShopManager.WebApi.Dtos;
 public class EmployeeReturnDto
 {
     #region Employee
+    public int EmployeeId { get; set; }
     public required string PasswordHash { get; set; }
     public required string SecurityStamp { get; set; }
 

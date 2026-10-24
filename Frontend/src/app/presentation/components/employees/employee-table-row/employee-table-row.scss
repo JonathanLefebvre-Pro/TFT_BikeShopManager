@@ -1,0 +1,60 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+tr {
+    display: grid;
+    grid-template-columns: 0.5rem repeat(13, minmax(0, 1fr));
+    gap: 1rem;
+
+    th, td {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: start;
+        word-break: break-word;
+        word-wrap: break-word;
+    }
+
+    td.actionButtons {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .edit, .save, .disable, .enable {
+        margin: 0.5rem;
+        border: none;
+        color: rgb(220, 220, 220);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        min-width: 90px;
+    }
+
+    .edit {
+        background-color: oklch(0.4023 0.1518 258.91)
+    }
+
+    .disable {
+        background-color: oklch(0.4023 0.1518 31.7)
+    }
+
+    .enable {
+        background-color: oklch(0.4023 0.1518 150.58)
+    }
+
+    .edit:disabled, .disable:disabled, .enable:disabled {
+        background-color: grey;
+    }
+
+    .edit:disabled:hover, .disable:disabled:hover, .enable:disabled:hover {
+        background-color: grey;
+    }
+
+    .edit:hover, .disable:hover, .enable:hover {
+        background-color: rgb(105, 105, 105);
+    }
+}

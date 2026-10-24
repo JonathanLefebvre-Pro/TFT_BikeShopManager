@@ -1,6 +1,8 @@
-export interface UpdateCustomerFormData {
-    //Customer
-    vatNumber: string;
+export interface UpdateEmployeeFormData {
+    //Employee
+    hiredAt: Date | string;
+    contractEndAt: Date | string | null;
+
     //User
     firstName: string;
     lastName: string;
@@ -12,4 +14,7 @@ export interface UpdateCustomerFormData {
     country: string;
     birthDate: Date | null;
     allowMarketing: boolean;
+
+    //Role
+    roleId: number;
 }

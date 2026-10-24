@@ -1,0 +1,15 @@
+<h1>View Employees</h1>
+
+<app-employee-search-input 
+(onSearchEmployees)="handleSearchEmployees($event)" 
+(onClearSearchEmployees)="handleClearSearchEmployees()" />
+
+<app-employees-table #employeesTable
+[employees]="employees()"
+[currentPageNumber]="pageNumber()"
+[maxPagesNumber]="totalPages()"
+(onEnableEmployeeEvent)="handleEnableEmployee($event)"
+(onDisableEmployeeEvent)="handleDisableEmployee($event)"
+(onEditEmployeeEvent)="handleEditEmployee($event)"
+(onNextPageEvent)="handleNextEmployeePage()"
+(onPreviousPageEvent)="handlePreviousEmployeePage()"/>
