@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -6,15 +7,16 @@ namespace BikeShopManager.WebApi.Extensions;
 
 public static class JwtExtension
 {
-    private const string jwtSecret =
-        "2141ce53a8880b92984a4d2496f3c2bcff5354757e30b3a4566cda137558d25a";
-    private const string jwtIssuer = "JwtApp";
-    private const string jwtAudience = "JwtAppUsers";
-
-    public static IServiceCollection ConfigureJwt(this IServiceCollection services)
+    public static WebApplicationBuilder ConfigureJwt(this WebApplicationBuilder builder)
     {
-        services
-            .AddAuthentication(options =>
+        IConfigurationSection jwtSettings = builder.Configuration.GetSection("JwtSettings");
+        string? jwtSecret = jwtSettings.GetValue<string>("Secret");
+        string? jwtIssuer = jwtSettings.GetValue<string>("Issuer");
+        string? jwtAudience = jwtSettings.GetValue<string>("Audience");
+        byte[] key = Encoding.UTF8.GetBytes(jwtSecret!);
+
+        builder
+            .Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -22,7 +24,6 @@ public static class JwtExtension
             .AddJwtBearer(options =>
             {
                 //options.SaveToken = true;  ???
-                byte[] key = Encoding.UTF8.GetBytes(jwtSecret);
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = true,
@@ -33,10 +34,11 @@ public static class JwtExtension
 
                     ValidIssuer = jwtIssuer,
                     ValidAudience = jwtAudience,
+                    //RoleClaimType = ClaimTypes.Role,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                 };
             });
 
-        return services;
+        return builder;
     }
 }

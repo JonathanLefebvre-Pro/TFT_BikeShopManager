@@ -11,7 +11,7 @@ public static class AuthDtoMapper
         {
             AccessToken = dto.AccessToken,
             RefreshToken = dto.RefreshToken,
-            ExpireAt = dto.ExpireAt,
+            AccessExpireAt = dto.ExpireAt,
             Type = dto.Type,
         };
     }
@@ -27,7 +27,7 @@ public static class AuthDtoMapper
         {
             AccessToken = entity.AccessToken,
             RefreshToken = entity.RefreshToken,
-            ExpireAt = entity.ExpireAt,
+            ExpireAt = entity.AccessExpireAt,
             Type = entity.Type,
         };
     }

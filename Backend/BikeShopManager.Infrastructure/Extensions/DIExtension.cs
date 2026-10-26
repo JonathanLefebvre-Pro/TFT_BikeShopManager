@@ -30,7 +30,7 @@ public static class DIExtension
         services.AddScoped<IEmployeeRoleRepository, EmployeeRoleRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IAuthRepository, AuthRepository>();
-        services.AddScoped<IJwtRepository, JwtRepository>();
+        services.AddScoped<IJwtProvider, JwtProvider>();
 
         return services;
     }

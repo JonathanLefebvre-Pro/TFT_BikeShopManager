@@ -5,20 +5,19 @@ using BikeShopManager.WebApi.Extensions;
 using Microsoft.Data.SqlClient;
 using Scalar.AspNetCore;
 
-string conStringTFT = @"GOS-VDI406\TFTIC";
-string conStringJo = @"JONATHAN\DATAVIZ";
-string connectionString =
-    @"Data Source="
-    + conStringJo
-    + @";Initial Catalog=TFT_BikeShopManager_WebApi;Integrated Security=True;Trust Server Certificate=True";
-
 var builder = WebApplication.CreateBuilder(args);
+
+string connectionString = builder
+    .Configuration.GetSection("ConnectionStrings")
+    .GetValue<string>("DefaultConnection")!;
+
+//.GetValue<string>("TechnofuturConnection")!;
 
 builder.Services.ConfigureCors();
 builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
-builder.Services.ConfigureJwt();
+builder.ConfigureJwt();
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
