@@ -1,12 +1,9 @@
-using BikeShopManager.Domain.Entities;
 using BikeShopManager.Domain.Entities.Auth;
 
 namespace BikeShopManager.AppCore.Interfaces.Repositories;
 
 public interface IAuthRepository
 {
-    Task<Employee?> AuthenticateUserAsync(string login, string password);
-
     Task<bool> RevokeAllActiveTokensAsync(int employeeId);
 
     Task<bool> RevokeRefreshTokenAsync(string refreshTokenHash);

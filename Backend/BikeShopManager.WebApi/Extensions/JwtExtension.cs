@@ -1,13 +1,14 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BikeShopManager.WebApi.Extensions;
 
 public static class JwtExtension
 {
-    public static WebApplicationBuilder ConfigureJwt(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddJwtConfiguration(this WebApplicationBuilder builder)
     {
         IConfigurationSection jwtSettings = builder.Configuration.GetSection("JwtSettings");
         string? jwtSecret = jwtSettings.GetValue<string>("Secret");
@@ -23,7 +24,7 @@ public static class JwtExtension
             })
             .AddJwtBearer(options =>
             {
-                //options.SaveToken = true;  ???
+                options.MapInboundClaims = false;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = true,
@@ -34,10 +35,13 @@ public static class JwtExtension
 
                     ValidIssuer = jwtIssuer,
                     ValidAudience = jwtAudience,
-                    //RoleClaimType = ClaimTypes.Role,
+                    NameClaimType = JwtRegisteredClaimNames.Name,
+                    RoleClaimType = ClaimTypes.Role,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                 };
             });
+
+        builder.Services.AddAuthorization();
 
         return builder;
     }

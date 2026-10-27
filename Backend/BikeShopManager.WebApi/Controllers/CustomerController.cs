@@ -6,18 +6,19 @@ using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos;
 using BikeShopManager.WebApi.Infrastructure.Extensions;
 using BikeShopManager.WebApi.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class CustomerController(IDispatcher Dispatcher) : ControllerBase
     {
         [Route("GetAsync")]
         [HttpGet]
-        //[Authorize(Roles = ("Admin"))]
+        [Authorize(Roles = ("Admin"))]
         public async Task<IActionResult> GetAsync(
             [FromQuery] string? keywords,
             [FromQuery] int pageNumber = 1,

@@ -37,7 +37,7 @@ public class JwtProvider(IConfiguration Configuration) : IJwtProvider
                 JwtRegisteredClaimNames.Iat,
                 DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
             ),
-            new Claim(ClaimTypes.Role, employee.Role.NormalizedName),
+            new Claim(ClaimTypes.Role, employee.Role.Name),
         };
 
         DateTime accessExpirationTime = DateTime.UtcNow.AddMinutes(jwtAccessExpiration);

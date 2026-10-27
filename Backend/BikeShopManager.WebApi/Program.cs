@@ -9,17 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 string connectionString = builder
     .Configuration.GetSection("ConnectionStrings")
-    .GetValue<string>("DefaultConnection")!;
-
-//.GetValue<string>("TechnofuturConnection")!;
+    //.GetValue<string>("DefaultConnection")!;
+    .GetValue<string>("TechnofuturConnection")!;
 
 builder.Services.ConfigureCors();
 builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
-builder.ConfigureJwt();
+builder.AddJwtConfiguration();
 
-builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -36,7 +34,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors(CorsExtension.AllowedLocalOrigins);
-app.UseAuthorization();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

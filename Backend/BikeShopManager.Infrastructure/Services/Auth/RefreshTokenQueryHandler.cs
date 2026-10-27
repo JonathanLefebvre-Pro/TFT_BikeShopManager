@@ -11,7 +11,10 @@ namespace BikeShopManager.Infrastructure.Services.Auth;
 public class RefreshTokenQueryHandler(
     IAuthRepository AuthRepository,
     IJwtProvider JwtProvider,
-    IEmployeeRepository EmployeeRepository
+    IEmployeeRepository EmployeeRepository,
+    IEmployeeRoleRepository EmployeeRoleRepository,
+    IUserRepository UserRepository,
+    IRoleRepository RoleRepository
 ) : IQueryHandlerAsync<RefreshTokenQuery, TokenResponse>
 {
     public async Task<Result<TokenResponse>> HandleAsync(RefreshTokenQuery query)
@@ -20,8 +23,9 @@ public class RefreshTokenQueryHandler(
         {
             //Check if the refresh token exist on DB
             // if the token does not exist : return unauthorized
+            string refreshTokenHash = JwtProvider.HashToken(query.RefreshToken);
             RefreshToken? existingRefreshToken = await AuthRepository.GetRefreshTokenAsync(
-                query.RefreshToken
+                refreshTokenHash
             );
             if (existingRefreshToken is null)
                 return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
@@ -46,6 +50,19 @@ public class RefreshTokenQueryHandler(
             );
             if (employee is null)
                 return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+
+            User? user = await UserRepository.GetUserById(employee.UserId);
+            if (user is null)
+                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+
+            employee.User = user;
+
+            int roleId = await EmployeeRoleRepository.GetEmployeeRole(employee.Id);
+            Role? role = await RoleRepository.GetRoleById(roleId);
+            if (role is null)
+                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+
+            employee.Role = role;
 
             //The user is verified -> generate a new token
             TokenResponse accessToken = JwtProvider.GenerateToken(employee);

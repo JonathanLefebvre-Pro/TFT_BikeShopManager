@@ -1,6 +1,5 @@
 using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.AppCore.Interfaces.Repositories;
-using BikeShopManager.Domain.Entities;
 using BikeShopManager.Domain.Entities.Auth;
 using Dapper;
 
@@ -10,17 +9,6 @@ public class AuthRepository(IDbSession DbSession) : IAuthRepository
 {
     private const string _tableName = @"Persons.RefreshTokens";
 
-    public async Task<Employee?> AuthenticateUserAsync(string login, string password)
-    {
-        //TODO : Check if the user exist, check password, login, ...
-
-        //Get the user from the login (email ?)
-        //Get the employee associated to this user
-        //Check the password hash with the password hashed from the password in param
-
-        return null;
-    }
-
     /// <summary>
     /// Revoke all active refresh tokens from this employee
     /// </summary>
@@ -29,7 +17,7 @@ public class AuthRepository(IDbSession DbSession) : IAuthRepository
     public async Task<bool> RevokeAllActiveTokensAsync(int employeeId)
     {
         string sqlQuery =
-            @$"UPDATE ${_tableName} SET RevokedAt=@RevokedAt 
+            @$"UPDATE {_tableName} SET RevokedAt=@RevokedAt 
                 WHERE EmployeeId=@EmployeeId 
                 AND RevokedAt=NULL";
         DynamicParameters parameters = new DynamicParameters();
@@ -52,7 +40,10 @@ public class AuthRepository(IDbSession DbSession) : IAuthRepository
     /// <returns></returns>
     public async Task<RefreshToken?> GetRefreshTokenAsync(string refreshTokenHash)
     {
-        string sqlQuery = @$"SELECT TokenHash FROM ${_tableName} WHERE TokenHash=@TokenHash";
+        string sqlQuery =
+            @$"SELECT Id, EmployeeId, TokenHash, ExpiresAt, RevokedAt, ReplacedByTokenHash, CreatedAt 
+                FROM {_tableName} 
+                WHERE TokenHash=@TokenHash";
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@TokenHash", refreshTokenHash);
 
@@ -71,7 +62,7 @@ public class AuthRepository(IDbSession DbSession) : IAuthRepository
     public async Task<int> CreateRefreshToken(RefreshToken refreshToken)
     {
         string sqlQuery =
-            @$"INSERT INTO ${_tableName} (EmployeeId, TokenHash, ExpiresAt, CreatedAt) 
+            @$"INSERT INTO {_tableName} (EmployeeId, TokenHash, ExpiresAt, CreatedAt) 
                 OUTPUT INSERTED.ID 
                 VALUES (@EmployeeId, @TokenHash, @ExpiresAt, @CreatedAt)";
 
@@ -96,7 +87,7 @@ public class AuthRepository(IDbSession DbSession) : IAuthRepository
     public async Task<bool> RevokeRefreshTokenAsync(string refreshTokenHash)
     {
         string sqlQuery =
-            @$"UPDATE ${_tableName} SET RevokedAt=@RevokedAt WHERE TokenHash=@TokenHash";
+            @$"UPDATE {_tableName} SET RevokedAt=@RevokedAt WHERE TokenHash=@TokenHash";
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@RevokedAt", DateTime.UtcNow);
         parameters.Add("@TokenHash", refreshTokenHash);
@@ -110,10 +101,16 @@ public class AuthRepository(IDbSession DbSession) : IAuthRepository
         return rows is not 0;
     }
 
+    /// <summary>
+    /// Update the ReplacedByTokenHash for refresh token rotation
+    /// </summary>
+    /// <param name="oldTokenHash"></param>
+    /// <param name="newTokenHash"></param>
+    /// <returns></returns>
     public async Task<bool> UpdateReplacedByTokenHash(string oldTokenHash, string newTokenHash)
     {
         string sqlQuery =
-            @$"UPDATE ${_tableName} SET ReplacedByTokenHash=@ReplacedByTokenHash, RevokedAt=@RevokedAt WHERE TokenHash=@TokenHash";
+            @$"UPDATE {_tableName} SET ReplacedByTokenHash=@ReplacedByTokenHash, RevokedAt=@RevokedAt WHERE TokenHash=@TokenHash";
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@ReplacedByTokenHash", newTokenHash);
         parameters.Add("@RevokedAt", DateTime.UtcNow);
