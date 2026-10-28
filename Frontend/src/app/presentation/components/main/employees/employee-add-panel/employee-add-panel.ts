@@ -1,49 +1,34 @@
-import { Component, input, OnInit, output, signal } from '@angular/core';
-import { FormTextInput } from '../../shared/form-text-input/form-text-input';
-import { FormDateInput } from '../../shared/form-date-input/form-date-input';
-import { FormCheckboxInput } from '../../shared/form-checkbox-input/form-checkbox-input';
+import { Component, inject, input, output, signal } from '@angular/core';
+import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
+import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
+import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
 import { email, form, FormRoot, maxLength, minLength, required } from '@angular/forms/signals';
+import { EmployeeService } from '@/app/infrastructure/services/employee-service';
+import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { Employee } from '@/app/domain/employee';
-import { EmployeeUpdateDto } from '@/app/appCore/dtos/employees/employeeUpdateDto';
-import { UpdateEmployeeFormData } from '@/app/presentation/forms/employees/updateEmployeeFormData';
-import { FormSelectInput } from '../../shared/form-select-input/form-select-input';
+import { AddEmployeeFormData } from '@/app/presentation/forms/employees/addEmployeeFormData';
+import { EmployeeAddDto } from '@/app/appCore/dtos/employees/employeeAddDto';
+import { FormSelectInput } from '@presentation/components/shared/form-select-input/form-select-input';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot, FormSelectInput],
-  selector: 'app-employee-edit-panel',
-  styleUrl: './employee-edit-panel.scss',
-  templateUrl: './employee-edit-panel.html',
+  selector: 'app-employee-add-panel',
+  styleUrl: './employee-add-panel.scss',
+  templateUrl: './employee-add-panel.html',
 })
-export class EmployeeEditPanel implements OnInit {
-  constructor(public datepipe: DatePipe){}
-  
-  public ngOnInit(): void {
-    this.employeeModel.set({
-      hiredAt: this.employee().hiredAt ?? '',
-      contractEndAt: this.employee().contractEndAt ?? null,
-      firstName: this.employee().user.firstName,
-      lastName: this.employee().user.lastName,
-      email: this.employee().user.email ?? '',
-      phoneNumber: this.employee().user.phoneNumber ?? '',
-      address: this.employee().user.address ?? '',
-      city: this.employee().user.city ?? '',
-      zipCode: this.employee().user.zipCode ?? '',
-      country: this.employee().user.country ?? '',
-      birthDate: this.employee().user.birthDate ?? null,
-      allowMarketing: this.employee().user.allowMarketing,
-      roleId: this.employee().role.id
-    });
-  }
+export class EmployeeAddPanel {
 
-  public employee = input.required<Employee>();
+  protected employeeService = inject(EmployeeService);
+  protected routerService = inject(Router);
+
+  public onAddEmployeeEvent = output<number>();
+
+  constructor(public datepipe: DatePipe){}
   public roleSelectOptions = input.required<string[]>();
 
-  public onUpdateEmployeeEvent = output<{id: number, obj: EmployeeUpdateDto}>();
-  public onCancelUpdateEmployeeEvent = output();
-
   private readonly INITIAL_MODEL = {
-      hiredAt: new Date('2023-02-01'),
+      password: '',
+      hiredAt: new Date('2025-04-02'),
       contractEndAt: null,
       firstName: '',
       lastName: '',
@@ -58,18 +43,21 @@ export class EmployeeEditPanel implements OnInit {
       allowMarketing: true,
       roleId: 1
   };
-  protected employeeModel = signal<UpdateEmployeeFormData>({...this.INITIAL_MODEL});
+  protected employeeModel = signal<AddEmployeeFormData>({...this.INITIAL_MODEL});
 
   protected employeeForm = form(this.employeeModel, (schemaPath) => {
     required(schemaPath.hiredAt, {message: "Hired date is required !"}),
+    required(schemaPath.password, {message: "Password is required !"}),
+    minLength(schemaPath.password, 5, {message: "Password min length : 5 !"}),
+    maxLength(schemaPath.password, 100,  {message: "Password max length : 100 !"}),
     required(schemaPath.firstName, {message: "Firstname is required !"}),
     minLength(schemaPath.firstName, 5, {message: "Firstname min length : 5 !"}),
     maxLength(schemaPath.firstName, 100,  {message: "Firstname max length : 100 !"}),
     required(schemaPath.lastName, {message: "LastName is required !"}),
     minLength(schemaPath.lastName, 5, {message: "LastName min length : 5 !"}),
     maxLength(schemaPath.lastName, 100,  {message: "LastName max length : 100 !"}),
-    email(schemaPath.email, {message: "Enter a valid email !"}),
     required(schemaPath.email, {message: "Email is required !"}),
+    email(schemaPath.email, {message: "Enter a valid email !"}),
     maxLength(schemaPath.email, 256, { message: "Email max length : 256 !"}),
     maxLength(schemaPath.phoneNumber, 20, { message: "Phone number max length : 20 !"}),
     maxLength(schemaPath.address, 200, { message: "Address max length : 200 !"}),
@@ -81,7 +69,8 @@ export class EmployeeEditPanel implements OnInit {
   {
     submission: {
       action: async (model) => {
-        const employeeUpdateDto: EmployeeUpdateDto = {
+        const employeeAddDto: EmployeeAddDto = {
+          password: model().value().password,
           hiredAt: this.datepipe.transform(model().value().hiredAt, 'yyyy-MM-dd') ?? '',
           contractEndAt: (model().value().contractEndAt === null) ? null : this.datepipe.transform(model().value().contractEndAt, 'yyyy-MM-dd'),
           firstName: model().value().firstName,
@@ -97,15 +86,19 @@ export class EmployeeEditPanel implements OnInit {
           roleId: model().value().roleId
         }
 
-        this.onUpdateEmployeeEvent.emit({id: this.employee().id, obj: employeeUpdateDto});
-        model().reset({...this.INITIAL_MODEL});
+        await this.employeeService.addEmployee(employeeAddDto).subscribe({
+          next: (res) => {
+            console.log("Result : " + JSON.stringify(res));
+            model().reset({...this.INITIAL_MODEL});
+            this.onAddEmployeeEvent.emit(res);
+            this.routerService.navigate(['/employees/list']);
+          },
+          error: (error) => {
+            console.log("Error : " + JSON.stringify(error));
+            console.log(JSON.stringify(employeeAddDto));
+          }
+        });
       }
     }
   });
-
-  protected handleCancel(event: Event) {
-    event.preventDefault();
-
-    this.onCancelUpdateEmployeeEvent.emit();
-  }
 }

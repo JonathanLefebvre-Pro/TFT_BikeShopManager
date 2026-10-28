@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CustomerEditPanel } from '@presentation/components/customers/customer-edit-panel/customer-edit-panel';
+import { CustomerEditPanel } from '@presentation/components/main/customers/customer-edit-panel/customer-edit-panel';
 import { Customer } from '@domain/customer';
 import { CustomerService } from '@infrastructure/services/customer-service';
 import { CustomerUpdateDto } from '@/app/appCore/dtos/customers/customerUpdateDto';

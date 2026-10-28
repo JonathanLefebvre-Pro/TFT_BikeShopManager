@@ -1,5 +1,5 @@
 import { Component, output, input, viewChildren, signal } from '@angular/core';
-import { CustomerTableRow } from '@presentation/components/customers/customer-table-row/customer-table-row';
+import { CustomerTableRow } from '@presentation/components/main/customers/customer-table-row/customer-table-row';
 import { Customer } from '@domain/customer';
 
 @Component({

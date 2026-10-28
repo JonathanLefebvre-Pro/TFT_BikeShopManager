@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
-import { CustomersTable } from '@presentation/components/customers/customers-table/customers-table';
+import { CustomersTable } from '@presentation/components/main/customers/customers-table/customers-table';
 import { Customer } from '@domain/customer';
 import { CustomerService } from '@infrastructure/services/customer-service';
 import { CustomerDtoMapper } from '@presentation/mappers/customers/customer-dto-mapper';
