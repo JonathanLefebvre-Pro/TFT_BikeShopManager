@@ -1,16 +1,17 @@
-using BikeShopManager.AppCore.Features.Queries;
+using BikeShopManager.AppCore.Features.Queries.Roles;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos;
 using BikeShopManager.WebApi.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize(Roles = ("Admin, Manager"))]
     public class RoleController(IDispatcher Dispatcher) : ControllerBase
     {
         [Route("GetAsync")]

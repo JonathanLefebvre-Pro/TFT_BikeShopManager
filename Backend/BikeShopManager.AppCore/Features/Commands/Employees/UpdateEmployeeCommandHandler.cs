@@ -1,10 +1,9 @@
-using BikeShopManager.AppCore.Features.Commands;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Commands;
 using BikeShopManager.AppCore.Interfaces.Repositories;
 
-namespace BikeShopManager.Infrastructure.Services;
+namespace BikeShopManager.AppCore.Features.Commands.Employees;
 
 public class UpdateEmployeeCommandHandler : ICommandHandlerAsync<UpdateEmployeeCommand>
 {

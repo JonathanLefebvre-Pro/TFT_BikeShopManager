@@ -1,5 +1,5 @@
-using BikeShopManager.AppCore.Features.Commands;
-using BikeShopManager.AppCore.Features.Queries;
+using BikeShopManager.AppCore.Features.Commands.Customers;
+using BikeShopManager.AppCore.Features.Queries.Customers;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.Domain.Entities;
@@ -18,7 +18,7 @@ namespace BikeShopManager.WebApi.Controllers
     {
         [Route("GetAsync")]
         [HttpGet]
-        [Authorize(Roles = ("Admin"))]
+        [Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public async Task<IActionResult> GetAsync(
             [FromQuery] string? keywords,
             [FromQuery] int pageNumber = 1,
@@ -50,6 +50,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("GetCountAsync")]
         [HttpGet]
+        [Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public async Task<IActionResult> GetCountAsync()
         {
             Result<int> result = await Dispatcher.SendQueryAsync<GetCustomersCountQuery, int>(
@@ -61,6 +62,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("GetAsync/{id}")]
         [HttpGet]
+        [Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             Result<Customer> result = await Dispatcher.SendQueryAsync<
@@ -77,6 +79,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("UpdateAsync/{id}")]
         [HttpPut]
+        [Authorize(Roles = ("Admin, Manager, Seller"))]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] CustomerUpdateDto dto)
         {
             Result result = await Dispatcher.SendCommandAsync<UpdateCustomerCommand>(
@@ -87,6 +90,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("DisableAsync/{id}")]
         [HttpPatch]
+        [Authorize(Roles = ("Admin, Manager, Seller"))]
         public async Task<IActionResult> DisableAsync(int id)
         {
             Result result = await Dispatcher.SendCommandAsync<DisableCustomerCommand>(
@@ -97,6 +101,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("EnableAsync/{id}")]
         [HttpPatch]
+        [Authorize(Roles = ("Admin, Manager, Seller"))]
         public async Task<IActionResult> EnableAsync(int id)
         {
             Result result = await Dispatcher.SendCommandAsync<EnableCustomerCommand>(
@@ -107,6 +112,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("AddAsync")]
         [HttpPost]
+        [Authorize(Roles = ("Admin, Manager, Seller"))]
         public async Task<IActionResult> AddAsync([FromBody] CustomerAddDto dto)
         {
             Result<int> result = await Dispatcher.SendCommandAsync<AddCustomerCommand, int>(

@@ -1,34 +1,27 @@
-using System.Security.Cryptography;
-using System.Text;
 using BikeShopManager.AppCore.Extensions;
-using BikeShopManager.AppCore.Features.Commands;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Commands;
 using BikeShopManager.AppCore.Interfaces.Repositories;
 using BikeShopManager.Domain.Entities;
-using BikeShopManager.Infrastructure.Extensions;
 
-namespace BikeShopManager.Infrastructure.Services;
+namespace BikeShopManager.AppCore.Features.Commands.Customers;
 
-public class AddEmployeeCommandHandler : ICommandHandlerAsync<AddEmployeeCommand, int>
+public class AddCustomerCommandHandler : ICommandHandlerAsync<AddCustomerCommand, int>
 {
-    private readonly IEmployeeRepository _employeeRepository;
+    private readonly ICustomerRepository _customerRepository;
     private readonly IUserRepository _userRepository;
-    private readonly IEmployeeRoleRepository _employeeRoleRepository;
 
-    public AddEmployeeCommandHandler(
-        IEmployeeRepository employeeRepository,
-        IUserRepository userRepository,
-        IEmployeeRoleRepository employeeRoleRepository
+    public AddCustomerCommandHandler(
+        ICustomerRepository customerRepository,
+        IUserRepository userRepository
     )
     {
-        _employeeRepository = employeeRepository;
+        _customerRepository = customerRepository;
         _userRepository = userRepository;
-        _employeeRoleRepository = employeeRoleRepository;
     }
 
-    public async Task<Result<int>> HandleAsync(AddEmployeeCommand command)
+    public async Task<Result<int>> HandleAsync(AddCustomerCommand command)
     {
         //Check if user already exist or not
         //If the user exist -> check values with the values inputed by the user
@@ -64,35 +57,22 @@ public class AddEmployeeCommandHandler : ICommandHandlerAsync<AddEmployeeCommand
             }
         }
 
-        //Hash password with Argon2
-        string passwordHash = HashingTools.HashPassword(command.Employee.Password);
-        command.Employee.PasswordHash = passwordHash;
-
-        //Temporary generate SecurityStamp -> TODO : Change this when adding JWT
-        Guid guid = Guid.NewGuid();
-        command.Employee.SecurityStamp = guid.ToString();
-
-        //Insert Employee data in Employee table and recover row id
-        int employeeRowId;
+        //Insert Customer data in Customer table and recover row id
+        int customerRowId;
         try
         {
-            employeeRowId = await _employeeRepository.CreateEmployee(userRowId, command.Employee);
-            if (employeeRowId is 0)
-                return Result<int>.Failure(EmployeeError.NotInserted);
+            customerRowId = await _customerRepository.CreateCustomer(
+                userRowId,
+                command.Customer.VatNumber
+            );
+            if (customerRowId is 0)
+                return Result<int>.Failure(CustomerError.NotInserted);
         }
         catch (Exception ex)
         {
             return ex;
         }
 
-        //Insert a row on the Persons.EmployeeRoles table
-        bool result = await _employeeRoleRepository.CreateEmployeeRole(
-            employeeRowId,
-            command.RoleId
-        );
-
-        return result
-            ? Result<int>.Success(employeeRowId)
-            : Result<int>.Failure(EmployeeRoleError.NotInserted);
+        return Result<int>.Success(customerRowId);
     }
 }

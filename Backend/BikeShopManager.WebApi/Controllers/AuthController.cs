@@ -1,5 +1,5 @@
-using BikeShopManager.AppCore.Features.Commands;
-using BikeShopManager.AppCore.Features.Queries;
+using BikeShopManager.AppCore.Features.Commands.Auth;
+using BikeShopManager.AppCore.Features.Queries.Auth;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.Domain.Entities;

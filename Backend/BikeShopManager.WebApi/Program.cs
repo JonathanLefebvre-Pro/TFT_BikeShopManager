@@ -9,8 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 string connectionString = builder
     .Configuration.GetSection("ConnectionStrings")
-    //.GetValue<string>("DefaultConnection")!;
-    .GetValue<string>("TechnofuturConnection")!;
+    .GetValue<string>("DefaultConnection")!;
+
+//.GetValue<string>("TechnofuturConnection")!;
 
 builder.Services.ConfigureCors();
 builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));

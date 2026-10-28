@@ -1,7 +1,7 @@
 using System.Data;
 using BikeShopManager.AppCore.Interfaces.Connection;
 
-namespace BikeShopManager.Infrastructure;
+namespace BikeShopManager.AppCore.Features.Connection;
 
 public class DbSession : IDbSession
 {

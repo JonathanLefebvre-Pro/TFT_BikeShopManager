@@ -1,12 +1,11 @@
 using System.Text.RegularExpressions;
 using BikeShopManager.AppCore.Features.Errors;
-using BikeShopManager.AppCore.Features.Queries;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Queries;
 using BikeShopManager.AppCore.Interfaces.Repositories;
 using BikeShopManager.Domain.Entities;
 
-namespace BikeShopManager.Infrastructure.Services.Customers;
+namespace BikeShopManager.AppCore.Features.Queries.Customers;
 
 public class GetCustomersQueryHandler
     : IQueryHandlerAsync<GetCustomersQuery, PageResponse<Customer>>

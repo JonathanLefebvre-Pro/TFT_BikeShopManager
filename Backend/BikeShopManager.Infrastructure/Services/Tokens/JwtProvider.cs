@@ -1,13 +1,13 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using BikeShopManager.AppCore.Interfaces.Repositories;
+using BikeShopManager.AppCore.Interfaces.Tokens;
 using BikeShopManager.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BikeShopManager.Infrastructure.Services.Repositories;
+namespace BikeShopManager.Infrastructure.Services.Tokens;
 
 public class JwtProvider(IConfiguration Configuration) : IJwtProvider
 {

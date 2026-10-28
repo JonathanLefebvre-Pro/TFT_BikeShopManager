@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Konscious.Security.Cryptography;
 
-namespace BikeShopManager.Infrastructure.Extensions;
+namespace BikeShopManager.AppCore.Extensions;
 
 public class HashingTools
 {

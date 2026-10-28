@@ -1,6 +1,6 @@
 using BikeShopManager.Domain.Entities;
 
-namespace BikeShopManager.AppCore.Interfaces.Repositories;
+namespace BikeShopManager.AppCore.Interfaces.Tokens;
 
 public interface IJwtProvider
 {

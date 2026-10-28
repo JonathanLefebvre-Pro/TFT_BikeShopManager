@@ -1,9 +1,8 @@
-using BikeShopManager.AppCore.Features.Queries;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Queries;
 using BikeShopManager.AppCore.Interfaces.Repositories;
 
-namespace BikeShopManager.Infrastructure.Services.Employees;
+namespace BikeShopManager.AppCore.Features.Queries.Employees;
 
 public class GetEmployeesCountQueryHandler(IEmployeeRepository EmployeeRepository)
     : IQueryHandlerAsync<GetEmployeesCountQuery, int>

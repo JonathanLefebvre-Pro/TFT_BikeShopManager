@@ -3,10 +3,11 @@ using BikeShopManager.AppCore.Features.Queries;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Queries;
 using BikeShopManager.AppCore.Interfaces.Repositories;
+using BikeShopManager.AppCore.Interfaces.Tokens;
 using BikeShopManager.Domain.Entities;
 using BikeShopManager.Domain.Entities.Auth;
 
-namespace BikeShopManager.Infrastructure.Services.Auth;
+namespace BikeShopManager.AppCore.Features.Queries.Auth;
 
 public class RefreshTokenQueryHandler(
     IAuthRepository AuthRepository,
