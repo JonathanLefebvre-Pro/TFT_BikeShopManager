@@ -5,9 +5,9 @@ namespace BikeShopManager.WebApi.Mappers;
 
 public static class RoleDtoMapper
 {
-    public static RoleReturnDto ToRoleReturnDto(this Role entity)
+    public static RoleResponseDto ToRoleResponseDto(this Role entity)
     {
-        return new RoleReturnDto()
+        return new RoleResponseDto()
         {
             Id = entity.Id,
             Name = entity.Name,

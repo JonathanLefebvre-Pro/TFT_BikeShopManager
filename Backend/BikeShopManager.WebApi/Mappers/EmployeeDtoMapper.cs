@@ -5,9 +5,9 @@ namespace BikeShopManager.WebApi.Mappers;
 
 public static class EmployeeDtoMapper
 {
-    public static EmployeeReturnDto ToEmployeeReturnDto(this Employee entity)
+    public static EmployeeResponseDto ToEmployeeResponseDto(this Employee entity)
     {
-        return new EmployeeReturnDto()
+        return new EmployeeResponseDto()
         {
             #region Employee
             EmployeeId = entity.Id,
@@ -39,13 +39,13 @@ public static class EmployeeDtoMapper
         };
     }
 
-    public static IEnumerable<EmployeeReturnDto> ToIEnumerableEmployeeReturnDtos(
+    public static IEnumerable<EmployeeResponseDto> ToIEnumerableEmployeeResponseDtos(
         this IEnumerable<Employee> entities
     )
     {
-        List<EmployeeReturnDto> dtos = new List<EmployeeReturnDto>();
+        List<EmployeeResponseDto> dtos = new List<EmployeeResponseDto>();
         foreach (Employee employee in entities)
-            dtos.Add(employee.ToEmployeeReturnDto());
+            dtos.Add(employee.ToEmployeeResponseDto());
 
         return dtos;
     }

@@ -1,21 +1,24 @@
-using BikeShopManager.AppCore.Features.Commands;
-using BikeShopManager.AppCore.Features.Queries;
+using BikeShopManager.AppCore.Features.Commands.Customers;
+using BikeShopManager.AppCore.Features.Queries.Customers;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos;
 using BikeShopManager.WebApi.Infrastructure.Extensions;
 using BikeShopManager.WebApi.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CustomerController(IDispatcher Dispatcher) : ControllerBase
     {
         [Route("GetAsync")]
         [HttpGet]
+        [Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public async Task<IActionResult> GetAsync(
             [FromQuery] string? keywords,
             [FromQuery] int pageNumber = 1,
@@ -29,10 +32,10 @@ namespace BikeShopManager.WebApi.Controllers
 
             if (result.IsSuccess)
             {
-                PageResponseDto<CustomerReturnDto> responseDto =
-                    new PageResponseDto<CustomerReturnDto>()
+                PageResponseDto<CustomerResponseDto> responseDto =
+                    new PageResponseDto<CustomerResponseDto>()
                     {
-                        Data = result.Data.Data.ToIEnumerableCustomerReturnDtos(),
+                        Data = result.Data.Data.ToIEnumerableCustomerResponseDtos(),
                         PageSize = result.Data.PageSize,
                         PageNumber = result.Data.PageNumber,
                         TotalRecords = result.Data.TotalRecords,
@@ -47,6 +50,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("GetCountAsync")]
         [HttpGet]
+        [Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public async Task<IActionResult> GetCountAsync()
         {
             Result<int> result = await Dispatcher.SendQueryAsync<GetCustomersCountQuery, int>(
@@ -58,6 +62,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("GetAsync/{id}")]
         [HttpGet]
+        [Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             Result<Customer> result = await Dispatcher.SendQueryAsync<
@@ -67,13 +72,14 @@ namespace BikeShopManager.WebApi.Controllers
 
             //Convert data to dto
             if (result.IsSuccess)
-                return this.Ok(result.Data.ToCustomerReturnDto());
+                return this.Ok(result.Data.ToCustomerResponseDto());
 
             return this.NotFound(result.Error);
         }
 
         [Route("UpdateAsync/{id}")]
         [HttpPut]
+        [Authorize(Roles = ("Admin, Manager, Seller"))]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] CustomerUpdateDto dto)
         {
             Result result = await Dispatcher.SendCommandAsync<UpdateCustomerCommand>(
@@ -84,6 +90,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("DisableAsync/{id}")]
         [HttpPatch]
+        [Authorize(Roles = ("Admin, Manager, Seller"))]
         public async Task<IActionResult> DisableAsync(int id)
         {
             Result result = await Dispatcher.SendCommandAsync<DisableCustomerCommand>(
@@ -94,6 +101,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("EnableAsync/{id}")]
         [HttpPatch]
+        [Authorize(Roles = ("Admin, Manager, Seller"))]
         public async Task<IActionResult> EnableAsync(int id)
         {
             Result result = await Dispatcher.SendCommandAsync<EnableCustomerCommand>(
@@ -104,6 +112,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("AddAsync")]
         [HttpPost]
+        [Authorize(Roles = ("Admin, Manager, Seller"))]
         public async Task<IActionResult> AddAsync([FromBody] CustomerAddDto dto)
         {
             Result<int> result = await Dispatcher.SendCommandAsync<AddCustomerCommand, int>(

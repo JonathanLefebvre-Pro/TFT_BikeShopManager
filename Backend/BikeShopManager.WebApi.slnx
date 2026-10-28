@@ -1,6 +1,7 @@
 <Solution>
   <Project Path="BikeShopManager.Domain/BikeShopManager.Domain.csproj" />
   <Project Path="BikeShopManager.AppCore/BikeShopManager.AppCore.csproj" />
+  <Project Path="BikeShopManager.Infrastructure.Test/BikeShopManager.Infrastructure.Test.csproj" />
   <Project Path="BikeShopManager.Infrastructure/BikeShopManager.Infrastructure.csproj" />
   <Project Path="BikeShopManager.WebApi/BikeShopManager.WebApi.csproj" />
 </Solution>

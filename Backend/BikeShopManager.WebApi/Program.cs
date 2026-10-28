@@ -1,37 +1,23 @@
 using System.Data;
 using BikeShopManager.AppCore.Extensions;
 using BikeShopManager.Infrastructure.Extensions;
+using BikeShopManager.WebApi.Extensions;
 using Microsoft.Data.SqlClient;
 using Scalar.AspNetCore;
 
-string myAllowedLocalOrigins = "MyAllowedLocalOrigins";
-
-string conStringTFT = @"GOS-VDI406\TFTIC";
-string conStringJo = @"JONATHAN\DATAVIZ";
-string connectionString =
-    @"Data Source="
-    + conStringJo
-    + @";Initial Catalog=TFT_BikeShopManager_WebApi;Integrated Security=True;Trust Server Certificate=True";
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(
-        name: myAllowedLocalOrigins,
-        policy =>
-        {
-            policy.WithOrigins("http://127.0.0.1:4200").AllowAnyHeader().AllowAnyMethod();
-            policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
-        }
-    );
-});
+string connectionString = builder
+    .Configuration.GetSection("ConnectionStrings")
+    .GetValue<string>("DefaultConnection")!;
 
-// Add services to the container.
+//.GetValue<string>("TechnofuturConnection")!;
+
+builder.Services.ConfigureCors();
 builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
-
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
+builder.AddJwtConfiguration();
 
 builder.Services.AddControllers();
 
@@ -48,7 +34,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors(myAllowedLocalOrigins);
+app.UseCors(CorsExtension.AllowedLocalOrigins);
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.Run();
