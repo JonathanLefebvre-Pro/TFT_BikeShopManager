@@ -14,7 +14,7 @@
     <td><input type="checkbox" disabled [checked]="customer().isActive"/></td>
 
     <td>
-        @if(customer().vatNumber === null 
+        <!-- @if(customer().vatNumber === null 
         || customer().vatNumber === undefined 
         || customer().vatNumber === ''){
             <span>/</span>
@@ -22,7 +22,8 @@
         @else
         {
             {{customer().vatNumber}}
-        }
+        } -->
+        {{displayPlaceholder(customer().vatNumber)}}
     </td>
 
     <td class="actionButtons">

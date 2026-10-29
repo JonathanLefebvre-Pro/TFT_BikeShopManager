@@ -40,4 +40,10 @@ export class CustomerTableRow implements OnChanges {
   public enableEditMode() {
     this.isEditModeEnabled.set(false);
   }
+
+  protected displayPlaceholder(value: string | null) : string {
+    if(value)
+      return value;
+    return '/';
+  }
 }

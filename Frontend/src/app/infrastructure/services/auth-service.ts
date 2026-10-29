@@ -20,12 +20,18 @@ export class AuthService implements IAuthRepository {
     public login(loginRequestDto: LoginRequestDto): Observable<TokenResponseDto> {
         const url:string = `${this.baseUrl}/${"api/Auth/LoginAsync"}`;
         return this.http.post<TokenResponseDto>(url, loginRequestDto, { withCredentials: true })
-        .pipe(tap(res => this._accessToken.set(res.accessToken)));
+        .pipe(tap({
+               next: (res) => this._accessToken.set(res.accessToken),
+               error: (err) => console.error(err)
+            }));
     }
     public refreshToken(): Observable<TokenResponseDto> {
         const url:string = `${this.baseUrl}/${"api/Auth/RefreshAsync"}`;
         return this.http.post<TokenResponseDto>(url, {}, { withCredentials: true })
-        .pipe(tap(res => this._accessToken.set(res.accessToken)));
+        .pipe(tap({
+               next: (res) => this._accessToken.set(res.accessToken),
+               error: (err) => console.error(err)
+            }));
     }
     public logout(): Observable<HttpResponse<Object>> {
         const url:string = `${this.baseUrl}/${"api/Auth/LogoutAsync"}`;
@@ -37,3 +43,4 @@ export class AuthService implements IAuthRepository {
         this.routerService.navigate(['/']);
     }
 }
+
