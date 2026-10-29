@@ -32,7 +32,8 @@ export class CustomersEditPage implements OnInit {
           this.lastEditedCustomer.set(this.customerDtoMapper.ToCustomerEntity(res))
         },
         error: (error) => {
-          this.routerService.navigate(['/customers/edit/:id']);
+          this.routerService.navigate(['..','edit/:id'], 
+            { relativeTo: this.routeService });
           console.error(error);
         }
       });
@@ -55,7 +56,8 @@ export class CustomersEditPage implements OnInit {
 
   private exitEdit() {
     this.lastEditedCustomer.set(null);
-    this.routerService.navigate(['/customers/list']);
+    this.routerService.navigate(['../../list'], 
+      { relativeTo: this.routeService });
   }
 
   private isLoading(): boolean {

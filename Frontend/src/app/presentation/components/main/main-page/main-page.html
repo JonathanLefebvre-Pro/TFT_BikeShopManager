@@ -3,7 +3,7 @@
   <a [routerLink]="['employees']" routerLinkActive="active">Employees</a>
   <a [routerLink]="['stock']" routerLinkActive="active">Stock</a>
   <a [routerLink]="['shop']" routerLinkActive="active">Shop</a>
-  <a [routerLink]="['../']" routerLinkActive="active">Logout</a>
+  <a [href]="''" (click)="onLogout($event)" routerLinkActive="active">Logout</a>
 </nav>
 
 <div class="content">

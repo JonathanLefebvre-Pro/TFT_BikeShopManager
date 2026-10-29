@@ -4,7 +4,7 @@ import { Customer } from '@domain/customer';
 import { CustomerService } from '@infrastructure/services/customer-service';
 import { CustomerDtoMapper } from '@presentation/mappers/customers/customer-dto-mapper';
 import { CustomerSearchInput } from '../customer-search-input/customer-search-input';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   imports: [CustomersTable, CustomerSearchInput],
@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 export class CustomersListPage implements OnInit {
   
   protected routerService = inject(Router);
+  protected routeService = inject(ActivatedRoute);
   protected readonly customerService : CustomerService = inject(CustomerService);
   protected readonly customerDtoMapper : CustomerDtoMapper = inject(CustomerDtoMapper);
 
@@ -70,7 +71,8 @@ export class CustomersListPage implements OnInit {
     if(customer !== null && customer !== undefined)
     {
       this.customersTableElement()?.notifyEditModeEnabled();
-      this.routerService.navigate(['/customers/edit', customer.id]);
+      this.routerService.navigate(['..', 'edit', customer.id], 
+        { relativeTo: this.routeService });
     }
   }
 

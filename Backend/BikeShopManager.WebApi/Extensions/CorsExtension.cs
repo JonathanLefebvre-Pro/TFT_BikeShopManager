@@ -10,7 +10,7 @@ public static class CorsExtension
         get => myAllowedLocalOrigins;
     }
 
-    public static IServiceCollection ConfigureCors(this IServiceCollection services)
+    public static IServiceCollection AddCorsConfiguration(this IServiceCollection services)
     {
         services.AddCors(options =>
         {
@@ -18,8 +18,16 @@ public static class CorsExtension
                 name: myAllowedLocalOrigins,
                 policy =>
                 {
-                    policy.WithOrigins("http://127.0.0.1:4200").AllowAnyHeader().AllowAnyMethod();
-                    policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+                    policy
+                        .WithOrigins("http://127.0.0.1:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                    policy
+                        .WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
                 }
             );
         });

@@ -10,12 +10,11 @@
             <option [value]="$index+1" [selected]="fieldState().value() === $index+1">{{option}}</option>
         }
     </select>
-
-    @if (fieldState().invalid() && fieldState().touched()) {
-        <div class="error">
-        @for (error of fieldState().errors(); track error.kind) {
-            <span class="error-message">{{ error.message }}</span>
-        }
-        </div>
-    }
 </div>
+@if (fieldState().invalid() && fieldState().touched()) {
+    <div class="error">
+    @for (error of fieldState().errors(); track error.kind) {
+        <span class="error-message">{{ error.message }}</span>
+    }
+    </div>
+}

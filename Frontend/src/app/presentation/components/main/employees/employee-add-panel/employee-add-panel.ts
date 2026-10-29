@@ -4,7 +4,7 @@ import { FormDateInput } from '@presentation/components/shared/form-date-input/f
 import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
 import { email, form, FormRoot, maxLength, minLength, required } from '@angular/forms/signals';
 import { EmployeeService } from '@/app/infrastructure/services/employee-service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { AddEmployeeFormData } from '@/app/presentation/forms/employees/addEmployeeFormData';
 import { EmployeeAddDto } from '@/app/appCore/dtos/employees/employeeAddDto';
@@ -18,8 +18,9 @@ import { FormSelectInput } from '@presentation/components/shared/form-select-inp
 })
 export class EmployeeAddPanel {
 
-  protected employeeService = inject(EmployeeService);
-  protected routerService = inject(Router);
+  protected readonly employeeService = inject(EmployeeService);
+  protected readonly routerService = inject(Router);
+  protected readonly routeService = inject(ActivatedRoute);
 
   public onAddEmployeeEvent = output<number>();
 
@@ -91,7 +92,7 @@ export class EmployeeAddPanel {
             console.log("Result : " + JSON.stringify(res));
             model().reset({...this.INITIAL_MODEL});
             this.onAddEmployeeEvent.emit(res);
-            this.routerService.navigate(['/employees/list']);
+            this.routerService.navigate(['..', 'list'], { relativeTo: this.routeService });
           },
           error: (error) => {
             console.log("Error : " + JSON.stringify(error));

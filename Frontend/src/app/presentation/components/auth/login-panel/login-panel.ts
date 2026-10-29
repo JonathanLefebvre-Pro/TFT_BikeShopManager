@@ -1,5 +1,5 @@
 import { LoginFormData } from '@/app/presentation/forms/auth/loginFormData';
-import { Component, model, output, signal } from '@angular/core';
+import { Component, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FormRoot, FormField, form, required, email, minLength, maxLength } from '@angular/forms/signals';
 
@@ -11,19 +11,13 @@ import { FormRoot, FormField, form, required, email, minLength, maxLength } from
 })
 export class LoginPanel {
 
-  protected loginInputModel = model<string>('Your email');
-  protected passwordInputModel = model<string>('password');
-  protected onConnectButtonClicked = output<{login: string | undefined, password: string | undefined}>();
+  protected onConnectButtonClicked = output<{login: string, password: string}>();
 
   private readonly INITIAL_MODEL = {
     login: '',
     password: ''
   };
   protected loginModel = signal<LoginFormData>({...this.INITIAL_MODEL});
-
-  protected handleOnConnectBtnClicked() {
-    this.onConnectButtonClicked.emit({login: this.loginInputModel(), password: this.passwordInputModel()});
-  }
 
   protected loginForm = form(this.loginModel, (schemaPath) => {
     required(schemaPath.login, {message: "The login is required !"}),
@@ -37,7 +31,7 @@ export class LoginPanel {
   {
     submission: {
       action: async (model) => {
-        this.onConnectButtonClicked.emit({login: this.loginInputModel(), password: this.passwordInputModel()});
+        this.onConnectButtonClicked.emit({login: model().value().login, password: model().value().password});
         model().reset({...this.INITIAL_MODEL});
       }
     }

@@ -7,7 +7,7 @@ import { DatePipe } from '@angular/common';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot],
@@ -17,8 +17,9 @@ import { Router } from '@angular/router';
 })
 export class CustomerAddPanel {
 
-  protected customerService = inject(CustomerService);
-  protected routerService = inject(Router);
+  protected readonly customerService = inject(CustomerService);
+  protected readonly routerService = inject(Router);
+  protected readonly routeService = inject(ActivatedRoute);
 
   public onAddCustomerEvent = output<number>();
 
@@ -77,7 +78,7 @@ export class CustomerAddPanel {
             console.log("Result : " + JSON.stringify(res));
             model().reset({...this.INITIAL_MODEL});
             this.onAddCustomerEvent.emit(res);
-            this.routerService.navigate(['/customers/list']);
+            this.routerService.navigate(['..', 'list'], { relativeTo: this.routeService });
           },
           error: (error) => {
             console.log("Error : " + JSON.stringify(error));

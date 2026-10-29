@@ -2,12 +2,11 @@
     <label [for]="id()">{{label()}}</label>
 
     <input type="number" [id]="id()" [formField]="field()"/>
-
-    @if (fieldState().invalid() && fieldState().touched()) {
-        <div class="error">
-        @for (error of fieldState().errors(); track error.kind) {
-            <span class="error-message">{{ error.message }}</span>
-        }
-        </div>
-    }
 </div>
+@if (fieldState().invalid() && fieldState().touched()) {
+    <div class="error">
+    @for (error of fieldState().errors(); track error.kind) {
+        <span class="error-message">{{ error.message }}</span>
+    }
+    </div>
+}

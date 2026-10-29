@@ -4,7 +4,7 @@ import { EmployeeSearchInput } from '../employee-search-input/employee-search-in
 import { EmployeeService } from '@/app/infrastructure/services/employee-service';
 import { EmployeeDtoMapper } from '@/app/presentation/mappers/employees/employee-dto-mapper';
 import { Employee } from '@/app/domain/employee';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   imports: [EmployeesTable, EmployeeSearchInput],
@@ -14,7 +14,8 @@ import { Router } from '@angular/router';
 })
 export class EmployeesListPage implements OnInit {
   
-  protected routerService = inject(Router);
+  protected readonly routerService = inject(Router);
+  protected readonly routeService = inject(ActivatedRoute);
   protected readonly employeeService : EmployeeService = inject(EmployeeService);
   protected readonly employeeDtoMapper : EmployeeDtoMapper = inject(EmployeeDtoMapper);
 
@@ -70,7 +71,7 @@ export class EmployeesListPage implements OnInit {
     if(employee !== null && employee !== undefined)
     {
       this.employeesTableElement()?.notifyEditModeEnabled();
-      this.routerService.navigate(['/employees/edit', employee.id]);
+      this.routerService.navigate(['..', 'edit', employee.id], { relativeTo: this.routeService });
     }
   }
 

@@ -50,7 +50,7 @@ export class EmployeesEditPage implements OnInit {
           this.lastEditedEmployee.set(this.employeeDtoMapper.ToEmployeeEntity(res));
         },
         error: (error) => {
-          this.routerService.navigate(['/employees/edit/:id']);
+          this.routerService.navigate(['..', 'edit/:id'], { relativeTo: this.routeService });
           console.error(error);
         }
       });
@@ -73,7 +73,7 @@ export class EmployeesEditPage implements OnInit {
 
   private exitEdit() {
     this.lastEditedEmployee.set(null);
-    this.routerService.navigate(['/employees/list']);
+    this.routerService.navigate(['../../list'], { relativeTo: this.routeService });
   }
 
   private isLoading(): boolean {
