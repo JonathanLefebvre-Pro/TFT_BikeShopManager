@@ -1,7 +1,8 @@
 import { LoginFormData } from '@/app/presentation/forms/auth/loginFormData';
+import { loginValidationSchema, passwordValidationSchema } from '@/app/presentation/forms/validations/loginValidationSchema';
 import { Component, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FormRoot, FormField, form, required, email, minLength, maxLength, validate, pattern } from '@angular/forms/signals';
+import { FormRoot, FormField, form, apply } from '@angular/forms/signals';
 
 @Component({
   imports: [FormsModule, FormRoot, FormField],
@@ -20,13 +21,11 @@ export class LoginPanel {
   protected loginModel = signal<LoginFormData>({...this.INITIAL_MODEL});
 
   protected loginForm = form(this.loginModel, (schemaPath) => {
-    required(schemaPath.login, {message: "The login is required !"}),
-    pattern(schemaPath.login, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/, {message: "Enter a valid email !"}),
-    minLength(schemaPath.login, 6, {message: "Login min length : 6 !"}),
-    maxLength(schemaPath.login, 254,  {message: "Login max length : 254 !"}),
-    required(schemaPath.password, {message: "The password is required !"}),
-    minLength(schemaPath.password, 5, {message: "Password min length : 5 !"}),
-    maxLength(schemaPath.password, 100,  {message: "Password max length : 100 !"})
+    //Validation : Login
+    apply(schemaPath.login, loginValidationSchema),
+    //Validation : Password
+    //TODO : Add validation with password best practices (NIST 800-63B)
+    apply(schemaPath.password, passwordValidationSchema)
   },
   {
     submission: {

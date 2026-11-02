@@ -1,13 +1,15 @@
 import { AddCustomerFormData } from '@/app/presentation/forms/customers/addCustomerFormData';
 import { CustomerService } from '@infrastructure/services/customer-service';
 import { Component, inject, output, signal } from '@angular/core';
-import { email, form, maxLength, minLength, required, FormRoot, pattern } from '@angular/forms/signals';
+import { form, FormRoot, apply } from '@angular/forms/signals';
 import { CustomerAddDto } from '@/app/appCore/dtos/customers/customerAddDto';
 import { DatePipe } from '@angular/common';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
 import { ActivatedRoute, Router } from '@angular/router';
+import { vatNumberValidationSchema } from '@/app/presentation/forms/validations/customerValidationSchema';
+import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot],
@@ -41,21 +43,24 @@ export class CustomerAddPanel {
   protected customerModel = signal<AddCustomerFormData>({...this.INITIAL_MODEL});
 
   protected customerForm = form(this.customerModel, (schemaPath) => {
-    required(schemaPath.firstName, {message: "Firstname is required !"}),
-    minLength(schemaPath.firstName, 5, {message: "Firstname min length : 5 !"}),
-    maxLength(schemaPath.firstName, 100,  {message: "Firstname max length : 100 !"}),
-    required(schemaPath.lastName, {message: "LastName is required !"}),
-    minLength(schemaPath.lastName, 5, {message: "LastName min length : 5 !"}),
-    maxLength(schemaPath.lastName, 100,  {message: "LastName max length : 100 !"}),
-    maxLength(schemaPath.vatNumber, 15, {message: "Vat number max length : 15 !"}),
-    pattern(schemaPath.email, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/, {message: "Enter a valid email !"}),
-    maxLength(schemaPath.email, 254, { message: "Email max length : 256 !"}),
-    maxLength(schemaPath.phoneNumber, 20, { message: "Phone number max length : 20 !"}),
-    pattern(schemaPath.phoneNumber, /^(?:(?:\+|00)32|0)\s?(?:[1-9]\d?)(?:[\s./-]?\d{2,3}){3,4}$/, { message: "Invalid phone number !" }),
-    maxLength(schemaPath.address, 200, { message: "Address max length : 200 !"}),
-    maxLength(schemaPath.city, 50, { message: "City max length : 50 !"}),
-    maxLength(schemaPath.zipCode, 10, { message: "ZipCode max length : 10 !"}),
-    maxLength(schemaPath.country, 50, { message: "Country max length : 50 !"})
+    //Validation : Firstname
+    apply(schemaPath.firstName, firstnameValidationSchema),
+    //Validation : Lastname
+    apply(schemaPath.lastName, lastnameValidationSchema),
+    //Validation : VAT Number
+    apply(schemaPath.vatNumber, vatNumberValidationSchema),
+    //Validation : Email
+    apply(schemaPath.email, emailValidationSchema),
+    //Validation : Phone Number
+    apply(schemaPath.phoneNumber, phoneNumberValidationSchema),
+    //Validation : Address
+    apply(schemaPath.address, addressValidationSchema),
+    //Validation : City
+    apply(schemaPath.city, cityValidationSchema),
+    //Validation : ZipCode
+    apply(schemaPath.zipCode, zipCodeValidationSchema),
+    //Validation : Country
+    apply(schemaPath.country, countryValidationSchema)
   },
   {
     submission: {
