@@ -1,7 +1,7 @@
 import { LoginFormData } from '@/app/presentation/forms/auth/loginFormData';
 import { Component, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FormRoot, FormField, form, required, email, minLength, maxLength } from '@angular/forms/signals';
+import { FormRoot, FormField, form, required, email, minLength, maxLength, validate, pattern } from '@angular/forms/signals';
 
 @Component({
   imports: [FormsModule, FormRoot, FormField],
@@ -21,9 +21,9 @@ export class LoginPanel {
 
   protected loginForm = form(this.loginModel, (schemaPath) => {
     required(schemaPath.login, {message: "The login is required !"}),
-    email(schemaPath.login, {message: "Enter a valid email !"}),
-    minLength(schemaPath.login, 5, {message: "Login min length : 5 !"}),
-    maxLength(schemaPath.login, 100,  {message: "Login max length : 100 !"}),
+    pattern(schemaPath.login, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/, {message: "Enter a valid email !"}),
+    minLength(schemaPath.login, 6, {message: "Login min length : 6 !"}),
+    maxLength(schemaPath.login, 254,  {message: "Login max length : 254 !"}),
     required(schemaPath.password, {message: "The password is required !"}),
     minLength(schemaPath.password, 5, {message: "Password min length : 5 !"}),
     maxLength(schemaPath.password, 100,  {message: "Password max length : 100 !"})
