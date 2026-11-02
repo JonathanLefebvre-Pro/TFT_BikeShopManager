@@ -2,7 +2,7 @@ import { Component, inject, input, output, signal } from '@angular/core';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
-import { email, form, FormRoot, maxLength, minLength, required } from '@angular/forms/signals';
+import { email, form, FormRoot, maxLength, minLength, pattern, required } from '@angular/forms/signals';
 import { EmployeeService } from '@/app/infrastructure/services/employee-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -58,9 +58,10 @@ export class EmployeeAddPanel {
     minLength(schemaPath.lastName, 5, {message: "LastName min length : 5 !"}),
     maxLength(schemaPath.lastName, 100,  {message: "LastName max length : 100 !"}),
     required(schemaPath.email, {message: "Email is required !"}),
-    email(schemaPath.email, {message: "Enter a valid email !"}),
-    maxLength(schemaPath.email, 256, { message: "Email max length : 256 !"}),
+    pattern(schemaPath.email, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/, {message: "Enter a valid email !"}),
+    maxLength(schemaPath.email, 254, { message: "Email max length : 254 !"}),
     maxLength(schemaPath.phoneNumber, 20, { message: "Phone number max length : 20 !"}),
+    pattern(schemaPath.phoneNumber, /^(?:(?:\+|00)32|0)\s?(?:[1-9]\d?)(?:[\s./-]?\d{2,3}){3,4}$/, { message: "Invalid phone number !" }),
     maxLength(schemaPath.address, 200, { message: "Address max length : 200 !"}),
     maxLength(schemaPath.city, 50, { message: "City max length : 50 !"}),
     maxLength(schemaPath.zipCode, 10, { message: "ZipCode max length : 10 !"}),

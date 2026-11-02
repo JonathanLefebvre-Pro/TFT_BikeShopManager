@@ -4,12 +4,13 @@ import { FormTextInput } from '@presentation/components/shared/form-text-input/f
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
 import { UpdateCustomerFormData } from '@/app/presentation/forms/customers/updateCustomerFormData';
-import { email, form, maxLength, minLength, required, FormRoot } from '@angular/forms/signals';
+import { form, maxLength, minLength, required, FormRoot, pattern, validate } from '@angular/forms/signals';
 import { CustomerUpdateDto } from '@/app/appCore/dtos/customers/customerUpdateDto';
 import { DatePipe } from '@angular/common';
+import { FormNumberInput } from '../../../shared/form-number-input/form-number-input';
 
 @Component({
-  imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot],
+  imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot, FormNumberInput],
   selector: 'app-customer-edit-panel',
   styleUrl: './customer-edit-panel.scss',
   templateUrl: './customer-edit-panel.html',
@@ -60,10 +61,11 @@ export class CustomerEditPanel implements OnInit {
     required(schemaPath.lastName, {message: "LastName is required !"}),
     minLength(schemaPath.lastName, 5, {message: "LastName min length : 5 !"}),
     maxLength(schemaPath.lastName, 100,  {message: "LastName max length : 100 !"}),
-    maxLength(schemaPath.vatNumber, 20, {message: "Vat number max length : 20 !"}),
-    email(schemaPath.email, {message: "Enter a valid email !"}),
-    maxLength(schemaPath.email, 256, { message: "Email max length : 256 !"}),
+    maxLength(schemaPath.vatNumber, 15, {message: "Vat number max length : 15 !"}),
+    pattern(schemaPath.email, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/, {message: "Enter a valid email !"}),
+    maxLength(schemaPath.email, 254, { message: "Email max length : 254 !"}),
     maxLength(schemaPath.phoneNumber, 20, { message: "Phone number max length : 20 !"}),
+    pattern(schemaPath.phoneNumber, /^(?:(?:\+|00)32|0)\s?(?:[1-9]\d?)(?:[\s./-]?\d{2,3}){3,4}$/, { message: "Invalid phone number !" }),
     maxLength(schemaPath.address, 200, { message: "Address max length : 200 !"}),
     maxLength(schemaPath.city, 50, { message: "City max length : 50 !"}),
     maxLength(schemaPath.zipCode, 10, { message: "ZipCode max length : 10 !"}),
@@ -80,7 +82,7 @@ export class CustomerEditPanel implements OnInit {
           phoneNumber: (model().value().phoneNumber === "") ? null : model().value().phoneNumber,
           address: (model().value().address === "") ? null : model().value().address,
           city: (model().value().city === "") ? null : model().value().city,
-          zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
+          zipCode: model().value().zipCode?.toString() ?? null,
           country: (model().value().country === "") ? null : model().value().country,
           birthDate: (model().value().birthDate === null) ? null : this.datepipe.transform(model().value().birthDate, 'yyyy-MM-dd'),
           allowMarketing: model().value().allowMarketing
