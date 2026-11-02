@@ -13,7 +13,7 @@ string connectionString = builder
 
 //.GetValue<string>("TechnofuturConnection")!;
 
-builder.Services.ConfigureCors();
+builder.Services.AddCorsConfiguration();
 builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();

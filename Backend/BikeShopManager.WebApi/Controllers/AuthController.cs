@@ -26,13 +26,25 @@ namespace BikeShopManager.WebApi.Controllers
             if (result.IsFailure)
                 return this.Unauthorized(new { message = "Invalid username or password" });
 
-            return this.FromResult(result);
+            this.SetRefreshTokenCookie(result.Data.RefreshToken, result.Data.RefreshExpireAt);
+
+            AccessTokenResponseDto accessToken = new AccessTokenResponseDto
+            {
+                AccessToken = result.Data.AccessToken,
+                ExpireAt = result.Data.AccessExpireAt,
+            };
+
+            return Ok(accessToken);
         }
 
         [Route("RefreshAsync")]
         [HttpPost]
-        public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
+        public async Task<IActionResult> RefreshToken()
         {
+            string? refreshToken = Request.Cookies["refreshToken"];
+            if (string.IsNullOrWhiteSpace(refreshToken))
+                return Unauthorized();
+
             Result<TokenResponse> result = await Dispatcher.SendQueryAsync<
                 RefreshTokenQuery,
                 TokenResponse
@@ -41,13 +53,27 @@ namespace BikeShopManager.WebApi.Controllers
             if (result.IsFailure)
                 return this.Unauthorized(new { message = "Invalid refresh token" });
 
-            return this.FromResult(result);
+            this.SetRefreshTokenCookie(result.Data.RefreshToken, result.Data.RefreshExpireAt);
+
+            AccessTokenResponseDto accessToken = new AccessTokenResponseDto
+            {
+                AccessToken = result.Data.AccessToken,
+                ExpireAt = result.Data.AccessExpireAt,
+            };
+
+            return Ok(accessToken);
         }
 
         [Route("LogoutAsync")]
         [HttpPost]
-        public async Task<IActionResult> Logout([FromBody] string refreshToken)
+        public async Task<IActionResult> Logout()
         {
+            string? refreshToken = Request.Cookies["refreshToken"];
+            if (string.IsNullOrWhiteSpace(refreshToken))
+                return Unauthorized();
+
+            this.DeleteRefreshToken();
+
             Result result = await Dispatcher.SendCommandAsync(new LogoutUserCommand(refreshToken));
 
             if (result.IsFailure)

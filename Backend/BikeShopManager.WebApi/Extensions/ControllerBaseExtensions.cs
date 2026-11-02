@@ -23,4 +23,37 @@ public static class ControllerBaseExtensions
 
         return controller.NotFound(result.Error);
     }
+
+    public static void SetRefreshTokenCookie(
+        this ControllerBase controller,
+        string refreshToken,
+        DateTime expireAt
+    )
+    {
+        controller.Response.Cookies.Append(
+            "refreshToken",
+            refreshToken,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = expireAt,
+                Path = "/api/Auth",
+            }
+        );
+    }
+
+    public static void DeleteRefreshToken(this ControllerBase controller)
+    {
+        controller.Response.Cookies.Delete(
+            "refreshToken",
+            new CookieOptions
+            {
+                Path = "/api/Auth",
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+            }
+        );
+    }
 }
