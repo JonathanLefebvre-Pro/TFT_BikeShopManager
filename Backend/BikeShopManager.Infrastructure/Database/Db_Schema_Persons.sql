@@ -136,10 +136,12 @@ VALUES
 
 GO
 
+USE TFT_BikeShopManager_WebApi;
 SELECT * FROM Persons.Users
 SELECT * FROM Persons.Customers
 SELECT * FROM Persons.Employees
 SELECT * FROM Persons.Roles
 SELECT * FROM Persons.EmployeeRoles
+SELECT * FROM Persons.RefreshTokens
 
 GO

@@ -1,0 +1,28 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+
+    margin-top: 1rem;
+    gap: 2rem;
+}
+
+.submitCustomerForm {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    gap: 0.5rem;
+
+    background-color: rgb(204, 204, 204);
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.submitCustomerForm div {
+    display: grid;
+    grid-template-columns: auto 200px;
+}
+
+.submitCustomerForm div.formGroup-Submit {
+    grid-template-columns: auto;
+}

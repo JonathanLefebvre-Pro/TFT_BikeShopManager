@@ -1,0 +1,37 @@
+<table class="customerTable">
+    <thead class="customerTableHead">
+        <tr>
+            @for (header of headers(); track $index) {
+                <th scope="col">{{header}}</th>
+            }
+        </tr>
+    </thead>
+    <tbody class="customerTableBody">
+        @defer(when isLoading())
+        {
+            @for (customer of customers(); track customer.id) {
+                <app-customer-table-row #customerTableRow
+                [customer]="customer" 
+                (onEnableCustomerEvent)="handleCustomerEnable($event)"
+                (onDisableCustomerEvent)="handleCustomerDisable($event)"
+                (onEditCustomerEvent)="handleCustomerEdit($event)"/>
+            }
+        }
+        @placeholder {
+            <p>Customers are loading !</p>
+        }
+        @loading(after 100ms; minimum 1s) {
+            <p>Customers are loading !</p>
+        }
+        @error {
+            <div>Loading error !</div>
+        }
+    </tbody>
+    <tfoot class="customerTableFooter">
+        @if(maxPagesNumber() > 0){
+            <input type="button" value="<" (click)="handlePreviousPage()"/>
+            {{currentPageNumber()}}/{{maxPagesNumber()}}
+            <input type="button" value=">" (click)="handleNextPage()"/>
+        }
+    </tfoot>
+</table>

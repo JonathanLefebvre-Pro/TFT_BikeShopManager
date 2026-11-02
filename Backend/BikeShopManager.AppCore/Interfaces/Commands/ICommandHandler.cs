@@ -1,4 +1,3 @@
-using System.Data;
 using BikeShopManager.AppCore.Features.Results;
 
 namespace BikeShopManager.AppCore.Interfaces.Commands;

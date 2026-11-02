@@ -1,0 +1,20 @@
+:host {
+
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+
+    padding: 1rem;
+    background-color: grey;
+}
+
+.employees-content {
+    margin-top: 2rem;
+}
+
+.active {
+    color: orange;
+}

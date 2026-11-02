@@ -1,0 +1,27 @@
+<form class="form" method="post" [formRoot]="loginForm">
+    <div class="input-group">
+        <label for="login">Login :</label>
+        <input id="login" type="email" [formField]="loginForm.login" placeholder="Email"/>
+    </div>
+    @if (loginForm.login().invalid() && loginForm.login().touched()) {
+        <div class="error">
+        @for (error of loginForm.login().errors(); track error.kind) {
+            <span class="error-message">{{ error.message }}</span>
+        }
+        </div>
+    }
+
+    <div class="input-group">
+        <label for="password">Password :</label>
+        <input type="password" [formField]="loginForm.password" placeholder="Password"/>
+    </div>
+    @if (loginForm.password().invalid() && loginForm.password().touched()) {
+        <div class="error">
+        @for (error of loginForm.password().errors(); track error.kind) {
+            <span class="error-message">{{ error.message }}</span>
+        }
+        </div>
+    }
+
+    <input type="submit" value="Connect"/>
+</form>

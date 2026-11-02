@@ -1,13 +1,13 @@
 export interface User {
-    Id: number;
-    FirstName: string ;
-    LastName:string;
-    Email: string;
-    PhoneNumber: string;
-    Address: string;
-    City: string;
-    ZipCode: string;
-    Country : string;
-    BirthDate: Date;
-    AllowMarketing: boolean;
+    id: number;
+    firstName: string;
+    lastName:string;
+    email: string | null;
+    phoneNumber: string | null;
+    address: string | null;
+    city: string | null;
+    zipCode: string | null;
+    country : string | null;
+    birthDate?: Date | null;
+    allowMarketing: boolean;
 }

@@ -1,0 +1,17 @@
+:host {
+    display: flex;
+    flex-direction: row;
+}
+
+div {
+    display: flex;
+    flex: 1;
+}
+
+label {
+    min-width: 200px;
+}
+
+input {
+    flex-grow: 1;
+}

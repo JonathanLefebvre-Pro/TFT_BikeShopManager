@@ -1,0 +1,11 @@
+<nav>
+  <a [routerLink]="['customers']" routerLinkActive="active">Customers</a>
+  <a [routerLink]="['employees']" routerLinkActive="active">Employees</a>
+  <a [routerLink]="['stock']" routerLinkActive="active">Stock</a>
+  <a [routerLink]="['shop']" routerLinkActive="active">Shop</a>
+  <a [href]="''" (click)="onLogout($event)" routerLinkActive="active">Logout</a>
+</nav>
+
+<div class="content">
+    <router-outlet />
+</div>

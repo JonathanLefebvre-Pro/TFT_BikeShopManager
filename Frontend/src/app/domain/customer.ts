@@ -1,10 +1,10 @@
 import { User } from "./user";
 
 export interface Customer {
-    Id: number;
-    UserId: number;
-    VatNumber: string;
-    IsActive: boolean;
+    id: number;
+    userId: number;
+    vatNumber: string | null;
+    isActive: boolean;
 
-    User: User;
+    user: User;
 }

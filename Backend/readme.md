@@ -4,18 +4,8 @@
 
 Développer une **API REST** complète avec authentification JWT sécurisée pour un domaine métier de votre choix. Le sujet doit permettre la gestion de ressources, d'utilisateurs avec différents rôles, et favoriser les interactions entre utilisateurs.
 
-### 🎨 Exemples de thèmes possibles
-- Plateforme de e-commerce
-- Système de gestion de projets/tâches
-- Réseau social professionnel
-- Plateforme de cours en ligne
-- Application de gestion d'événements
-- Système de réservation (hotels, restaurants, etc.)
-- Plateforme de freelancing
-- Application de gestion de portfolio
-- Système de ticketing/support
-- Plateforme d'évaluation/feedback
-- **Ou tout autre thème de votre choix**
+### 🎨 Thème
+- Plateforme de gestion commerciale d'un magasin de vélo
 
 ---
 
@@ -24,16 +14,16 @@ Développer une **API REST** complète avec authentification JWT sécurisée pou
 Le projet doit comporter au minimum 5 fonctionnalités majeurs liées à votre thème :
 
 ### Fonctionnalité 1
-Description générale de la première entité/ressource principale
+Gestion des clients
 
 ### Fonctionnalité 2
-Description générale de la seconde entité/ressource principale
+Gestion des utilisateurs (employés) et des roles
 
 ### Fonctionnalité 3
-Description générale de la troisième entité/ressource principale
+Gestion du stock
 
 ### Fonctionnalité 4
-Description générale de la quatrième entité/ressource principale
+Gestion des commandes
 
 ### Fonctionnalité 5
 Description générale des interactions/relations entre utilisateurs et ressources

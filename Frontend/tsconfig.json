@@ -15,8 +15,10 @@
     "module": "preserve",
     "paths": {
       "@/*": ["./src/*"],
-      "@forms/*": ["./src/app/forms/*"],
-      "@domain/*": ["./src/app/domain/*"]
+      "@appCore/*": ["./src/app/appCore/*"],
+      "@domain/*": ["./src/app/domain/*"],
+      "@infrastructure/*": ["./src/app/infrastructure/*"],
+      "@presentation/*": ["./src/app/presentation/*"]
     },
   },
   "angularCompilerOptions": {
