@@ -1,15 +1,16 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using BikeShopManager.AppCore.Features.Options;
 using BikeShopManager.AppCore.Interfaces.Tokens;
 using BikeShopManager.Domain.Entities;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BikeShopManager.Infrastructure.Services.Tokens;
 
-public class JwtProvider(IConfiguration Configuration) : IJwtProvider
+public class JwtProvider(IOptions<JwtOptions> Options) : IJwtProvider
 {
     public TokenResponse GenerateToken(Employee employee)
     {
@@ -17,12 +18,11 @@ public class JwtProvider(IConfiguration Configuration) : IJwtProvider
             throw new ArgumentException("Invalid user");
 
         JsonWebTokenHandler tokenHandler = new JsonWebTokenHandler();
-        IConfigurationSection jwtSettings = Configuration.GetSection("JwtSettings");
-        string? jwtSecret = jwtSettings.GetValue<string>("Secret");
-        string? jwtIssuer = jwtSettings.GetValue<string>("Issuer");
-        string? jwtAudience = jwtSettings.GetValue<string>("Audience");
-        int jwtAccessExpiration = jwtSettings.GetValue<int>("ExpirationInMinutes");
-        int jwtRefreshExpiration = jwtSettings.GetValue<int>("RefreshTokenDays");
+        string? jwtSecret = Options.Value.Secret;
+        string? jwtIssuer = Options.Value.Issuer;
+        string? jwtAudience = Options.Value.Audience;
+        int jwtAccessExpiration = Options.Value.ExpirationInMinutes;
+        int jwtRefreshExpiration = Options.Value.RefreshTokenDays;
         byte[] key = Encoding.UTF8.GetBytes(jwtSecret!);
 
         List<Claim> claims = new List<Claim>

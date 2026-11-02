@@ -1,6 +1,9 @@
+using System.Data;
 using System.Security.Claims;
 using System.Text;
+using BikeShopManager.AppCore.Features.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
@@ -8,12 +11,36 @@ namespace BikeShopManager.WebApi.Extensions;
 
 public static class JwtExtension
 {
+    public static IServiceCollection AddJwtOptions(this IServiceCollection services)
+    {
+        services
+            .AddOptions<JwtOptions>()
+            .BindConfiguration(JwtOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        return services;
+    }
+
+    public static IServiceCollection AddConnectionStringsOptions(this IServiceCollection services)
+    {
+        services
+            .AddOptions<ConnectionStringsOptions>()
+            .BindConfiguration(ConnectionStringsOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        return services;
+    }
+
     public static WebApplicationBuilder AddJwtConfiguration(this WebApplicationBuilder builder)
     {
-        IConfigurationSection jwtSettings = builder.Configuration.GetSection("JwtSettings");
-        string? jwtSecret = jwtSettings.GetValue<string>("Secret");
-        string? jwtIssuer = jwtSettings.GetValue<string>("Issuer");
-        string? jwtAudience = jwtSettings.GetValue<string>("Audience");
+        JwtOptions? jwtOptions = builder
+            .Configuration.GetSection(JwtOptions.SectionName)
+            .Get<JwtOptions>();
+        string? jwtSecret = jwtOptions?.Secret;
+        string? jwtIssuer = jwtOptions?.Issuer;
+        string? jwtAudience = jwtOptions?.Audience;
         byte[] key = Encoding.UTF8.GetBytes(jwtSecret!);
 
         builder
@@ -42,6 +69,21 @@ public static class JwtExtension
             });
 
         builder.Services.AddAuthorization();
+
+        return builder;
+    }
+
+    public static WebApplicationBuilder AddConnectionStringConfiguration(
+        this WebApplicationBuilder builder
+    )
+    {
+        ConnectionStringsOptions? connectionStringsOptions = builder
+            .Configuration.GetSection(ConnectionStringsOptions.SectionName)
+            .Get<ConnectionStringsOptions>();
+
+        builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(
+            connectionStringsOptions?.TechnofuturConnection
+        ));
 
         return builder;
     }

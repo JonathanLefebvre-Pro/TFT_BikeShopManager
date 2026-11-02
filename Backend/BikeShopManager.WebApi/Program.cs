@@ -1,20 +1,14 @@
-using System.Data;
 using BikeShopManager.AppCore.Extensions;
 using BikeShopManager.Infrastructure.Extensions;
 using BikeShopManager.WebApi.Extensions;
-using Microsoft.Data.SqlClient;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string connectionString = builder
-    .Configuration.GetSection("ConnectionStrings")
-    .GetValue<string>("DefaultConnection")!;
-
-//.GetValue<string>("TechnofuturConnection")!;
-
 builder.Services.AddCorsConfiguration();
-builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
+builder.Services.AddJwtOptions();
+builder.Services.AddConnectionStringsOptions();
+builder.AddConnectionStringConfiguration();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
 builder.AddJwtConfiguration();
