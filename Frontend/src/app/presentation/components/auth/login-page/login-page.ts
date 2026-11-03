@@ -1,8 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { LoginPanel } from '../login-panel/login-panel';
 import { Router } from '@angular/router';
 import { AuthService } from '@/app/infrastructure/services/auth-service';
 import { LoginRequestDto } from '@/app/appCore/dtos/auth/loginRequestDto';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [LoginPanel],
@@ -15,6 +16,7 @@ export class LoginPage implements OnInit {
   protected routerService = inject(Router);
   private readonly authService = inject(AuthService);
   protected readonly displayErrorMessage = signal<boolean>(false);
+  protected readonly destroyRef = inject(DestroyRef);
 
   private timeoutId: number = 0;
 
@@ -30,15 +32,13 @@ export class LoginPage implements OnInit {
       password: value.password
     }
 
-    this.authService.login(dto).subscribe({
+    this.authService.login(dto).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
-        //console.log(res);
-        
         this.displayErrorMessage.set(false);
         this.routerService.navigate(['/main']);
       },
       error: (error) => {
-        console.error(error);
+        console.error('Error : ',error);
 
         //Display error message : Login or password are not valid !
         this.displayErrorMessage.set(true);

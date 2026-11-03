@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
 import { apply, form, FormRoot, required, schema, validate } from '@angular/forms/signals';
@@ -11,6 +11,7 @@ import { passwordValidationSchema } from '@/app/presentation/forms/validations/l
 import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
 import { hiredAtValidationSchema } from '@/app/presentation/forms/validations/employeeValidationSchema';
 import { EmployeeFormDtoMapper } from '@/app/presentation/mappers/employees/employee-form-dto-mapper';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormRoot, FormSelectInput],
@@ -20,6 +21,7 @@ import { EmployeeFormDtoMapper } from '@/app/presentation/mappers/employees/empl
 })
 export class EmployeeAddPanel {
 
+  protected readonly destroyRef = inject(DestroyRef);
   protected readonly employeeService = inject(EmployeeService);
   protected readonly employeeFormDtoMapper = inject(EmployeeFormDtoMapper);
   protected readonly routerService = inject(Router);
@@ -115,6 +117,7 @@ export class EmployeeAddPanel {
       action: async (model) => {
         await this.employeeService.addEmployee(
           this.employeeFormDtoMapper.ToEmployeeAddDto(model().value()))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: (res) => {
               model().reset({...this.INITIAL_MODEL});

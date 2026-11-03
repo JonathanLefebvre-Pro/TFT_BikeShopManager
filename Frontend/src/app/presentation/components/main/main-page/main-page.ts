@@ -1,5 +1,6 @@
 import { AuthService } from '@/app/infrastructure/services/auth-service';
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -11,9 +12,10 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 export class MainPage {
   protected readonly title = signal('BikeShopManager');
   protected readonly authService = inject(AuthService);
+  protected readonly destroyRef = inject(DestroyRef);
 
   protected onLogout(event: Event) {
     event.preventDefault();
-    this.authService.logout().subscribe();
+    this.authService.logout().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 }
