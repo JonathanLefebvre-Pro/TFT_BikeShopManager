@@ -37,10 +37,10 @@ export class EmployeeAddPanel {
     return date;
   }
 
-  //private today: Date = new Date();
   private readonly INITIAL_MODEL = {
       password: '',
-      hiredAt: this.getDate(),//new Date(Date.UTC(this.today.getFullYear(),this.today.getMonth(), this.today.getDate())),
+      passwordConfirm: '',
+      hiredAt: this.getDate(),
       contractEndAt: null,
       firstName: '',
       lastName: '',
@@ -77,8 +77,19 @@ export class EmployeeAddPanel {
     }),
     //Validation : Password
     //TODO : Add validation with password best practices (NIST 800-63B) 
-    // and with double input for password confirmation
     apply(schemaPath.password, passwordValidationSchema),
+    validate(schemaPath.passwordConfirm, ({value, valueOf}) => {
+        const password: string = valueOf(schemaPath.password);
+        const passwordConfirm: string = value();
+
+        if(!password) return undefined;
+        if(!passwordConfirm) return undefined;
+
+        if(password !== passwordConfirm)
+          return { kind: 'password-confirm', message: "The password does not match !" }
+
+        return null;
+    }),
     //Validation : Firstname
     apply(schemaPath.firstName, firstnameValidationSchema),
     //Validation : Lastname

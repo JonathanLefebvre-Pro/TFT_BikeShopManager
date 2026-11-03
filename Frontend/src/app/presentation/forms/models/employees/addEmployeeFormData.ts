@@ -1,6 +1,7 @@
 export interface AddEmployeeFormData {
     //Employee
     password: string;
+    passwordConfirm: string;
     hiredAt: Date;
     contractEndAt: Date | null;
     
