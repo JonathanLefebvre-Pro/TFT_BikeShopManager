@@ -18,7 +18,7 @@ export class EmployeeDtoMapper {
             city: dto.city,
             zipCode: dto.zipCode,
             country: dto.country,
-            birthDate: dto.birthDate,
+            birthDate: (dto.birthDate) ? new Date(dto.birthDate) : null,
             allowMarketing: dto.allowMarketing
         };
         return user;
@@ -39,8 +39,8 @@ export class EmployeeDtoMapper {
             userId: dto.userId,
             passwordHash: dto.passwordHash,
             securityStamp: dto.securityStamp,
-            hiredAt: dto.hiredAt,
-            contractEndAt: dto.contractEndAt, 
+            hiredAt: new Date(dto.hiredAt),
+            contractEndAt: (dto.contractEndAt) ? new Date(dto.contractEndAt) : null, 
             isActive: dto.isActive,
             
             user: this.ToUserEntity(dto),

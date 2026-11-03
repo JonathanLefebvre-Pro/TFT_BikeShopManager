@@ -88,7 +88,7 @@ export class CustomerEditPanel implements OnInit {
           city: (model().value().city === "") ? null : model().value().city,
           zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
           country: (model().value().country === "") ? null : model().value().country,
-          birthDate: (model().value().birthDate === null) ? null : this.datepipe.transform(model().value().birthDate, 'yyyy-MM-dd'),
+          birthDate: model().value().birthDate?.toISOString().substring(0,10) ?? null,
           allowMarketing: model().value().allowMarketing
         }
         this.onUpdateCustomerEvent.emit({id: this.customer().id, obj: customerUpdateDto});

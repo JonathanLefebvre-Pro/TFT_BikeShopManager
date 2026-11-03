@@ -14,7 +14,7 @@ export interface EmployeeAddDto {
     zipCode: string | null;
     country: string | null;
     birthDate: string | null;
-    allowMarketing: boolean;
+    //allowMarketing: boolean;
 
     //Role
     roleId: number;

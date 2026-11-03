@@ -126,7 +126,7 @@ export class EmployeeAddPanel {
           zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
           country: (model().value().country === "") ? null : model().value().country,
           birthDate: model().value().birthDate?.toISOString().substring(0, 10) ?? null,
-          allowMarketing: model().value().allowMarketing,
+          // allowMarketing: model().value().allowMarketing,
           roleId: model().value().roleId
         }
 

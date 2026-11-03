@@ -12,7 +12,7 @@ import { addressValidationSchema, cityValidationSchema, countryValidationSchema,
 import { hiredAtValidationSchema } from '@/app/presentation/forms/validations/employeeValidationSchema';
 
 @Component({
-  imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot, FormSelectInput],
+  imports: [FormTextInput, FormDateInput, FormRoot, FormSelectInput],
   selector: 'app-employee-edit-panel',
   styleUrl: './employee-edit-panel.scss',
   templateUrl: './employee-edit-panel.html',
@@ -32,7 +32,7 @@ export class EmployeeEditPanel implements OnInit {
       city: this.employee().user.city ?? '',
       zipCode: this.employee().user.zipCode ?? '',
       country: this.employee().user.country ?? '',
-      birthDate: this.employee().user.birthDate ?? null,
+      birthDate: this.employee().user.birthDate,
       allowMarketing: this.employee().user.allowMarketing,
       roleId: this.employee().role.id
     });
@@ -125,7 +125,7 @@ export class EmployeeEditPanel implements OnInit {
           zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
           country: (model().value().country === "") ? null : model().value().country,
           birthDate: model().value().birthDate?.toISOString().substring(0,10) ?? null,
-          allowMarketing: model().value().allowMarketing,
+          // allowMarketing: model().value().allowMarketing,
           roleId: model().value().roleId
         }
 
