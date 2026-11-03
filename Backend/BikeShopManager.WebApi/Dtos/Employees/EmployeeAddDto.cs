@@ -35,15 +35,15 @@ public class EmployeeAddDto
     public string? Address { get; set; }
     public string? City { get; set; }
 
-    [RegularExpression(@"^\d{5}(-\d{4})?$", ErrorMessage = "Invalid ZipCode")]
+    //[RegularExpression(@"^\d{5}(-\d{4})?$", ErrorMessage = "Invalid ZipCode")]
     public string? ZipCode { get; set; }
     public string? Country { get; set; }
 
     [DataType(DataType.Date)]
     public DateOnly? BirthDate { get; set; }
 
-    [Required]
-    public bool AllowMarketing { get; set; }
+    //[Required]
+    //public bool AllowMarketing { get; set; }
     #endregion
 
     #region Role

@@ -24,7 +24,7 @@ public class EmployeeResponseDto
     public string? ZipCode { get; set; }
     public string? Country { get; set; }
     public DateOnly? BirthDate { get; set; }
-    public bool AllowMarketing { get; set; }
+    //public bool AllowMarketing { get; set; }
     #endregion
 
     #region Role
