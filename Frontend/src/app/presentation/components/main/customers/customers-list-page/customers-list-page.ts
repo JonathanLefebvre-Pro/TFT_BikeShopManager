@@ -1,10 +1,11 @@
-import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { CustomersTable } from '@presentation/components/main/customers/customers-table/customers-table';
 import { Customer } from '@domain/customer';
 import { CustomerService } from '@infrastructure/services/customer-service';
 import { CustomerDtoMapper } from '@presentation/mappers/customers/customer-dto-mapper';
 import { CustomerSearchInput } from '../customer-search-input/customer-search-input';
 import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [CustomersTable, CustomerSearchInput],
@@ -16,9 +17,10 @@ export class CustomersListPage implements OnInit {
   
   protected routerService = inject(Router);
   protected routeService = inject(ActivatedRoute);
+  protected readonly destroyRef = inject(DestroyRef);
   protected readonly customerService : CustomerService = inject(CustomerService);
   protected readonly customerDtoMapper : CustomerDtoMapper = inject(CustomerDtoMapper);
-
+  
   protected readonly customers = signal<Customer[]>([]);
 
   protected readonly keywords = signal<string>('');
@@ -41,7 +43,7 @@ export class CustomersListPage implements OnInit {
   }
 
   protected handleEnableCustomer(customerId: number) {
-    this.customerService.enableCustomer(customerId).subscribe({
+    this.customerService.enableCustomer(customerId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res.status));
         this.init();
@@ -52,7 +54,7 @@ export class CustomersListPage implements OnInit {
     });
   }
   protected handleDisableCustomer(customerId: number) {
-    this.customerService.disableCustomer(customerId).subscribe({
+    this.customerService.disableCustomer(customerId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res.status));
         this.init();
@@ -102,7 +104,7 @@ export class CustomersListPage implements OnInit {
   }
 
   private getCustomers() {
-    this.customerService.getCustomers(this.pageNumber(),this.pageSize, this.keywords()).subscribe({
+    this.customerService.getCustomers(this.pageNumber(),this.pageSize, this.keywords()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next : (res) => {
         this.totalPages.set(res.totalPages);
         this.pageNumber.set(res.pageNumber);

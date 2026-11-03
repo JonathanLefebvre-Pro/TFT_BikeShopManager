@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { EmployeeEditPanel } from '../employee-edit-panel/employee-edit-panel';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '@/app/infrastructure/services/employee-service';
@@ -9,6 +9,7 @@ import { IRoleRepository } from '@/app/appCore/abstraction/repositories/irole-re
 import { RoleService } from '@/app/infrastructure/services/role-service';
 import { Role } from '@/app/domain/role';
 import { RoleDtoMapper } from '@/app/presentation/mappers/roles/role-dto-mapper';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [EmployeeEditPanel],
@@ -18,8 +19,9 @@ import { RoleDtoMapper } from '@/app/presentation/mappers/roles/role-dto-mapper'
 })
 export class EmployeesEditPage implements OnInit {
   
-  private routeService = inject(ActivatedRoute);
-  protected routerService = inject(Router);
+  protected readonly routeService = inject(ActivatedRoute);
+  protected readonly routerService = inject(Router);
+  protected readonly destroyRef = inject(DestroyRef);
   protected readonly employeeService : EmployeeService = inject(EmployeeService);
   protected readonly employeeDtoMapper : EmployeeDtoMapper = inject(EmployeeDtoMapper);
   protected readonly roleService : IRoleRepository = inject(RoleService);
@@ -31,7 +33,7 @@ export class EmployeesEditPage implements OnInit {
 
   ngOnInit(): void {
 
-    this.roleService.getRoles().subscribe({
+    this.roleService.getRoles().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.roles.set(this.roleDtoMapper.ToRoleEntities(res));
       },
@@ -45,7 +47,7 @@ export class EmployeesEditPage implements OnInit {
       if(Number.isNaN(+params['id']))
         return;
 
-      this.employeeService.getEmployeeById(+params['id']).subscribe({
+      this.employeeService.getEmployeeById(+params['id']).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (res) => {
           this.lastEditedEmployee.set(this.employeeDtoMapper.ToEmployeeEntity(res));
         },
@@ -58,7 +60,7 @@ export class EmployeesEditPage implements OnInit {
   }
 
   protected handleUpdateEmployee(event : {id: number, obj: EmployeeUpdateDto}) {
-    this.employeeService.updateEmployee(event.id, event.obj).subscribe({
+    this.employeeService.updateEmployee(event.id, event.obj).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (res) => {
           this.exitEdit();
         },

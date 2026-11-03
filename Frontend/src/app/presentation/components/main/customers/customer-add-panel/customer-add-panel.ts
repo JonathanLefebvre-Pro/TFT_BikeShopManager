@@ -1,6 +1,6 @@
 import { AddCustomerFormData } from '@/app/presentation/forms/models/customers/addCustomerFormData';
 import { CustomerService } from '@infrastructure/services/customer-service';
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, DestroyRef, inject, output, signal } from '@angular/core';
 import { form, FormRoot, apply } from '@angular/forms/signals';
 import { DatePipe } from '@angular/common';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { vatNumberValidationSchema } from '@/app/presentation/forms/validations/customerValidationSchema';
 import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
 import { CustomerFormDtoMapper } from '@/app/presentation/mappers/customers/customer-form-dto-mapper';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot],
@@ -19,6 +20,7 @@ import { CustomerFormDtoMapper } from '@/app/presentation/mappers/customers/cust
 })
 export class CustomerAddPanel {
 
+  protected readonly destroyRef = inject(DestroyRef);
   protected readonly customerService = inject(CustomerService);
   protected readonly customerFormDtoMapper = inject(CustomerFormDtoMapper);
   protected readonly routerService = inject(Router);
@@ -68,6 +70,7 @@ export class CustomerAddPanel {
       action: async (model) => {
         await this.customerService.addCustomer(
           this.customerFormDtoMapper.ToCustomerAddDto(model().value()))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: (res) => {
               model().reset({...this.INITIAL_MODEL});

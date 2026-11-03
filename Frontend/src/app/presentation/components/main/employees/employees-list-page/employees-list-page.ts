@@ -1,10 +1,11 @@
-import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { EmployeesTable } from '../employees-table/employees-table';
 import { EmployeeSearchInput } from '../employee-search-input/employee-search-input';
 import { EmployeeService } from '@/app/infrastructure/services/employee-service';
 import { EmployeeDtoMapper } from '@/app/presentation/mappers/employees/employee-dto-mapper';
 import { Employee } from '@/app/domain/employee';
 import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [EmployeesTable, EmployeeSearchInput],
@@ -16,6 +17,7 @@ export class EmployeesListPage implements OnInit {
   
   protected readonly routerService = inject(Router);
   protected readonly routeService = inject(ActivatedRoute);
+  protected readonly destroyRef = inject(DestroyRef);
   protected readonly employeeService : EmployeeService = inject(EmployeeService);
   protected readonly employeeDtoMapper : EmployeeDtoMapper = inject(EmployeeDtoMapper);
 
@@ -41,7 +43,7 @@ export class EmployeesListPage implements OnInit {
   }
 
   protected handleEnableEmployee(employeeId: number) {
-    this.employeeService.enableEmployee(employeeId).subscribe({
+    this.employeeService.enableEmployee(employeeId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res.status));
         this.init();
@@ -52,7 +54,7 @@ export class EmployeesListPage implements OnInit {
     });
   }
   protected handleDisableEmployee(employeeId: number) {
-    this.employeeService.disableEmployee(employeeId).subscribe({
+    this.employeeService.disableEmployee(employeeId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res.status));
         this.init();
@@ -100,7 +102,7 @@ export class EmployeesListPage implements OnInit {
   }
 
   private getEmployees() {
-    this.employeeService.getEmployees(this.pageNumber(),this.pageSize, this.keywords()).subscribe({
+    this.employeeService.getEmployees(this.pageNumber(),this.pageSize, this.keywords()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next : (res) => {
         this.totalPages.set(res.totalPages);
         this.pageNumber.set(res.pageNumber);

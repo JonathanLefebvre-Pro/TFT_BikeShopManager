@@ -1,9 +1,10 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { EmployeeAddPanel } from '../employee-add-panel/employee-add-panel';
 import { Role } from '@/app/domain/role';
 import { RoleDtoMapper } from '@/app/presentation/mappers/roles/role-dto-mapper';
 import { RoleService } from '@/app/infrastructure/services/role-service';
 import { IRoleRepository } from '@/app/appCore/abstraction/repositories/irole-repository';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [EmployeeAddPanel],
@@ -13,6 +14,7 @@ import { IRoleRepository } from '@/app/appCore/abstraction/repositories/irole-re
 })
 export class EmployeesAddPage implements OnInit {
 
+  protected readonly destroyRef = inject(DestroyRef);
   protected readonly roleService : IRoleRepository = inject(RoleService);
   protected readonly roleDtoMapper : RoleDtoMapper = inject(RoleDtoMapper);
 
@@ -20,7 +22,7 @@ export class EmployeesAddPage implements OnInit {
   protected readonly roleOptions = computed(() => this.roles().map(x => x.name));
 
   ngOnInit(): void {
-     this.roleService.getRoles().subscribe({
+     this.roleService.getRoles().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.roles.set(this.roleDtoMapper.ToRoleEntities(res));
       },
