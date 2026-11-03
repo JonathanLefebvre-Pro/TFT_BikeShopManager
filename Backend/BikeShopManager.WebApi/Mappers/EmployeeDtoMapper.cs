@@ -28,7 +28,7 @@ public static class EmployeeDtoMapper
             ZipCode = entity.User.ZipCode,
             Country = entity.User.Country,
             BirthDate = entity.User.BirthDate,
-            AllowMarketing = entity.User.AllowMarketing,
+            // AllowMarketing = entity.User.AllowMarketing,
             #endregion
 
             #region Role
@@ -75,7 +75,7 @@ public static class EmployeeDtoMapper
             ZipCode = dto.ZipCode,
             Country = dto.Country,
             BirthDate = dto.BirthDate,
-            AllowMarketing = dto.AllowMarketing,
+            AllowMarketing = false, //dto.AllowMarketing,
         };
     }
 
@@ -104,7 +104,7 @@ public static class EmployeeDtoMapper
             ZipCode = dto.ZipCode,
             Country = dto.Country,
             BirthDate = dto.BirthDate,
-            AllowMarketing = dto.AllowMarketing,
+            AllowMarketing = false, //dto.AllowMarketing,
         };
     }
 }

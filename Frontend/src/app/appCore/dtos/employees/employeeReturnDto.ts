@@ -3,8 +3,8 @@ export interface EmployeeReturnDto {
     employeeId: number;
     passwordHash: string;
     securityStamp: string;
-    hiredAt: Date | string;
-    contractEndAt: Date | string | null;
+    hiredAt: Date;
+    contractEndAt: Date | null;
     isActive: boolean;
 
     //User

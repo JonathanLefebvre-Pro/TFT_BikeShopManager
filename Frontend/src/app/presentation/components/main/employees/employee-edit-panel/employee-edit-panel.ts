@@ -1,27 +1,32 @@
-import { Component, input, OnInit, output, signal } from '@angular/core';
+import { Component, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
-import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
-import { email, form, FormRoot, maxLength, minLength, required } from '@angular/forms/signals';
+import { apply, form, FormRoot, required, validate } from '@angular/forms/signals';
 import { DatePipe } from '@angular/common';
 import { Employee } from '@/app/domain/employee';
 import { EmployeeUpdateDto } from '@/app/appCore/dtos/employees/employeeUpdateDto';
-import { UpdateEmployeeFormData } from '@/app/presentation/forms/employees/updateEmployeeFormData';
+import { UpdateEmployeeFormData } from '@/app/presentation/forms/models/employees/updateEmployeeFormData';
 import { FormSelectInput } from '@presentation/components/shared/form-select-input/form-select-input';
+import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
+import { hiredAtValidationSchema } from '@/app/presentation/forms/validations/employeeValidationSchema';
+import { EmployeeFormDtoMapper } from '@/app/presentation/mappers/employees/employee-form-dto-mapper';
 
 @Component({
-  imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot, FormSelectInput],
+  imports: [FormTextInput, FormDateInput, FormRoot, FormSelectInput],
   selector: 'app-employee-edit-panel',
   styleUrl: './employee-edit-panel.scss',
   templateUrl: './employee-edit-panel.html',
 })
 export class EmployeeEditPanel implements OnInit {
+
+  protected readonly employeeFormDtoMapper = inject(EmployeeFormDtoMapper);
+
   constructor(public datepipe: DatePipe){}
   
   public ngOnInit(): void {
     this.employeeModel.set({
-      hiredAt: this.employee().hiredAt ?? '',
-      contractEndAt: this.employee().contractEndAt ?? null,
+      hiredAt: this.employee().hiredAt,
+      contractEndAt: this.employee().contractEndAt,
       firstName: this.employee().user.firstName,
       lastName: this.employee().user.lastName,
       email: this.employee().user.email ?? '',
@@ -30,7 +35,7 @@ export class EmployeeEditPanel implements OnInit {
       city: this.employee().user.city ?? '',
       zipCode: this.employee().user.zipCode ?? '',
       country: this.employee().user.country ?? '',
-      birthDate: this.employee().user.birthDate ?? null,
+      birthDate: this.employee().user.birthDate,
       allowMarketing: this.employee().user.allowMarketing,
       roleId: this.employee().role.id
     });
@@ -42,8 +47,14 @@ export class EmployeeEditPanel implements OnInit {
   public onUpdateEmployeeEvent = output<{id: number, obj: EmployeeUpdateDto}>();
   public onCancelUpdateEmployeeEvent = output();
 
+  private getDate() : Date {
+    var date = new Date();
+    date.setUTCHours(0, 0, 0, 0);
+    return date;
+  }
+
   private readonly INITIAL_MODEL = {
-      hiredAt: new Date('2023-02-01'),
+      hiredAt: this.getDate(),
       contractEndAt: null,
       firstName: '',
       lastName: '',
@@ -61,43 +72,50 @@ export class EmployeeEditPanel implements OnInit {
   protected employeeModel = signal<UpdateEmployeeFormData>({...this.INITIAL_MODEL});
 
   protected employeeForm = form(this.employeeModel, (schemaPath) => {
-    required(schemaPath.hiredAt, {message: "Hired date is required !"}),
-    required(schemaPath.firstName, {message: "Firstname is required !"}),
-    minLength(schemaPath.firstName, 5, {message: "Firstname min length : 5 !"}),
-    maxLength(schemaPath.firstName, 100,  {message: "Firstname max length : 100 !"}),
-    required(schemaPath.lastName, {message: "LastName is required !"}),
-    minLength(schemaPath.lastName, 5, {message: "LastName min length : 5 !"}),
-    maxLength(schemaPath.lastName, 100,  {message: "LastName max length : 100 !"}),
-    email(schemaPath.email, {message: "Enter a valid email !"}),
-    required(schemaPath.email, {message: "Email is required !"}),
-    maxLength(schemaPath.email, 256, { message: "Email max length : 256 !"}),
-    maxLength(schemaPath.phoneNumber, 20, { message: "Phone number max length : 20 !"}),
-    maxLength(schemaPath.address, 200, { message: "Address max length : 200 !"}),
-    maxLength(schemaPath.city, 50, { message: "City max length : 50 !"}),
-    maxLength(schemaPath.zipCode, 10, { message: "ZipCode max length : 10 !"}),
-    maxLength(schemaPath.country, 50, { message: "Country max length : 50 !"}),
-    required(schemaPath.roleId, {message: "Role id is required !"})
+    //Validation : HiredAt
+    apply(schemaPath.hiredAt, hiredAtValidationSchema),
+    //Validation : ContractEndAt
+    validate(schemaPath.contractEndAt, ({value, valueOf}) => {  
+      const contractEndAt = value();
+      const hiredAt = valueOf(schemaPath.hiredAt);
+
+      if(!contractEndAt) return undefined;
+      if(isNaN(contractEndAt.valueOf())) return undefined;
+
+      if(!hiredAt) return undefined;
+      if(isNaN(hiredAt.valueOf())) return undefined;
+
+      if(contractEndAt.getTime() <= hiredAt.getTime())
+        return { kind: "min-date", message: "Contract end date must be after hired date !" };
+      else return undefined;
+    }),
+    //Validation : Firstname
+    apply(schemaPath.firstName, firstnameValidationSchema),
+    //Validation : Lastname
+    apply(schemaPath.lastName, lastnameValidationSchema),
+    //Validation : Email
+    required(schemaPath.email, { message: "Email is required !" }),
+    apply(schemaPath.email, emailValidationSchema),
+    //Validation : Phone Number
+    apply(schemaPath.phoneNumber, phoneNumberValidationSchema),
+    //Validation : Address
+    apply(schemaPath.address, addressValidationSchema),
+    //Validation : City
+    apply(schemaPath.city, cityValidationSchema),
+    //Validation : ZipCode
+    apply(schemaPath.zipCode, zipCodeValidationSchema),
+    //Validation : Country
+    apply(schemaPath.country, countryValidationSchema),
+    //Validation : RoleId
+    required(schemaPath.roleId, { message: "Role id is required !" })
   },
   {
     submission: {
       action: async (model) => {
-        const employeeUpdateDto: EmployeeUpdateDto = {
-          hiredAt: this.datepipe.transform(model().value().hiredAt, 'yyyy-MM-dd') ?? '',
-          contractEndAt: (model().value().contractEndAt === null) ? null : this.datepipe.transform(model().value().contractEndAt, 'yyyy-MM-dd'),
-          firstName: model().value().firstName,
-          lastName: model().value().lastName,
-          email: (model().value().email === "") ? null : model().value().email,
-          phoneNumber: (model().value().phoneNumber === "") ? null : model().value().phoneNumber,
-          address: (model().value().address === "") ? null : model().value().address,
-          city: (model().value().city === "") ? null : model().value().city,
-          zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
-          country: (model().value().country === "") ? null : model().value().country,
-          birthDate: (model().value().birthDate === null) ? null : this.datepipe.transform(model().value().birthDate, 'yyyy-MM-dd'),
-          allowMarketing: model().value().allowMarketing,
-          roleId: model().value().roleId
-        }
-
-        this.onUpdateEmployeeEvent.emit({id: this.employee().id, obj: employeeUpdateDto});
+        this.onUpdateEmployeeEvent.emit({
+          id: this.employee().id,
+          obj: this.employeeFormDtoMapper.ToEmployeeUpdateDto(model().value())
+        });
         model().reset({...this.INITIAL_MODEL});
       }
     }
@@ -105,7 +123,14 @@ export class EmployeeEditPanel implements OnInit {
 
   protected handleCancel(event: Event) {
     event.preventDefault();
-
     this.onCancelUpdateEmployeeEvent.emit();
+  }
+
+  private toDateOrNull(value: Date | string | null): Date | null {
+    if(value === null) return null;
+    if(value instanceof Date) return value;
+
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
   }
 }

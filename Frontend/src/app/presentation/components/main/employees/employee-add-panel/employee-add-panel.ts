@@ -1,17 +1,19 @@
 import { Component, inject, input, output, signal } from '@angular/core';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
-import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
-import { email, form, FormRoot, maxLength, minLength, required } from '@angular/forms/signals';
+import { apply, form, FormRoot, required, schema, validate } from '@angular/forms/signals';
 import { EmployeeService } from '@/app/infrastructure/services/employee-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { AddEmployeeFormData } from '@/app/presentation/forms/employees/addEmployeeFormData';
-import { EmployeeAddDto } from '@/app/appCore/dtos/employees/employeeAddDto';
+import { AddEmployeeFormData } from '@/app/presentation/forms/models/employees/addEmployeeFormData';
 import { FormSelectInput } from '@presentation/components/shared/form-select-input/form-select-input';
+import { passwordValidationSchema } from '@/app/presentation/forms/validations/loginValidationSchema';
+import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
+import { hiredAtValidationSchema } from '@/app/presentation/forms/validations/employeeValidationSchema';
+import { EmployeeFormDtoMapper } from '@/app/presentation/mappers/employees/employee-form-dto-mapper';
 
 @Component({
-  imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot, FormSelectInput],
+  imports: [FormTextInput, FormDateInput, FormRoot, FormSelectInput],
   selector: 'app-employee-add-panel',
   styleUrl: './employee-add-panel.scss',
   templateUrl: './employee-add-panel.html',
@@ -19,17 +21,26 @@ import { FormSelectInput } from '@presentation/components/shared/form-select-inp
 export class EmployeeAddPanel {
 
   protected readonly employeeService = inject(EmployeeService);
+  protected readonly employeeFormDtoMapper = inject(EmployeeFormDtoMapper);
   protected readonly routerService = inject(Router);
   protected readonly routeService = inject(ActivatedRoute);
 
   public onAddEmployeeEvent = output<number>();
 
   constructor(public datepipe: DatePipe){}
+
   public roleSelectOptions = input.required<string[]>();
+
+  private getDate() : Date {
+    var date = new Date();
+    date.setUTCHours(0, 0, 0, 0);
+    return date;
+  }
 
   private readonly INITIAL_MODEL = {
       password: '',
-      hiredAt: new Date('2025-04-02'),
+      passwordConfirm: '',
+      hiredAt: this.getDate(),
       contractEndAt: null,
       firstName: '',
       lastName: '',
@@ -47,57 +58,72 @@ export class EmployeeAddPanel {
   protected employeeModel = signal<AddEmployeeFormData>({...this.INITIAL_MODEL});
 
   protected employeeForm = form(this.employeeModel, (schemaPath) => {
-    required(schemaPath.hiredAt, {message: "Hired date is required !"}),
-    required(schemaPath.password, {message: "Password is required !"}),
-    minLength(schemaPath.password, 5, {message: "Password min length : 5 !"}),
-    maxLength(schemaPath.password, 100,  {message: "Password max length : 100 !"}),
-    required(schemaPath.firstName, {message: "Firstname is required !"}),
-    minLength(schemaPath.firstName, 5, {message: "Firstname min length : 5 !"}),
-    maxLength(schemaPath.firstName, 100,  {message: "Firstname max length : 100 !"}),
-    required(schemaPath.lastName, {message: "LastName is required !"}),
-    minLength(schemaPath.lastName, 5, {message: "LastName min length : 5 !"}),
-    maxLength(schemaPath.lastName, 100,  {message: "LastName max length : 100 !"}),
-    required(schemaPath.email, {message: "Email is required !"}),
-    email(schemaPath.email, {message: "Enter a valid email !"}),
-    maxLength(schemaPath.email, 256, { message: "Email max length : 256 !"}),
-    maxLength(schemaPath.phoneNumber, 20, { message: "Phone number max length : 20 !"}),
-    maxLength(schemaPath.address, 200, { message: "Address max length : 200 !"}),
-    maxLength(schemaPath.city, 50, { message: "City max length : 50 !"}),
-    maxLength(schemaPath.zipCode, 10, { message: "ZipCode max length : 10 !"}),
-    maxLength(schemaPath.country, 50, { message: "Country max length : 50 !"}),
-    required(schemaPath.roleId, {message: "Role id is required !"})
+    //Validation : HiredAt
+    apply(schemaPath.hiredAt, hiredAtValidationSchema),
+    //Validation : ContractEndAt
+    validate(schemaPath.contractEndAt, ({value, valueOf}) => {  
+      const contractEndAt = value();
+      const hiredAt = valueOf(schemaPath.hiredAt);
+
+      if(!contractEndAt) return undefined;
+      if(isNaN(contractEndAt.valueOf())) return undefined;
+
+      if(!hiredAt) return undefined;
+      if(isNaN(hiredAt.valueOf())) return undefined;
+
+      if(contractEndAt.getTime() <= hiredAt.getTime())
+        return { kind: "min-date", message: "Contract end date must be after hired date !" };
+      else return undefined;
+    }),
+    //Validation : Password
+    //TODO : Add validation with password best practices (NIST 800-63B) 
+    apply(schemaPath.password, passwordValidationSchema),
+    validate(schemaPath.passwordConfirm, ({value, valueOf}) => {
+        const password: string = valueOf(schemaPath.password);
+        const passwordConfirm: string = value();
+
+        if(!password) return undefined;
+        if(!passwordConfirm) return undefined;
+
+        if(password !== passwordConfirm)
+          return { kind: 'password-confirm', message: "The password does not match !" }
+
+        return null;
+    }),
+    //Validation : Firstname
+    apply(schemaPath.firstName, firstnameValidationSchema),
+    //Validation : Lastname
+    apply(schemaPath.lastName, lastnameValidationSchema),
+    //Validation : Email
+    required(schemaPath.email, { message: "Email is required !" }),
+    apply(schemaPath.email, emailValidationSchema),
+    //Validation : Phone Number
+    apply(schemaPath.phoneNumber, phoneNumberValidationSchema),
+    //Validation : Address
+    apply(schemaPath.address, addressValidationSchema),
+    //Validation : City
+    apply(schemaPath.city, cityValidationSchema),
+    //Validation : ZipCode
+    apply(schemaPath.zipCode, zipCodeValidationSchema)
+    //Validation : Country
+    apply(schemaPath.country, countryValidationSchema)
+    //Validation : RoleId
+    required(schemaPath.roleId, { message: "Role id is required !" })
   },
   {
     submission: {
       action: async (model) => {
-        const employeeAddDto: EmployeeAddDto = {
-          password: model().value().password,
-          hiredAt: this.datepipe.transform(model().value().hiredAt, 'yyyy-MM-dd') ?? '',
-          contractEndAt: (model().value().contractEndAt === null) ? null : this.datepipe.transform(model().value().contractEndAt, 'yyyy-MM-dd'),
-          firstName: model().value().firstName,
-          lastName: model().value().lastName,
-          email: (model().value().email === "") ? null : model().value().email,
-          phoneNumber: (model().value().phoneNumber === "") ? null : model().value().phoneNumber,
-          address: (model().value().address === "") ? null : model().value().address,
-          city: (model().value().city === "") ? null : model().value().city,
-          zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
-          country: (model().value().country === "") ? null : model().value().country,
-          birthDate: (model().value().birthDate === null) ? null : this.datepipe.transform(model().value().birthDate, 'yyyy-MM-dd'),
-          allowMarketing: model().value().allowMarketing,
-          roleId: model().value().roleId
-        }
-
-        await this.employeeService.addEmployee(employeeAddDto).subscribe({
-          next: (res) => {
-            console.log("Result : " + JSON.stringify(res));
-            model().reset({...this.INITIAL_MODEL});
-            this.onAddEmployeeEvent.emit(res);
-            this.routerService.navigate(['..', 'list'], { relativeTo: this.routeService });
-          },
-          error: (error) => {
-            console.log("Error : " + JSON.stringify(error));
-            console.log(JSON.stringify(employeeAddDto));
-          }
+        await this.employeeService.addEmployee(
+          this.employeeFormDtoMapper.ToEmployeeAddDto(model().value()))
+          .subscribe({
+            next: (res) => {
+              model().reset({...this.INITIAL_MODEL});
+              this.onAddEmployeeEvent.emit(res);
+              this.routerService.navigate(['..', 'list'], { relativeTo: this.routeService });
+            },
+            error: (error) => {
+              console.log('Error : ', error);
+            }
         });
       }
     }

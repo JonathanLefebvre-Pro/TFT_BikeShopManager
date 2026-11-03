@@ -1,8 +1,10 @@
-export interface UpdateEmployeeFormData {
+export interface AddEmployeeFormData {
     //Employee
-    hiredAt: Date | string;
-    contractEndAt: Date | string | null;
-
+    password: string;
+    passwordConfirm: string;
+    hiredAt: Date;
+    contractEndAt: Date | null;
+    
     //User
     firstName: string;
     lastName: string;

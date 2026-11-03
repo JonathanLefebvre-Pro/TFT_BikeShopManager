@@ -12,8 +12,8 @@
     
     <td><input type="checkbox" disabled [checked]="employee().isActive"/></td>
 
-    <td>{{employee().hiredAt}}</td>
-    <td>{{employee().contractEndAt}}</td>
+    <td>{{employee().hiredAt  | date:'dd/MM/yyyy'}}</td>
+    <td>{{employee().contractEndAt  | date:'dd/MM/yyyy'}}</td>
 
     <td class="actionButtons">
         <div>

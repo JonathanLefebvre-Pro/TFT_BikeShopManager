@@ -17,7 +17,7 @@ export class CustomerDtoMapper {
             city: dto.city,
             zipCode: dto.zipCode,
             country: dto.country,
-            birthDate: dto.birthDate,
+            birthDate: (dto.birthDate) ? new Date(dto.birthDate) : null,
             allowMarketing: dto.allowMarketing
         };
         return user;

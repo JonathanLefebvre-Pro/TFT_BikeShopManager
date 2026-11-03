@@ -12,5 +12,5 @@ export class FormTextInput {
   id = input.required<string>();
   field = input.required<FieldTree<string>>();
   fieldState = input.required<FieldState<string, string>>();
-  type = input<string>("text");
+  type = input<"text" | "email" | "password">("text");
 }
