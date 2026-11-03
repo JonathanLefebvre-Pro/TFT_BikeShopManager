@@ -7,7 +7,7 @@ export interface User {
     address: string | null;
     city: string | null;
     zipCode: string | null;
-    country : string | null;
-    birthDate?: Date | null;
+    country: string | null;
+    birthDate: Date | null;
     allowMarketing: boolean;
 }

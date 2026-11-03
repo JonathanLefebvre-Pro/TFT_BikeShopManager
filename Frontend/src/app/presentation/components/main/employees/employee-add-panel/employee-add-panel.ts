@@ -2,15 +2,16 @@ import { Component, inject, input, output, signal } from '@angular/core';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
-import { apply, email, form, FormRoot, maxLength, minLength, required } from '@angular/forms/signals';
+import { apply, form, FormRoot, required, schema, validate } from '@angular/forms/signals';
 import { EmployeeService } from '@/app/infrastructure/services/employee-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { AddEmployeeFormData } from '@/app/presentation/forms/employees/addEmployeeFormData';
+import { AddEmployeeFormData } from '@/app/presentation/forms/models/employees/addEmployeeFormData';
 import { EmployeeAddDto } from '@/app/appCore/dtos/employees/employeeAddDto';
 import { FormSelectInput } from '@presentation/components/shared/form-select-input/form-select-input';
 import { passwordValidationSchema } from '@/app/presentation/forms/validations/loginValidationSchema';
 import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
+import { hiredAtValidationSchema } from '@/app/presentation/forms/validations/employeeValidationSchema';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot, FormSelectInput],
@@ -27,11 +28,19 @@ export class EmployeeAddPanel {
   public onAddEmployeeEvent = output<number>();
 
   constructor(public datepipe: DatePipe){}
+
   public roleSelectOptions = input.required<string[]>();
 
+  private getDate() : Date {
+    var date = new Date();
+    date.setUTCHours(0, 0, 0, 0);
+    return date;
+  }
+
+  //private today: Date = new Date();
   private readonly INITIAL_MODEL = {
       password: '',
-      hiredAt: new Date('2025-04-02'),
+      hiredAt: this.getDate(),//new Date(Date.UTC(this.today.getFullYear(),this.today.getMonth(), this.today.getDate())),
       contractEndAt: null,
       firstName: '',
       lastName: '',
@@ -50,10 +59,25 @@ export class EmployeeAddPanel {
 
   protected employeeForm = form(this.employeeModel, (schemaPath) => {
     //Validation : HiredAt
-    //TODO : Add validation for hiredAt and contractEndAt (contractEndAt must be after hiredAt)
-    required(schemaPath.hiredAt, { message: "Hired date is required !" }),
+    required(schemaPath.hiredAt, { message: "Hired date is required !" })
+    //Validation : ContractEndAt
+    validate(schemaPath.contractEndAt, ({value, valueOf}) => {  
+      const contractEndAt = value();
+      const hiredAt = valueOf(schemaPath.hiredAt);
+
+      if(!contractEndAt) return undefined;
+      if(isNaN(contractEndAt.valueOf())) return undefined;
+
+      if(!hiredAt) return undefined;
+      if(isNaN(hiredAt.valueOf())) return undefined;
+
+      if(contractEndAt.getTime() <= hiredAt.getTime())
+        return { kind: "min-date", message: "Contract end date must be after hired date !" };
+      else return undefined;
+    }),
     //Validation : Password
-    //TODO : Add validation with password best practices (NIST 800-63B) and with double input for password confirmation
+    //TODO : Add validation with password best practices (NIST 800-63B) 
+    // and with double input for password confirmation
     apply(schemaPath.password, passwordValidationSchema),
     //Validation : Firstname
     apply(schemaPath.firstName, firstnameValidationSchema),
@@ -80,8 +104,8 @@ export class EmployeeAddPanel {
       action: async (model) => {
         const employeeAddDto: EmployeeAddDto = {
           password: model().value().password,
-          hiredAt: this.datepipe.transform(model().value().hiredAt, 'yyyy-MM-dd') ?? '',
-          contractEndAt: (model().value().contractEndAt === null) ? null : this.datepipe.transform(model().value().contractEndAt, 'yyyy-MM-dd'),
+          hiredAt: model().value().hiredAt.toISOString().substring(0, 10),
+          contractEndAt: model().value().contractEndAt?.toISOString().substring(0, 10) ?? null,
           firstName: model().value().firstName,
           lastName: model().value().lastName,
           email: (model().value().email === "") ? null : model().value().email,
@@ -90,7 +114,7 @@ export class EmployeeAddPanel {
           city: (model().value().city === "") ? null : model().value().city,
           zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
           country: (model().value().country === "") ? null : model().value().country,
-          birthDate: (model().value().birthDate === null) ? null : this.datepipe.transform(model().value().birthDate, 'yyyy-MM-dd'),
+          birthDate: model().value().birthDate?.toISOString().substring(0, 10) ?? null,
           allowMarketing: model().value().allowMarketing,
           roleId: model().value().roleId
         }

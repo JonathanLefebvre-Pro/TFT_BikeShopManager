@@ -1,4 +1,4 @@
-import { AddCustomerFormData } from '@/app/presentation/forms/customers/addCustomerFormData';
+import { AddCustomerFormData } from '@/app/presentation/forms/models/customers/addCustomerFormData';
 import { CustomerService } from '@infrastructure/services/customer-service';
 import { Component, inject, output, signal } from '@angular/core';
 import { form, FormRoot, apply } from '@angular/forms/signals';
@@ -43,9 +43,9 @@ export class CustomerAddPanel {
   protected customerModel = signal<AddCustomerFormData>({...this.INITIAL_MODEL});
 
   protected customerForm = form(this.customerModel, (schemaPath) => {
-    //Validation : Firstname
+    //Validation : Firstname (Required)
     apply(schemaPath.firstName, firstnameValidationSchema),
-    //Validation : Lastname
+    //Validation : Lastname (Required)
     apply(schemaPath.lastName, lastnameValidationSchema),
     //Validation : VAT Number
     apply(schemaPath.vatNumber, vatNumberValidationSchema),
@@ -66,7 +66,7 @@ export class CustomerAddPanel {
     submission: {
       action: async (model) => {
         const customerAddDto: CustomerAddDto = {
-          vatNumber: model().value().vatNumber,
+          vatNumber: (model().value().vatNumber === "") ? null : model().value().vatNumber,
           firstName: model().value().firstName,
           lastName: model().value().lastName,
           email: (model().value().email === "") ? null : model().value().email,

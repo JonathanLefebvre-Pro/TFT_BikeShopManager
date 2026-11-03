@@ -1,8 +1,8 @@
 export interface AddEmployeeFormData {
     //Employee
     password: string;
-    hiredAt: Date | string;
-    contractEndAt: Date | string| null;
+    hiredAt: Date;
+    contractEndAt: Date | null;
     
     //User
     firstName: string;

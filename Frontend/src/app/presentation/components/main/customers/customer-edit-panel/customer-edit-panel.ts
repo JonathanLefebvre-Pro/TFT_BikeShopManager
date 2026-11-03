@@ -3,16 +3,15 @@ import { Component, input, OnInit, output, signal } from '@angular/core';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
-import { UpdateCustomerFormData } from '@/app/presentation/forms/customers/updateCustomerFormData';
+import { UpdateCustomerFormData } from '@/app/presentation/forms/models/customers/updateCustomerFormData';
 import { form, FormRoot, apply } from '@angular/forms/signals';
 import { CustomerUpdateDto } from '@/app/appCore/dtos/customers/customerUpdateDto';
 import { DatePipe } from '@angular/common';
-import { FormNumberInput } from '../../../shared/form-number-input/form-number-input';
 import { vatNumberValidationSchema } from '@/app/presentation/forms/validations/customerValidationSchema';
 import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
 
 @Component({
-  imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot, FormNumberInput],
+  imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot],
   selector: 'app-customer-edit-panel',
   styleUrl: './customer-edit-panel.scss',
   templateUrl: './customer-edit-panel.html',
@@ -32,7 +31,7 @@ export class CustomerEditPanel implements OnInit {
       city: this.customer().user.city ?? '',
       zipCode: this.customer().user.zipCode ?? '',
       country: this.customer().user.country ?? '',
-      birthDate: this.customer().user.birthDate ?? null,
+      birthDate: this.customer().user.birthDate,
       allowMarketing: this.customer().user.allowMarketing
     });
   }
@@ -57,9 +56,9 @@ export class CustomerEditPanel implements OnInit {
   protected customerModel = signal<UpdateCustomerFormData>({...this.INITIAL_MODEL});
 
   protected customerForm = form(this.customerModel, (schemaPath) => {
-    //Validation : Firstname
+    //Validation : Firstname (Required)
     apply(schemaPath.firstName, firstnameValidationSchema),
-    //Validation : Lastname
+    //Validation : Lastname (Required)
     apply(schemaPath.lastName, lastnameValidationSchema),
     //Validation : VAT Number
     apply(schemaPath.vatNumber, vatNumberValidationSchema),
@@ -80,19 +79,18 @@ export class CustomerEditPanel implements OnInit {
     submission: {
       action: async (model) => {
         const customerUpdateDto: CustomerUpdateDto = {
-          vatNumber: model().value().vatNumber,
+          vatNumber: (model().value().vatNumber === "") ? null : model().value().vatNumber,
           firstName: model().value().firstName,
           lastName: model().value().lastName,
           email: (model().value().email === "") ? null : model().value().email,
           phoneNumber: (model().value().phoneNumber === "") ? null : model().value().phoneNumber,
           address: (model().value().address === "") ? null : model().value().address,
           city: (model().value().city === "") ? null : model().value().city,
-          zipCode: model().value().zipCode?.toString() ?? null,
+          zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
           country: (model().value().country === "") ? null : model().value().country,
           birthDate: (model().value().birthDate === null) ? null : this.datepipe.transform(model().value().birthDate, 'yyyy-MM-dd'),
           allowMarketing: model().value().allowMarketing
         }
-
         this.onUpdateCustomerEvent.emit({id: this.customer().id, obj: customerUpdateDto});
         model().reset({...this.INITIAL_MODEL});
       }

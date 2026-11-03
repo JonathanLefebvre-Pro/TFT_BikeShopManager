@@ -1,4 +1,4 @@
-import { LoginFormData } from '@/app/presentation/forms/auth/loginFormData';
+import { LoginFormData } from '@/app/presentation/forms/models/auth/loginFormData';
 import { loginValidationSchema, passwordValidationSchema } from '@/app/presentation/forms/validations/loginValidationSchema';
 import { Component, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';

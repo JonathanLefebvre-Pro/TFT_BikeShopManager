@@ -9,8 +9,8 @@ export interface Employee
     securityStamp: string; 
     //accessFailedCount: number | null;
     //lockoutEnd: Date | null;
-    hiredAt?: Date | string;
-    contractEndAt?: Date | string | null; 
+    hiredAt: Date;
+    contractEndAt: Date | null; 
     isActive: boolean;
 
     user: User;

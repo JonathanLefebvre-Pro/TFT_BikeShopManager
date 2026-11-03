@@ -2,11 +2,11 @@ import { Component, input, OnInit, output, signal } from '@angular/core';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
-import { apply, email, form, FormRoot, maxLength, minLength, pattern, required } from '@angular/forms/signals';
+import { apply, form, FormRoot, required, validate } from '@angular/forms/signals';
 import { DatePipe } from '@angular/common';
 import { Employee } from '@/app/domain/employee';
 import { EmployeeUpdateDto } from '@/app/appCore/dtos/employees/employeeUpdateDto';
-import { UpdateEmployeeFormData } from '@/app/presentation/forms/employees/updateEmployeeFormData';
+import { UpdateEmployeeFormData } from '@/app/presentation/forms/models/employees/updateEmployeeFormData';
 import { FormSelectInput } from '@presentation/components/shared/form-select-input/form-select-input';
 import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
 
@@ -21,8 +21,8 @@ export class EmployeeEditPanel implements OnInit {
   
   public ngOnInit(): void {
     this.employeeModel.set({
-      hiredAt: this.employee().hiredAt ?? '',
-      contractEndAt: this.employee().contractEndAt ?? null,
+      hiredAt: this.employee().hiredAt,
+      contractEndAt: this.employee().contractEndAt,
       firstName: this.employee().user.firstName,
       lastName: this.employee().user.lastName,
       email: this.employee().user.email ?? '',
@@ -43,8 +43,14 @@ export class EmployeeEditPanel implements OnInit {
   public onUpdateEmployeeEvent = output<{id: number, obj: EmployeeUpdateDto}>();
   public onCancelUpdateEmployeeEvent = output();
 
+  private getDate() : Date {
+    var date = new Date();
+    date.setUTCHours(0, 0, 0, 0);
+    return date;
+  }
+
   private readonly INITIAL_MODEL = {
-      hiredAt: new Date('2023-02-01'),
+      hiredAt: this.getDate(),
       contractEndAt: null,
       firstName: '',
       lastName: '',
@@ -67,8 +73,22 @@ export class EmployeeEditPanel implements OnInit {
     //TODO : Add validation with password best practices (NIST 800-63B) and with double input for password confirmation
 
     //Validation : HiredAt
-    //TODO : Add validation for hiredAt and contractEndAt (contractEndAt must be after hiredAt)
     required(schemaPath.hiredAt, { message: "Hired date is required !" }),
+    //Validation : ContractEndAt
+    validate(schemaPath.contractEndAt, ({value, valueOf}) => {  
+      const contractEndAt = value();
+      const hiredAt = valueOf(schemaPath.hiredAt);
+
+      if(!contractEndAt) return undefined;
+      if(isNaN(contractEndAt.valueOf())) return undefined;
+
+      if(!hiredAt) return undefined;
+      if(isNaN(hiredAt.valueOf())) return undefined;
+
+      if(contractEndAt.getTime() <= hiredAt.getTime())
+        return { kind: "min-date", message: "Contract end date must be after hired date !" };
+      else return undefined;
+    }),
     //Validation : Firstname
     apply(schemaPath.firstName, firstnameValidationSchema),
     //Validation : Lastname
@@ -93,8 +113,8 @@ export class EmployeeEditPanel implements OnInit {
     submission: {
       action: async (model) => {
         const employeeUpdateDto: EmployeeUpdateDto = {
-          hiredAt: this.datepipe.transform(model().value().hiredAt, 'yyyy-MM-dd') ?? '',
-          contractEndAt: (model().value().contractEndAt === null) ? null : this.datepipe.transform(model().value().contractEndAt, 'yyyy-MM-dd'),
+          hiredAt: model().value().hiredAt.toISOString().substring(0, 10),
+          contractEndAt: model().value().contractEndAt?.toISOString().substring(0, 10) ?? null,
           firstName: model().value().firstName,
           lastName: model().value().lastName,
           email: (model().value().email === "") ? null : model().value().email,
@@ -103,7 +123,7 @@ export class EmployeeEditPanel implements OnInit {
           city: (model().value().city === "") ? null : model().value().city,
           zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
           country: (model().value().country === "") ? null : model().value().country,
-          birthDate: (model().value().birthDate === null) ? null : this.datepipe.transform(model().value().birthDate, 'yyyy-MM-dd'),
+          birthDate: model().value().birthDate?.toISOString().substring(0,10) ?? null,
           allowMarketing: model().value().allowMarketing,
           roleId: model().value().roleId
         }
@@ -118,5 +138,13 @@ export class EmployeeEditPanel implements OnInit {
     event.preventDefault();
 
     this.onCancelUpdateEmployeeEvent.emit();
+  }
+
+  private toDateOrNull(value: Date | string | null): Date | null {
+    if(value === null) return null;
+    if(value instanceof Date) return value;
+
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
   }
 }
