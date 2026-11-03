@@ -9,6 +9,7 @@ import { EmployeeUpdateDto } from '@/app/appCore/dtos/employees/employeeUpdateDt
 import { UpdateEmployeeFormData } from '@/app/presentation/forms/models/employees/updateEmployeeFormData';
 import { FormSelectInput } from '@presentation/components/shared/form-select-input/form-select-input';
 import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
+import { hiredAtValidationSchema } from '@/app/presentation/forms/validations/employeeValidationSchema';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot, FormSelectInput],
@@ -73,7 +74,7 @@ export class EmployeeEditPanel implements OnInit {
     //TODO : Add validation with password best practices (NIST 800-63B) and with double input for password confirmation
 
     //Validation : HiredAt
-    required(schemaPath.hiredAt, { message: "Hired date is required !" }),
+    apply(schemaPath.hiredAt, hiredAtValidationSchema),
     //Validation : ContractEndAt
     validate(schemaPath.contractEndAt, ({value, valueOf}) => {  
       const contractEndAt = value();

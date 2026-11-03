@@ -59,7 +59,7 @@ export class EmployeeAddPanel {
 
   protected employeeForm = form(this.employeeModel, (schemaPath) => {
     //Validation : HiredAt
-    required(schemaPath.hiredAt, { message: "Hired date is required !" })
+    apply(schemaPath.hiredAt, hiredAtValidationSchema),
     //Validation : ContractEndAt
     validate(schemaPath.contractEndAt, ({value, valueOf}) => {  
       const contractEndAt = value();
