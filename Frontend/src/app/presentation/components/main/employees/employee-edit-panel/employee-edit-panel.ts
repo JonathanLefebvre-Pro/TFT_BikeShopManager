@@ -1,7 +1,6 @@
-import { Component, input, OnInit, output, signal } from '@angular/core';
+import { Component, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
-import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
 import { apply, form, FormRoot, required, validate } from '@angular/forms/signals';
 import { DatePipe } from '@angular/common';
 import { Employee } from '@/app/domain/employee';
@@ -10,6 +9,7 @@ import { UpdateEmployeeFormData } from '@/app/presentation/forms/models/employee
 import { FormSelectInput } from '@presentation/components/shared/form-select-input/form-select-input';
 import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
 import { hiredAtValidationSchema } from '@/app/presentation/forms/validations/employeeValidationSchema';
+import { EmployeeFormDtoMapper } from '@/app/presentation/mappers/employees/employee-form-dto-mapper';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormRoot, FormSelectInput],
@@ -18,6 +18,9 @@ import { hiredAtValidationSchema } from '@/app/presentation/forms/validations/em
   templateUrl: './employee-edit-panel.html',
 })
 export class EmployeeEditPanel implements OnInit {
+
+  protected readonly employeeFormDtoMapper = inject(EmployeeFormDtoMapper);
+
   constructor(public datepipe: DatePipe){}
   
   public ngOnInit(): void {
@@ -69,10 +72,6 @@ export class EmployeeEditPanel implements OnInit {
   protected employeeModel = signal<UpdateEmployeeFormData>({...this.INITIAL_MODEL});
 
   protected employeeForm = form(this.employeeModel, (schemaPath) => {
-
-    //TODO : Add input for password update ???
-    //TODO : Add validation with password best practices (NIST 800-63B) and with double input for password confirmation
-
     //Validation : HiredAt
     apply(schemaPath.hiredAt, hiredAtValidationSchema),
     //Validation : ContractEndAt
@@ -113,23 +112,10 @@ export class EmployeeEditPanel implements OnInit {
   {
     submission: {
       action: async (model) => {
-        const employeeUpdateDto: EmployeeUpdateDto = {
-          hiredAt: model().value().hiredAt.toISOString().substring(0, 10),
-          contractEndAt: model().value().contractEndAt?.toISOString().substring(0, 10) ?? null,
-          firstName: model().value().firstName,
-          lastName: model().value().lastName,
-          email: (model().value().email === "") ? null : model().value().email,
-          phoneNumber: (model().value().phoneNumber === "") ? null : model().value().phoneNumber,
-          address: (model().value().address === "") ? null : model().value().address,
-          city: (model().value().city === "") ? null : model().value().city,
-          zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
-          country: (model().value().country === "") ? null : model().value().country,
-          birthDate: model().value().birthDate?.toISOString().substring(0,10) ?? null,
-          // allowMarketing: model().value().allowMarketing,
-          roleId: model().value().roleId
-        }
-
-        this.onUpdateEmployeeEvent.emit({id: this.employee().id, obj: employeeUpdateDto});
+        this.onUpdateEmployeeEvent.emit({
+          id: this.employee().id,
+          obj: this.employeeFormDtoMapper.ToEmployeeUpdateDto(model().value())
+        });
         model().reset({...this.INITIAL_MODEL});
       }
     }
@@ -137,7 +123,6 @@ export class EmployeeEditPanel implements OnInit {
 
   protected handleCancel(event: Event) {
     event.preventDefault();
-
     this.onCancelUpdateEmployeeEvent.emit();
   }
 

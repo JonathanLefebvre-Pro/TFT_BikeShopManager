@@ -2,7 +2,6 @@ import { AddCustomerFormData } from '@/app/presentation/forms/models/customers/a
 import { CustomerService } from '@infrastructure/services/customer-service';
 import { Component, inject, output, signal } from '@angular/core';
 import { form, FormRoot, apply } from '@angular/forms/signals';
-import { CustomerAddDto } from '@/app/appCore/dtos/customers/customerAddDto';
 import { DatePipe } from '@angular/common';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
@@ -10,6 +9,7 @@ import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox
 import { ActivatedRoute, Router } from '@angular/router';
 import { vatNumberValidationSchema } from '@/app/presentation/forms/validations/customerValidationSchema';
 import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
+import { CustomerFormDtoMapper } from '@/app/presentation/mappers/customers/customer-form-dto-mapper';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot],
@@ -20,6 +20,7 @@ import { addressValidationSchema, cityValidationSchema, countryValidationSchema,
 export class CustomerAddPanel {
 
   protected readonly customerService = inject(CustomerService);
+  protected readonly customerFormDtoMapper = inject(CustomerFormDtoMapper);
   protected readonly routerService = inject(Router);
   protected readonly routeService = inject(ActivatedRoute);
 
@@ -65,31 +66,17 @@ export class CustomerAddPanel {
   {
     submission: {
       action: async (model) => {
-        const customerAddDto: CustomerAddDto = {
-          vatNumber: (model().value().vatNumber === "") ? null : model().value().vatNumber,
-          firstName: model().value().firstName,
-          lastName: model().value().lastName,
-          email: (model().value().email === "") ? null : model().value().email,
-          phoneNumber: (model().value().phoneNumber === "") ? null : model().value().phoneNumber,
-          address: (model().value().address === "") ? null : model().value().address,
-          city: (model().value().city === "") ? null : model().value().city,
-          zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
-          country: (model().value().country === "") ? null : model().value().country,
-          birthDate: model().value().birthDate?.toISOString().substring(0,10) ?? null,
-          allowMarketing: model().value().allowMarketing
-        }
-
-        await this.customerService.addCustomer(customerAddDto).subscribe({
-          next: (res) => {
-            console.log("Result : " + JSON.stringify(res));
-            model().reset({...this.INITIAL_MODEL});
-            this.onAddCustomerEvent.emit(res);
-            this.routerService.navigate(['..', 'list'], { relativeTo: this.routeService });
-          },
-          error: (error) => {
-            console.log("Error : " + JSON.stringify(error));
-            console.log(JSON.stringify(customerAddDto));
-          }
+        await this.customerService.addCustomer(
+          this.customerFormDtoMapper.ToCustomerAddDto(model().value()))
+          .subscribe({
+            next: (res) => {
+              model().reset({...this.INITIAL_MODEL});
+              this.onAddCustomerEvent.emit(res);
+              this.routerService.navigate(['..', 'list'], { relativeTo: this.routeService });
+            },
+            error: (error) => {
+              console.error('Error : ', error);
+            }
         });
       }
     }

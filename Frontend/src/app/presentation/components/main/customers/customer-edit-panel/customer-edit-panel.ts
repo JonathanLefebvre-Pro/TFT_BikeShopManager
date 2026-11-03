@@ -1,5 +1,5 @@
 import { Customer } from '@domain/customer';
-import { Component, input, OnInit, output, signal } from '@angular/core';
+import { Component, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
 import { FormCheckboxInput } from '@presentation/components/shared/form-checkbox-input/form-checkbox-input';
@@ -9,6 +9,7 @@ import { CustomerUpdateDto } from '@/app/appCore/dtos/customers/customerUpdateDt
 import { DatePipe } from '@angular/common';
 import { vatNumberValidationSchema } from '@/app/presentation/forms/validations/customerValidationSchema';
 import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
+import { CustomerFormDtoMapper } from '@/app/presentation/mappers/customers/customer-form-dto-mapper';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormCheckboxInput, FormRoot],
@@ -18,6 +19,8 @@ import { addressValidationSchema, cityValidationSchema, countryValidationSchema,
 })
 export class CustomerEditPanel implements OnInit {
 
+  protected readonly customerFormDtoMapper = inject(CustomerFormDtoMapper);
+  
   constructor(public datepipe: DatePipe){}
   
   public ngOnInit(): void {
@@ -78,20 +81,10 @@ export class CustomerEditPanel implements OnInit {
   {
     submission: {
       action: async (model) => {
-        const customerUpdateDto: CustomerUpdateDto = {
-          vatNumber: (model().value().vatNumber === "") ? null : model().value().vatNumber,
-          firstName: model().value().firstName,
-          lastName: model().value().lastName,
-          email: (model().value().email === "") ? null : model().value().email,
-          phoneNumber: (model().value().phoneNumber === "") ? null : model().value().phoneNumber,
-          address: (model().value().address === "") ? null : model().value().address,
-          city: (model().value().city === "") ? null : model().value().city,
-          zipCode: (model().value().zipCode === "") ? null : model().value().zipCode,
-          country: (model().value().country === "") ? null : model().value().country,
-          birthDate: model().value().birthDate?.toISOString().substring(0,10) ?? null,
-          allowMarketing: model().value().allowMarketing
-        }
-        this.onUpdateCustomerEvent.emit({id: this.customer().id, obj: customerUpdateDto});
+        this.onUpdateCustomerEvent.emit({
+          id: this.customer().id, 
+          obj: this.customerFormDtoMapper.ToCustomerUpdateDto(model().value())
+        });
         model().reset({...this.INITIAL_MODEL});
       }
     }
