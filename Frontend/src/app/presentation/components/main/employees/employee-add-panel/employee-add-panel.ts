@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { FormTextInput } from '@presentation/components/shared/form-text-input/form-text-input';
 import { FormDateInput } from '@presentation/components/shared/form-date-input/form-date-input';
-import { apply, form, FormRoot, required, schema, validate } from '@angular/forms/signals';
+import { apply, form, FormRoot, required, validate } from '@angular/forms/signals';
 import { EmployeeService } from '@/app/infrastructure/services/employee-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -28,10 +28,12 @@ export class EmployeeAddPanel {
   protected readonly routeService = inject(ActivatedRoute);
 
   public onAddEmployeeEvent = output<number>();
+  public roleSelectOptions = input.required<string[]>();
+
+  protected errorMessage: string = 'Something went wrong !';
+  protected readonly displayErrorMessage = signal<boolean>(false);
 
   constructor(public datepipe: DatePipe){}
-
-  public roleSelectOptions = input.required<string[]>();
 
   private getDate() : Date {
     var date = new Date();
@@ -126,6 +128,7 @@ export class EmployeeAddPanel {
             },
             error: (error) => {
               console.log('Error : ', error);
+              this.displayErrorMessage.set(true);
             }
         });
       }

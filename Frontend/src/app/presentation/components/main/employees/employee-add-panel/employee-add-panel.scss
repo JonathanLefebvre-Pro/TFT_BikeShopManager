@@ -7,7 +7,7 @@
     gap: 2rem;
 }
 
-.submitEmployeeForm {
+.submit-employee-form {
     display: flex;
     flex-direction: column;
     max-width: 400px;
@@ -18,11 +18,26 @@
     padding: 1rem;
 }
 
-.submitEmployeeForm div {
+.submit-employee-form div {
     display: grid;
     grid-template-columns: auto 200px;
 }
 
-.submitEmployeeForm div.formGroup-Submit {
+.submit-employee-form div.form-group-submit {
     grid-template-columns: auto;
+}
+
+.form-group-submit {
+    margin-top: 0.5rem;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.8rem;
+    display: none;
+    margin-top: 0.5rem;
+
+    &.active {
+        display: block;
+    }
 }
