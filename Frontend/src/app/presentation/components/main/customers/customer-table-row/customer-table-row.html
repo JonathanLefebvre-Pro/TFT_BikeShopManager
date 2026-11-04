@@ -1,30 +1,19 @@
 <tr>
     <th scope="row">{{customer().id}}</th>
-    <td>{{customer().user.firstName}}</td>
-    <td>{{customer().user.lastName}}</td>
-    <td>{{customer().user.email}}</td>
-    <td>{{customer().user.phoneNumber}}</td>
-    <td>{{customer().user.address}}</td>
-    <td>{{customer().user.city}}</td>
-    <td>{{customer().user.zipCode}}</td>
-    <td>{{customer().user.country}}</td>
-    <td>{{customer().user.birthDate | date:'dd/MM/yyyy'}}</td>
+    <td>{{customer().user.firstName | listFieldEmptyPlaceholder}}</td>
+    <td>{{customer().user.lastName | listFieldEmptyPlaceholder}}</td>
+    <td>{{customer().user.email | listFieldEmptyPlaceholder}}</td>
+    <td>{{customer().user.phoneNumber | listFieldEmptyPlaceholder}}</td>
+    <td>{{customer().user.address | listFieldEmptyPlaceholder}}</td>
+    <td>{{customer().user.city | listFieldEmptyPlaceholder}}</td>
+    <td>{{customer().user.zipCode | listFieldEmptyPlaceholder}}</td>
+    <td>{{customer().user.country | listFieldEmptyPlaceholder}}</td>
+    <td>{{customer().user.birthDate | date:'dd/MM/yyyy' | listFieldEmptyPlaceholder}}</td>
     
     <td><input type="checkbox" disabled [checked]="customer().user.allowMarketing"/></td>
     <td><input type="checkbox" disabled [checked]="customer().isActive"/></td>
 
-    <td>
-        <!-- @if(customer().vatNumber === null 
-        || customer().vatNumber === undefined 
-        || customer().vatNumber === ''){
-            <span>/</span>
-        }
-        @else
-        {
-            {{customer().vatNumber}}
-        } -->
-        {{displayPlaceholder(customer().vatNumber)}}
-    </td>
+    <td>{{customer().vatNumber | listFieldEmptyPlaceholder}}</td>
 
     <td class="actionButtons">
         <div>
