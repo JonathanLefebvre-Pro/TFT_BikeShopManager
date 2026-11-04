@@ -1,4 +1,4 @@
-<form method="post" class="submitEmployeeForm" [formRoot]="employeeForm">
+<form method="post" class="submit-employee-form" [formRoot]="employeeForm">
 
     <app-form-text-input label="Password : " id="Password" type="password" [field]="employeeForm.password" [fieldState]="employeeForm.password()"/>
     <app-form-text-input label="Password confirm : " id="PasswordConfirm" type="password" [field]="employeeForm.passwordConfirm" [fieldState]="employeeForm.passwordConfirm()"/>
@@ -18,8 +18,10 @@
     <!-- <app-form-checkbox-input label="Allow marketing : " id="AllowMarketing" [field]="employeeForm.allowMarketing" [fieldState]="employeeForm.allowMarketing()"/> -->
     
     <app-form-select-input label="Role : " id="RoleId" [fieldState]="employeeForm.roleId()" [options]="roleSelectOptions()"/>
+    
+    <p class="error-message" [class.active]="displayErrorMessage()">{{ errorMessage }}</p>
 
-    <div class="formGroup-Submit">
+    <div class="form-group-submit">
         <input type="submit" value="Create" [disabled]="employeeForm().invalid()"/>
     </div>
 
