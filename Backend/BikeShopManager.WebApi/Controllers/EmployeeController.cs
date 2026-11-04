@@ -109,6 +109,19 @@ namespace BikeShopManager.WebApi.Controllers
             return this.FromResult(result);
         }
 
+        [Route("UpdatePasswordAsync/{id}")]
+        [HttpPatch]
+        public async Task<IActionResult> UpdatePasswordAsync(
+            int id,
+            [FromBody] EmployeeUpdatePasswordDto dto
+        )
+        {
+            Result result = await Dispatcher.SendCommandAsync<UpdateEmployeePasswordCommand>(
+                new UpdateEmployeePasswordCommand(id, dto.OldPassword, dto.NewPassword)
+            );
+            return this.FromResult(result);
+        }
+
         [Route("DisableAsync/{id}")]
         [HttpPatch]
         public async Task<IActionResult> DisableAsync(int id)

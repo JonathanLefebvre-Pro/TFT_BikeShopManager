@@ -2,6 +2,9 @@ using System.Data;
 using System.Security.Claims;
 using System.Text;
 using BikeShopManager.AppCore.Features.Options;
+using BikeShopManager.AppCore.Interfaces.Repositories;
+using BikeShopManager.Domain.Entities;
+using BikeShopManager.Infrastructure.Services.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -66,6 +69,7 @@ public static class JwtExtension
                     RoleClaimType = ClaimTypes.Role,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                 };
+                options.Events = new JwtBearerEventsValidator();
             });
 
         builder.Services.AddAuthorization();
@@ -82,7 +86,7 @@ public static class JwtExtension
             .Get<ConnectionStringsOptions>();
 
         builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(
-            connectionStringsOptions?.TechnofuturConnection
+            connectionStringsOptions?.DefaultConnection
         ));
 
         return builder;

@@ -64,9 +64,9 @@ public class AddEmployeeCommandHandler : ICommandHandlerAsync<AddEmployeeCommand
         string passwordHash = HashingTools.HashPassword(command.Employee.Password);
         command.Employee.PasswordHash = passwordHash;
 
-        //Temporary generate SecurityStamp -> TODO : Change this when adding JWT
+        //Generate new SecurityStamp (For JWT Claims)
         Guid guid = Guid.NewGuid();
-        command.Employee.SecurityStamp = guid.ToString();
+        command.Employee.SecurityStamp = guid.ToString("N");
 
         //Insert Employee data in Employee table and recover row id
         int employeeRowId;

@@ -24,7 +24,7 @@ public class RefreshTokenQueryHandler(
         {
             //Check if the refresh token exist on DB
             // if the token does not exist : return unauthorized
-            string refreshTokenHash = JwtProvider.HashToken(query.RefreshToken);
+            string refreshTokenHash = JwtProvider.HashRefreshToken(query.RefreshToken);
             RefreshToken? existingRefreshToken = await AuthRepository.GetRefreshTokenAsync(
                 refreshTokenHash
             );
@@ -52,6 +52,9 @@ public class RefreshTokenQueryHandler(
             if (employee is null)
                 return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
 
+            if (!employee.IsActive)
+                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+
             User? user = await UserRepository.GetUserById(employee.UserId);
             if (user is null)
                 return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
@@ -72,7 +75,7 @@ public class RefreshTokenQueryHandler(
             //  set the new expiration time
             RefreshToken refreshToken = new RefreshToken()
             {
-                TokenHash = JwtProvider.HashToken(accessToken.RefreshToken),
+                TokenHash = JwtProvider.HashRefreshToken(accessToken.RefreshToken),
                 EmployeeId = employee.Id,
                 CreatedAt = DateTime.UtcNow,
                 ExpiresAt = accessToken.RefreshExpireAt,

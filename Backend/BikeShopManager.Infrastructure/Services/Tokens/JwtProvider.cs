@@ -38,6 +38,7 @@ public class JwtProvider(IOptions<JwtOptions> Options) : IJwtProvider
                 DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
             ),
             new Claim(ClaimTypes.Role, employee.Role.Name),
+            new Claim("SecurityStamp", employee.SecurityStamp),
         };
 
         DateTime accessExpirationTime = DateTime.UtcNow.AddMinutes(jwtAccessExpiration);
@@ -73,7 +74,7 @@ public class JwtProvider(IOptions<JwtOptions> Options) : IJwtProvider
         return Convert.ToBase64String(randomBytes);
     }
 
-    public string HashToken(string token)
+    public string HashRefreshToken(string token)
     {
         return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(token)));
     }

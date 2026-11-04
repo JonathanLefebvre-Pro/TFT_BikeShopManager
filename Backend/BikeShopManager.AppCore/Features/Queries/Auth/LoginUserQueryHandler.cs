@@ -31,6 +31,9 @@ public class LoginUserQueryHandler(
             if (employee is null)
                 return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
 
+            if (!employee.IsActive)
+                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+
             User? user = await UserRepository.GetUserById(employee.UserId);
             if (user is null)
                 return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
@@ -59,7 +62,7 @@ public class LoginUserQueryHandler(
             //Create a new RefreshToken object from the one that is returned on the TokenResponse that also contains the AccessToken
             RefreshToken refreshToken = new RefreshToken()
             {
-                TokenHash = JwtProvider.HashToken(token.RefreshToken),
+                TokenHash = JwtProvider.HashRefreshToken(token.RefreshToken),
                 EmployeeId = employee.Id,
                 CreatedAt = DateTime.UtcNow,
                 ExpiresAt = token.RefreshExpireAt,

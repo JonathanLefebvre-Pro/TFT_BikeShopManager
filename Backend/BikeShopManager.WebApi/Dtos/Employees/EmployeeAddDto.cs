@@ -8,9 +8,6 @@ public class EmployeeAddDto
     [Required]
     public required string Password { get; set; }
 
-    //[Required]
-    //public required string SecurityStamp { get; set; }
-
     //public int AccessFailedCount { get; set; }
     //public DateTimeOffset LockoutEnd { get; set; }
 

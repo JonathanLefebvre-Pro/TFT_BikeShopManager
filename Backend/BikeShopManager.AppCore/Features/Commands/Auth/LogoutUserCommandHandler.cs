@@ -14,7 +14,7 @@ public class LogoutUserCommandHandler(IAuthRepository AuthRepository, IJwtProvid
         if (string.IsNullOrWhiteSpace(command.RefreshToken))
             return Result.Failure(AuthError.NotValidToken);
 
-        string refreshTokenHash = JwtProvider.HashToken(command.RefreshToken);
+        string refreshTokenHash = JwtProvider.HashRefreshToken(command.RefreshToken);
         bool result = await AuthRepository.RevokeRefreshTokenAsync(refreshTokenHash);
         return result ? Result.Success() : Result.Failure(AuthError.NotValidToken);
     }
