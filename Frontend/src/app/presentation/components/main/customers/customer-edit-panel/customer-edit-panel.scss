@@ -7,7 +7,7 @@
     gap: 1rem;
 }
 
-.editCustomerForm {
+.edit-customer-form {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -17,12 +17,27 @@
     border-radius: 1rem;
 }
 
-.editCustomerForm div {
+.edit-customer-form div {
     display: grid;
     grid-template-columns: auto 200px;
 }
 
-.editCustomerForm div.formGroup-Submit {
+.edit-customer-form div.form-group-submit {
     grid-template-columns: auto auto;
     gap: 1rem;
+}
+
+.form-group-submit {
+    margin-top: 0.5rem;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.8rem;
+    display: none;
+    margin-top: 0.5rem;
+
+    &.active {
+        display: block;
+    }
 }
