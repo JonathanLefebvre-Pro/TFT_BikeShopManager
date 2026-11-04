@@ -1,7 +1,7 @@
 @defer(when isLoading()) {
     <h1>Edit Selected Employee</h1>
     
-    <app-employee-edit-panel #editPanel
+    <app-employee-edit-panel #employeeEditPanel
     [employee]="lastEditedEmployee()!"
     [roleSelectOptions]="roleOptions()"
     (onUpdateEmployeeEvent)="handleUpdateEmployee($event)"

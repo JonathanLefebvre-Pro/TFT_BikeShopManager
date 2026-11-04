@@ -1,4 +1,4 @@
-<form method="post" class="editEmployeeForm" [formRoot]="employeeForm">
+<form method="post" class="edit-employee-form" [formRoot]="employeeForm">
 
     <app-form-date-input label="Hired At : " id="HiredAt" [field]="employeeForm.hiredAt" [fieldState]="employeeForm.hiredAt()"/>
     <app-form-date-input label="Contract End At : " id="ContractEndAt" [field]="employeeForm.contractEndAt" [fieldState]="employeeForm.contractEndAt()"/>
@@ -16,7 +16,9 @@
     
     <app-form-select-input label="Role : " id="RoleId" [fieldState]="employeeForm.roleId()" [options]="roleSelectOptions()"/>
     
-    <div class="formGroup-Submit">
+    <p class="error-message" [class.active]="displayErrorMessage()">{{ errorMessage }}</p>
+
+    <div class="form-group-submit">
         <input type="submit" value="Save" [disabled]="employeeForm().invalid()"/>
         <input type="button" value="Cancel" (click)="handleCancel($event)"/>
     </div>

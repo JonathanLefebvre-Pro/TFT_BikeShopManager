@@ -21,6 +21,9 @@ export class EmployeeEditPanel implements OnInit {
 
   protected readonly employeeFormDtoMapper = inject(EmployeeFormDtoMapper);
 
+  protected readonly errorMessage: string = 'Something went wrong !';
+  protected readonly displayErrorMessage = signal<boolean>(false);
+
   constructor(public datepipe: DatePipe){}
   
   public ngOnInit(): void {
@@ -116,7 +119,6 @@ export class EmployeeEditPanel implements OnInit {
           id: this.employee().id,
           obj: this.employeeFormDtoMapper.ToEmployeeUpdateDto(model().value())
         });
-        model().reset({...this.INITIAL_MODEL});
       }
     }
   });
@@ -126,11 +128,11 @@ export class EmployeeEditPanel implements OnInit {
     this.onCancelUpdateEmployeeEvent.emit();
   }
 
-  private toDateOrNull(value: Date | string | null): Date | null {
-    if(value === null) return null;
-    if(value instanceof Date) return value;
+  public handleDisplayErrorMessage() {
+    this.displayErrorMessage.set(true);
+  }
 
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? null : date;
+  public handleFormReset() {
+    this.employeeForm().reset({...this.INITIAL_MODEL}); 
   }
 }

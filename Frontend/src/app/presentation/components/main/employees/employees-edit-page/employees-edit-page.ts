@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { EmployeeEditPanel } from '../employee-edit-panel/employee-edit-panel';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '@/app/infrastructure/services/employee-service';
@@ -27,6 +27,7 @@ export class EmployeesEditPage implements OnInit {
   protected readonly roleService : IRoleRepository = inject(RoleService);
   protected readonly roleDtoMapper : RoleDtoMapper = inject(RoleDtoMapper);
 
+  protected readonly employeeEditPanel = viewChild(EmployeeEditPanel);
   protected readonly lastEditedEmployee = signal<Employee | null>(null);
   private readonly roles = signal<Role[]>([]);
   protected readonly roleOptions = computed(() => this.roles().map(x => x.name));
@@ -60,11 +61,14 @@ export class EmployeesEditPage implements OnInit {
   }
 
   protected handleUpdateEmployee(event : {id: number, obj: EmployeeUpdateDto}) {
-    this.employeeService.updateEmployee(event.id, event.obj).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.employeeService.updateEmployee(event.id, event.obj)
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
         next: (res) => {
           this.exitEdit();
         },
         error: (error) => {
+          this.employeeEditPanel()?.handleDisplayErrorMessage();
           console.error(error);
         }
     });
@@ -74,8 +78,10 @@ export class EmployeesEditPage implements OnInit {
   }
 
   private exitEdit() {
+    this.employeeEditPanel()?.handleFormReset();
     this.lastEditedEmployee.set(null);
-    this.routerService.navigate(['../../list'], { relativeTo: this.routeService });
+    this.routerService.navigate(['../../list'], 
+      { relativeTo: this.routeService });
   }
 
   private isLoading(): boolean {
