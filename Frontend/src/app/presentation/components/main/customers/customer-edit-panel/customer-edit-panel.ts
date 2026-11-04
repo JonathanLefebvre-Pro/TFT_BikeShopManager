@@ -20,7 +20,10 @@ import { CustomerFormDtoMapper } from '@/app/presentation/mappers/customers/cust
 export class CustomerEditPanel implements OnInit {
 
   protected readonly customerFormDtoMapper = inject(CustomerFormDtoMapper);
-  
+
+  protected readonly errorMessage: string = 'Something went wrong !';
+  protected readonly displayErrorMessage = signal<boolean>(false);
+
   constructor(public datepipe: DatePipe){}
   
   public ngOnInit(): void {
@@ -85,14 +88,20 @@ export class CustomerEditPanel implements OnInit {
           id: this.customer().id, 
           obj: this.customerFormDtoMapper.ToCustomerUpdateDto(model().value())
         });
-        model().reset({...this.INITIAL_MODEL});
       }
     }
   });
 
   protected handleCancel(event: Event) {
     event.preventDefault();
-
     this.onCancelUpdateCustomerEvent.emit();
+  }
+
+  public handleDisplayErrorMessage() {
+    this.displayErrorMessage.set(true);
+  }
+
+  public handleFormReset() {
+    this.customerForm().reset({...this.INITIAL_MODEL}); 
   }
 }

@@ -1,7 +1,7 @@
 @defer(when isLoading()) {
     <h1>Edit Selected Customer</h1>
     
-    <app-customer-edit-panel #editPanel
+    <app-customer-edit-panel #customerEditPanel
     [customer]="lastEditedCustomer()!"
     (onUpdateCustomerEvent)="handleUpdateCustomer($event)"
     (onCancelUpdateCustomerEvent)="handleCancelUpdateCustomer()"/>
