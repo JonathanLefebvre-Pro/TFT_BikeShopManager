@@ -1,9 +1,10 @@
 import { Component, input, OnChanges, output, signal, SimpleChanges } from '@angular/core';
 import { Customer } from '@domain/customer';
 import { DatePipe } from '@angular/common';
+import { ListFieldEmptyPlaceholderPipe } from '@appCore/pipes/list-field-empty-placeholder-pipe';
 
 @Component({
-  imports: [DatePipe],
+  imports: [DatePipe, ListFieldEmptyPlaceholderPipe],
   selector: 'app-customer-table-row',
   styleUrl: './customer-table-row.scss',
   templateUrl: './customer-table-row.html'
@@ -39,11 +40,5 @@ export class CustomerTableRow implements OnChanges {
   }
   public enableEditMode() {
     this.isEditModeEnabled.set(false);
-  }
-
-  protected displayPlaceholder(value: string | null) : string {
-    if(value)
-      return value;
-    return '/';
   }
 }
