@@ -1,17 +1,24 @@
 using BikeShopManager.AppCore.Extensions;
 using BikeShopManager.Infrastructure.Extensions;
 using BikeShopManager.WebApi.Extensions;
+using BikeShopManager.WebApi.Seeders;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCorsConfiguration();
+
+builder.Services.AddAdminSeederOptions();
 builder.Services.AddJwtOptions();
 builder.Services.AddConnectionStringsOptions();
+
 builder.AddConnectionStringConfiguration();
+
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
+
 builder.AddJwtConfiguration();
+builder.Services.AddHostedService<AdminSeederHostedService>();
 
 builder.Services.AddControllers();
 
