@@ -28,6 +28,9 @@ export class CustomerAddPanel {
 
   public onAddCustomerEvent = output<number>();
 
+  protected errorMessage: string = 'Something went wrong !';
+  protected readonly displayErrorMessage = signal<boolean>(false);
+
   constructor(public datepipe: DatePipe){}
 
   private readonly INITIAL_MODEL = {
@@ -79,6 +82,7 @@ export class CustomerAddPanel {
             },
             error: (error) => {
               console.error('Error : ', error);
+              this.displayErrorMessage.set(true);
             }
         });
       }
