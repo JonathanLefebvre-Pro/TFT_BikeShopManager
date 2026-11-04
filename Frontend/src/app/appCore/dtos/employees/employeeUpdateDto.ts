@@ -13,7 +13,6 @@ export interface EmployeeUpdateDto {
     zipCode: string | null;
     country: string | null;
     birthDate: string | null;
-    // allowMarketing: boolean;
 
     //Role
     roleId: number;

@@ -6,7 +6,7 @@
 
 tr {
     display: grid;
-    grid-template-columns: 0.5rem repeat(13, minmax(0, 1fr));
+    grid-template-columns: 0.5rem repeat(14, minmax(0, 1fr));
     gap: 1rem;
 
     th, td {

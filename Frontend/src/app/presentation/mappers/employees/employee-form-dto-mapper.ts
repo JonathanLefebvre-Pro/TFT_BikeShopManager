@@ -20,7 +20,6 @@ export class EmployeeFormDtoMapper {
             zipCode: (formData.zipCode === "") ? null : formData.zipCode,
             country: (formData.country === "") ? null : formData.country,
             birthDate: formData.birthDate?.toISOString().substring(0, 10) ?? null,
-            // allowMarketing: formData.allowMarketing,
             roleId: formData.roleId
         }
         return employeeAddDto;
@@ -39,7 +38,6 @@ export class EmployeeFormDtoMapper {
             zipCode: (formData.zipCode === "") ? null : formData.zipCode,
             country: (formData.country === "") ? null : formData.country,
             birthDate: formData.birthDate?.toISOString().substring(0,10) ?? null,
-            // allowMarketing: formData.allowMarketing,
             roleId: formData.roleId
         }
         return employeeUpdateDto;

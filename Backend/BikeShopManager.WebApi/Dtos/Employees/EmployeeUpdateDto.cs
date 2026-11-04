@@ -5,9 +5,6 @@ namespace BikeShopManager.WebApi.Dtos;
 public class EmployeeUpdateDto
 {
     #region Employee
-    //public int AccessFailedCount { get; set; }
-    //public DateTimeOffset LockoutEnd { get; set; }
-
     [Required]
     [DataType(DataType.Date)]
     public required DateOnly HiredAt { get; set; }
@@ -28,16 +25,11 @@ public class EmployeeUpdateDto
     public string? PhoneNumber { get; set; }
     public string? Address { get; set; }
     public string? City { get; set; }
-
-    //[RegularExpression(@"^\d{5}(-\d{4})?$", ErrorMessage = "Invalid ZipCode")]
     public string? ZipCode { get; set; }
     public string? Country { get; set; }
 
     [DataType(DataType.Date)]
     public DateOnly? BirthDate { get; set; }
-
-    //[Required]
-    //public bool AllowMarketing { get; set; }
     #endregion
 
     #region Role

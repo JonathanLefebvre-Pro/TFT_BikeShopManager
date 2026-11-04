@@ -15,6 +15,8 @@
     <td>{{employee().hiredAt  | date:'dd/MM/yyyy' | listFieldEmptyPlaceholder}}</td>
     <td>{{employee().contractEndAt  | date:'dd/MM/yyyy' | listFieldEmptyPlaceholder}}</td>
 
+    <td>{{employee().role.name| listFieldEmptyPlaceholder}}</td>
+
     <td class="actionButtons">
         <div>
             @if(employee().isActive)
