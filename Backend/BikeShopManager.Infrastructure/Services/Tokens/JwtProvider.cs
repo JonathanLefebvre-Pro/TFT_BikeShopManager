@@ -78,4 +78,34 @@ public class JwtProvider(IOptions<JwtOptions> Options) : IJwtProvider
     {
         return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(token)));
     }
+
+    public static TokenValidationParameters GenerateTokenValidationObject(
+        string? issuer,
+        string? audience,
+        string? secret
+    )
+    {
+        if (
+            string.IsNullOrWhiteSpace(issuer)
+            || string.IsNullOrWhiteSpace(audience)
+            || string.IsNullOrWhiteSpace(secret)
+        )
+            throw new ArgumentNullException();
+
+        byte[] key = Encoding.UTF8.GetBytes(secret);
+        return new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero,
+
+            ValidIssuer = issuer,
+            ValidAudience = audience,
+            NameClaimType = JwtRegisteredClaimNames.Name,
+            RoleClaimType = ClaimTypes.Role,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+        };
+    }
 }

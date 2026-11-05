@@ -102,7 +102,9 @@ export class EmployeesListPage implements OnInit {
   }
 
   private getEmployees() {
-    this.employeeService.getEmployees(this.pageNumber(),this.pageSize, this.keywords()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.employeeService.getEmployees(this.pageNumber(),this.pageSize, this.keywords())
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
       next : (res) => {
         this.totalPages.set(res.totalPages);
         this.pageNumber.set(res.pageNumber);

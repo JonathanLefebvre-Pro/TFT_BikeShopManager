@@ -14,7 +14,7 @@ public class JwtBearerEventsValidator : JwtBearerEvents
         await base.TokenValidated(context);
 
         // Perform additional security
-        // check stamp and isValid claims
+        // check security stamp and isValid claims
         ClaimsPrincipal? principal = context.Principal;
 
         //Get employee id and security stamp from the token claims

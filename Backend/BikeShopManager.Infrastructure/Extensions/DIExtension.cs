@@ -17,6 +17,7 @@ public static class DIExtension
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IAuthRepository, AuthRepository>();
         services.AddScoped<IJwtProvider, JwtProvider>();
+        services.AddScoped<IJwtUtilities, JwtUtilities>();
 
         return services;
     }
