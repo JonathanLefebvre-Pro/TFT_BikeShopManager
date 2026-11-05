@@ -1,10 +1,10 @@
 import { Employee } from '@/app/domain/employee';
 import { DatePipe } from '@angular/common';
-import { Component, input, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
-import { ListFieldEmptyPlaceholderPipe } from '@appCore/pipes/list-field-empty-placeholder-pipe';
+import { Component, input, OnChanges, output, signal, SimpleChanges } from '@angular/core';
+import { EmptyStringPlaceholderPipe } from '@/app/appCore/pipes/empty-string-placeholder-pipe';
 
 @Component({
-  imports: [DatePipe, ListFieldEmptyPlaceholderPipe],
+  imports: [DatePipe, EmptyStringPlaceholderPipe],
   selector: 'app-employee-table-row',
   styleUrl: './employee-table-row.scss',
   templateUrl: './employee-table-row.html',

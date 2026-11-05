@@ -1,10 +1,7 @@
-using System.Security.Claims;
 using System.Text;
 using BikeShopManager.AppCore.Features.Options;
 using BikeShopManager.Infrastructure.Services.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
 
 namespace BikeShopManager.WebApi.Extensions;
 

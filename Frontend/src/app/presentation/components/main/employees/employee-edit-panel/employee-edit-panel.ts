@@ -10,6 +10,7 @@ import { FormSelectInput } from '@presentation/components/shared/form-select-inp
 import { addressValidationSchema, cityValidationSchema, countryValidationSchema, emailValidationSchema, firstnameValidationSchema, lastnameValidationSchema, phoneNumberValidationSchema, zipCodeValidationSchema } from '@/app/presentation/forms/validations/userValidationSchema';
 import { hiredAtValidationSchema } from '@/app/presentation/forms/validations/employeeValidationSchema';
 import { EmployeeFormDtoMapper } from '@/app/presentation/mappers/employees/employee-form-dto-mapper';
+import { DateUtilityService } from '@/app/infrastructure/utilities/date-utility-service';
 
 @Component({
   imports: [FormTextInput, FormDateInput, FormRoot, FormSelectInput],
@@ -20,6 +21,7 @@ import { EmployeeFormDtoMapper } from '@/app/presentation/mappers/employees/empl
 export class EmployeeEditPanel implements OnInit {
 
   protected readonly employeeFormDtoMapper = inject(EmployeeFormDtoMapper);
+  protected readonly dateUtilityService = inject(DateUtilityService);
 
   protected readonly errorMessage: string = 'Something went wrong !';
   protected readonly displayErrorMessage = signal<boolean>(false);
@@ -50,14 +52,8 @@ export class EmployeeEditPanel implements OnInit {
   public onUpdateEmployeeEvent = output<{id: number, obj: EmployeeUpdateDto}>();
   public onCancelUpdateEmployeeEvent = output();
 
-  private getDate() : Date {
-    var date = new Date();
-    date.setUTCHours(0, 0, 0, 0);
-    return date;
-  }
-
   private readonly INITIAL_MODEL = {
-      hiredAt: this.getDate(),
+      hiredAt: this.dateUtilityService.getDate(),
       contractEndAt: null,
       firstName: '',
       lastName: '',

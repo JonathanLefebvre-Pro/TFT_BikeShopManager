@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
-import { EmployeeEditPanel } from '../employee-edit-panel/employee-edit-panel';
+import { EmployeeEditPanel } from '@presentation/components/main/employees/employee-edit-panel/employee-edit-panel';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '@/app/infrastructure/services/employee-service';
 import { EmployeeDtoMapper } from '@/app/presentation/mappers/employees/employee-dto-mapper';

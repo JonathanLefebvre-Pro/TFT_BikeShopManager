@@ -113,7 +113,7 @@ namespace BikeShopManager.WebApi.Controllers
         [HttpPatch]
         public async Task<IActionResult> UpdatePasswordAsync(
             int id,
-            [FromBody] EmployeeUpdatePasswordDto dto
+            [FromBody] AuthUserUpdatePasswordDto dto
         )
         {
             Result result = await Dispatcher.SendCommandAsync<UpdateEmployeePasswordCommand>(

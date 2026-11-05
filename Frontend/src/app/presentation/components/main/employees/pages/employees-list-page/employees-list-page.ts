@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
-import { EmployeesTable } from '../employees-table/employees-table';
-import { EmployeeSearchInput } from '../employee-search-input/employee-search-input';
+import { EmployeesTable } from '@presentation/components/main/employees/employees-table/employees-table';
+import { EmployeeSearchInput } from '@presentation/components/main/employees/employee-search-input/employee-search-input';
 import { EmployeeService } from '@/app/infrastructure/services/employee-service';
 import { EmployeeDtoMapper } from '@/app/presentation/mappers/employees/employee-dto-mapper';
 import { Employee } from '@/app/domain/employee';

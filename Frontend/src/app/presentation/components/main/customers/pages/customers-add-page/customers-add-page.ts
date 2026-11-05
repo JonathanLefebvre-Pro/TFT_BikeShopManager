@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CustomerAddPanel } from '../customer-add-panel/customer-add-panel';
+import { CustomerAddPanel } from '@presentation/components/main/customers/customer-add-panel/customer-add-panel';
 
 @Component({
   imports: [CustomerAddPanel],

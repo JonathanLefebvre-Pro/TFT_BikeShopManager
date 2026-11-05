@@ -3,7 +3,7 @@ import { CustomersTable } from '@presentation/components/main/customers/customer
 import { Customer } from '@domain/customer';
 import { CustomerService } from '@infrastructure/services/customer-service';
 import { CustomerDtoMapper } from '@presentation/mappers/customers/customer-dto-mapper';
-import { CustomerSearchInput } from '../customer-search-input/customer-search-input';
+import { CustomerSearchInput } from '@presentation/components/main/customers/customer-search-input/customer-search-input';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 

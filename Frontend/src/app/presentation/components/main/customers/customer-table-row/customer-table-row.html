@@ -1,19 +1,19 @@
 <tr>
     <th scope="row">{{customer().id}}</th>
-    <td>{{customer().user.firstName | listFieldEmptyPlaceholder}}</td>
-    <td>{{customer().user.lastName | listFieldEmptyPlaceholder}}</td>
-    <td>{{customer().user.email | listFieldEmptyPlaceholder}}</td>
-    <td>{{customer().user.phoneNumber | listFieldEmptyPlaceholder}}</td>
-    <td>{{customer().user.address | listFieldEmptyPlaceholder}}</td>
-    <td>{{customer().user.city | listFieldEmptyPlaceholder}}</td>
-    <td>{{customer().user.zipCode | listFieldEmptyPlaceholder}}</td>
-    <td>{{customer().user.country | listFieldEmptyPlaceholder}}</td>
-    <td>{{customer().user.birthDate | date:'dd/MM/yyyy' | listFieldEmptyPlaceholder}}</td>
+    <td>{{customer().user.firstName | emptyStringPlaceholder}}</td>
+    <td>{{customer().user.lastName | emptyStringPlaceholder}}</td>
+    <td>{{customer().user.email | emptyStringPlaceholder}}</td>
+    <td>{{customer().user.phoneNumber | emptyStringPlaceholder}}</td>
+    <td>{{customer().user.address | emptyStringPlaceholder}}</td>
+    <td>{{customer().user.city | emptyStringPlaceholder}}</td>
+    <td>{{customer().user.zipCode | emptyStringPlaceholder}}</td>
+    <td>{{customer().user.country | emptyStringPlaceholder}}</td>
+    <td>{{customer().user.birthDate | date:'dd/MM/yyyy' | emptyStringPlaceholder}}</td>
     
     <td><input type="checkbox" disabled [checked]="customer().user.allowMarketing"/></td>
     <td><input type="checkbox" disabled [checked]="customer().isActive"/></td>
 
-    <td>{{customer().vatNumber | listFieldEmptyPlaceholder}}</td>
+    <td>{{customer().vatNumber | emptyStringPlaceholder}}</td>
 
     <td class="actionButtons">
         <div>

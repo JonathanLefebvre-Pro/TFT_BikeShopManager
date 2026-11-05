@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BikeShopManager.WebApi.Dtos;
 
-public class EmployeeUpdatePasswordDto
+public class AuthUserUpdatePasswordDto
 {
     #region Employee
     [Required]

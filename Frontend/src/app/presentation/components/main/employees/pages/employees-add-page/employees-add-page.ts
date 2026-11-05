@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { EmployeeAddPanel } from '../employee-add-panel/employee-add-panel';
+import { EmployeeAddPanel } from '@presentation/components/main/employees/employee-add-panel/employee-add-panel';
 import { Role } from '@/app/domain/role';
 import { RoleDtoMapper } from '@/app/presentation/mappers/roles/role-dto-mapper';
 import { RoleService } from '@/app/infrastructure/services/role-service';

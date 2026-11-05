@@ -15,7 +15,7 @@ namespace BikeShopManager.WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class LogUserController(IDispatcher Dispatcher, IJwtUtilities JwtUtilities)
+    public class AuthUserController(IDispatcher Dispatcher, IJwtUtilities JwtUtilities)
         : ControllerBase
     {
         [Route("GetCurrentAsync")]
@@ -40,7 +40,7 @@ namespace BikeShopManager.WebApi.Controllers
         [Route("UpdatePasswordAsync")]
         [HttpPatch]
         public async Task<IActionResult> UpdatePasswordAsync(
-            [FromBody] EmployeeUpdatePasswordDto dto
+            [FromBody] AuthUserUpdatePasswordDto dto
         )
         {
             //Get the employee id from the JWT claims
