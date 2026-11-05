@@ -23,17 +23,7 @@ export class EmployeeProfilePage implements OnInit {
   protected readonly employeeProfileEditPanelChild = viewChild(EmployeeProfileEditPanel);
 
   public ngOnInit(): void {
-    //Recover current authenticated employee
-    this.authUserService.getEmployee()
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe({
-      next: (res) => {
-        this.employee.set(this.employeeDtoMapper.ToEmployeeEntity(res));
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    })
+    this.init();
   }
 
   public handleUpdateProfilePassword(obj: {currentPassword: string, newPassword: string}) {
@@ -48,11 +38,26 @@ export class EmployeeProfilePage implements OnInit {
       next: (res) => {
         console.log(res);
         this.employeeProfileEditPanelChild()?.ResetForm();
+        this.init();
       },
       error: (err) => {
         console.error(err);
         this.employeeProfileEditPanelChild()?.DisplayErrorMessage();
       }
     })
+  }
+
+  private init() {
+    //Recover current authenticated employee
+    this.authUserService.getEmployee()
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
+      next: (res) => {
+        this.employee.set(this.employeeDtoMapper.ToEmployeeEntity(res));
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 }

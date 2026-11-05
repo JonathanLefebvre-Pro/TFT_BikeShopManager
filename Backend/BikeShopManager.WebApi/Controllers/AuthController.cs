@@ -81,7 +81,5 @@ namespace BikeShopManager.WebApi.Controllers
 
             return this.FromResult(result);
         }
-
-        //TODO : Register ?
     }
 }

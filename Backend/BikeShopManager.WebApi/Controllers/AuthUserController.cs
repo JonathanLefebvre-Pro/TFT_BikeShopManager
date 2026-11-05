@@ -49,6 +49,7 @@ namespace BikeShopManager.WebApi.Controllers
             Result result = await Dispatcher.SendCommandAsync<UpdateEmployeePasswordCommand>(
                 new UpdateEmployeePasswordCommand(id, dto.OldPassword, dto.NewPassword)
             );
+
             return this.FromResult(result);
         }
     }

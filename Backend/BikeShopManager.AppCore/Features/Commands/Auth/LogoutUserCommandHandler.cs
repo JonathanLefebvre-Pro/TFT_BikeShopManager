@@ -1,3 +1,4 @@
+using BikeShopManager.AppCore.Extensions;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Commands;
@@ -13,6 +14,12 @@ public class LogoutUserCommandHandler(IAuthRepository AuthRepository, IJwtProvid
     {
         if (string.IsNullOrWhiteSpace(command.RefreshToken))
             return Result.Failure(AuthError.NotValidToken);
+
+        //TODO : Replace SecurityStamp
+        string securityStamp = SecurityStampExtension.GenerateSecurityStamp();
+
+        //TODO : Revoke all refresh tokens for this employee ?
+        //AuthRepository.RevokeAllActiveTokensAsync(employee.Id);
 
         string refreshTokenHash = JwtProvider.HashRefreshToken(command.RefreshToken);
         bool result = await AuthRepository.RevokeRefreshTokenAsync(refreshTokenHash);

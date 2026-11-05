@@ -17,8 +17,20 @@ h2 {
     font-weight: 700;
 }
 
+.edit-employee-password-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 .form-group-submit {
-    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+
+    input {
+        min-width: 100px;
+    }
 }
 
 .error-message {

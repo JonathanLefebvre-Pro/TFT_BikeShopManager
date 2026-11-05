@@ -22,7 +22,7 @@ public class RefreshTokenQueryHandler(
         try
         {
             //Check if the refresh token exist on DB
-            // if the token does not exist : return unauthorized
+            //  if the token does not exist : return unauthorized
             string refreshTokenHash = JwtProvider.HashRefreshToken(query.RefreshToken);
             RefreshToken? existingRefreshToken = await AuthRepository.GetRefreshTokenAsync(
                 refreshTokenHash
@@ -30,10 +30,11 @@ public class RefreshTokenQueryHandler(
             if (existingRefreshToken is null)
                 return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
 
-            // if the token exist but is not active :
+            //If the token exist but is not active :
             //  check if the token is not revoked yet : if so revoked it and return unauthorized
             if (!existingRefreshToken.IsActive)
             {
+                //If refresh token revoked date is not null -> Revoke all refresh tokens for that user
                 if (existingRefreshToken.RevokedAt is not null)
                     await AuthRepository.RevokeAllActiveTokensAsync(
                         existingRefreshToken.EmployeeId
@@ -42,29 +43,34 @@ public class RefreshTokenQueryHandler(
                 return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
             }
 
-            // Now that we are sur that the token exist and is still active
+            //Now that we are sur that the token exist and is still active
             //  Get the employee by employeeId
-            //  if the employee is null : return unauthorized
             Employee? employee = await EmployeeRepository.GetEmployeeById(
                 existingRefreshToken.EmployeeId
             );
+            //If the employee is null -> Reject
             if (employee is null)
                 return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
 
+            //If the employee account is disabled -> Reject
             if (!employee.IsActive)
                 return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
 
+            //Get user data by id
             User? user = await UserRepository.GetUserById(employee.UserId);
             if (user is null)
                 return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
 
+            //Set employer user data
             employee.User = user;
 
+            //Get role data by employee id
             int roleId = await EmployeeRoleRepository.GetEmployeeRole(employee.Id);
             Role? role = await RoleRepository.GetRoleById(roleId);
             if (role is null)
                 return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
 
+            //Set employee role data
             employee.Role = role;
 
             //The user is verified -> generate a new token
@@ -80,9 +86,8 @@ public class RefreshTokenQueryHandler(
                 ExpiresAt = accessToken.RefreshExpireAt,
             };
 
-            //Set the revokedAt from the old refresh token to UtcNow
-            //Set the replacedByTokenHash from the old refresh token by the new token hash
-            await AuthRepository.UpdateReplacedByTokenHash(
+            //Replace the old token by the new one
+            await AuthRepository.ReplaceTokenHash(
                 existingRefreshToken.TokenHash,
                 refreshToken.TokenHash
             );

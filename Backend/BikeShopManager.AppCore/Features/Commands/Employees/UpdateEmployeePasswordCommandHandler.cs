@@ -1,3 +1,4 @@
+using BikeShopManager.AppCore.Extensions;
 using BikeShopManager.AppCore.Extensions.Argon2;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
@@ -7,20 +8,15 @@ using BikeShopManager.Domain.Entities;
 
 namespace BikeShopManager.AppCore.Features.Commands.Employees;
 
-public class UpdateEmployeePasswordCommandHandler
-    : ICommandHandlerAsync<UpdateEmployeePasswordCommand>
+public class UpdateEmployeePasswordCommandHandler(
+    IEmployeeRepository EmployeeRepository,
+    IAuthRepository AuthRepository
+) : ICommandHandlerAsync<UpdateEmployeePasswordCommand>
 {
-    private readonly IEmployeeRepository _employeeRepository;
-
-    public UpdateEmployeePasswordCommandHandler(IEmployeeRepository employeeRepository)
-    {
-        _employeeRepository = employeeRepository;
-    }
-
     public async Task<Result> HandleAsync(UpdateEmployeePasswordCommand command)
     {
         //Get the employee from the employee id
-        Employee? employee = await _employeeRepository.GetEmployeeById(command.Id);
+        Employee? employee = await EmployeeRepository.GetEmployeeById(command.Id);
 
         if (employee is null)
             return Result.Failure(EmployeeError.NotFound);
@@ -36,20 +32,25 @@ public class UpdateEmployeePasswordCommandHandler
 
         //Hash new password with Argon2
         string newPasswordHash = PasswordHashExtension.HashPassword(command.NewPassword);
+
         //Generate new SecurityStamp (For JWT Claims)
-        Guid guid = Guid.NewGuid();
-        string securityStamp = guid.ToString("N");
+        string securityStamp = SecurityStampExtension.GenerateSecurityStamp();
 
         //Update the Employee row
         try
         {
-            bool isEmployeeUpdated = await _employeeRepository.UpdateEmployeePassword(
+            bool isEmployeeUpdated = await EmployeeRepository.UpdateEmployeePassword(
                 command.Id,
                 newPasswordHash,
                 securityStamp
             );
             if (!isEmployeeUpdated)
                 return Result.Failure(EmployeeError.NotUpdated);
+
+            //Revoke all refresh tokens for this employee
+            bool revoked = await AuthRepository.RevokeAllActiveTokensAsync(employee.Id);
+            if (!revoked)
+                return Result.Failure(AuthError.NotValidToken);
         }
         catch (Exception ex)
         {

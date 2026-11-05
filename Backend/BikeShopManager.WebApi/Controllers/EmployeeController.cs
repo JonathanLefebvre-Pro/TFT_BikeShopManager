@@ -126,8 +126,6 @@ namespace BikeShopManager.WebApi.Controllers
         [HttpPatch]
         public async Task<IActionResult> DisableAsync(int id)
         {
-            //TODO : Generate new SecurityStamp & Revoke old refresh tokens
-
             Result result = await Dispatcher.SendCommandAsync<DisableEmployeeCommand>(
                 new DisableEmployeeCommand(id)
             );
@@ -138,8 +136,6 @@ namespace BikeShopManager.WebApi.Controllers
         [HttpPatch]
         public async Task<IActionResult> EnableAsync(int id)
         {
-            //TODO : Generate new SecurityStamp & Revoke old refresh tokens
-
             Result result = await Dispatcher.SendCommandAsync<EnableEmployeeCommand>(
                 new EnableEmployeeCommand(id)
             );
