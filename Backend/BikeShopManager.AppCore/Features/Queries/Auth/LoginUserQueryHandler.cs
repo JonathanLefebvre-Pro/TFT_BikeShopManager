@@ -1,4 +1,4 @@
-using BikeShopManager.AppCore.Extensions;
+using BikeShopManager.AppCore.Extensions.Argon2;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Queries;
@@ -48,7 +48,7 @@ public class LoginUserQueryHandler(
             employee.Role = role;
 
             //Verify password
-            bool isPasswordVerified = HashingTools.VerifyPassword(
+            bool isPasswordVerified = PasswordHashExtension.VerifyPassword(
                 query.Request.Password,
                 employee.PasswordHash
             );

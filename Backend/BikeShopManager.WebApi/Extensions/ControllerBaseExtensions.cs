@@ -1,7 +1,7 @@
 using BikeShopManager.AppCore.Features.Results;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BikeShopManager.WebApi.Infrastructure.Extensions;
+namespace BikeShopManager.WebApi.Extensions.Controller;
 
 public static class ControllerBaseExtensions
 {

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BikeShopManager.Infrastructure.Services.Tokens;
+namespace BikeShopManager.AppCore.Features.Tokens;
 
 public class JwtProvider(IOptions<JwtOptions> Options) : IJwtProvider
 {

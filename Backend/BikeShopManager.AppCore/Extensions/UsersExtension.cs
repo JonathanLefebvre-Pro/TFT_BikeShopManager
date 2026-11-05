@@ -1,8 +1,8 @@
 using BikeShopManager.Domain.Entities;
 
-namespace BikeShopManager.AppCore.Extensions;
+namespace BikeShopManager.AppCore.Extensions.Users;
 
-public static class UserExtension
+public static class UsersExtension
 {
     public static bool IsSameIdentity(ExistingUser existingUser, User newUser)
     {

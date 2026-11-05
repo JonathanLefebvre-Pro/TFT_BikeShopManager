@@ -4,7 +4,7 @@ using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos;
-using BikeShopManager.WebApi.Infrastructure.Extensions;
+using BikeShopManager.WebApi.Extensions.Controller;
 using BikeShopManager.WebApi.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

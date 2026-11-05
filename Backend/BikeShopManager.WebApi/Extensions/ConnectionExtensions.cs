@@ -2,11 +2,11 @@ using System.Data;
 using BikeShopManager.AppCore.Features.Options;
 using Microsoft.Data.SqlClient;
 
-namespace BikeShopManager.WebApi.Extensions;
+namespace BikeShopManager.WebApi.Extensions.Connection;
 
 public static class ConnectionExtension
 {
-    public static IServiceCollection AddConnectionStringsOptions(this IServiceCollection services)
+    public static IServiceCollection AddConnectionOptions(this IServiceCollection services)
     {
         services
             .AddOptions<ConnectionStringsOptions>()
@@ -17,7 +17,7 @@ public static class ConnectionExtension
         return services;
     }
 
-    public static WebApplicationBuilder AddConnectionStringConfiguration(
+    public static WebApplicationBuilder BuildConnectionConfiguration(
         this WebApplicationBuilder builder
     )
     {

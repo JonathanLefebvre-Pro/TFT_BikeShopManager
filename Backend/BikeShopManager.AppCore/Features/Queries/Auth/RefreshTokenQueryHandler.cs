@@ -1,5 +1,4 @@
 using BikeShopManager.AppCore.Features.Errors;
-using BikeShopManager.AppCore.Features.Queries;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Queries;
 using BikeShopManager.AppCore.Interfaces.Repositories;

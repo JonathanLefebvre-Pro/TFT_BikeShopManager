@@ -1,9 +1,9 @@
 using System.Text;
 using BikeShopManager.AppCore.Features.Options;
-using BikeShopManager.Infrastructure.Services.Tokens;
+using BikeShopManager.AppCore.Features.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace BikeShopManager.WebApi.Extensions;
+namespace BikeShopManager.WebApi.Extensions.Jwt;
 
 public static class JwtExtension
 {
@@ -18,7 +18,7 @@ public static class JwtExtension
         return services;
     }
 
-    public static WebApplicationBuilder AddJwtConfiguration(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder BuildJwtConfiguration(this WebApplicationBuilder builder)
     {
         JwtOptions? jwtOptions = builder
             .Configuration.GetSection(JwtOptions.SectionName)

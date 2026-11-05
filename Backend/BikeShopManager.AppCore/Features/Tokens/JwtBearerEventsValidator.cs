@@ -5,7 +5,7 @@ using BikeShopManager.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BikeShopManager.Infrastructure.Services.Tokens;
+namespace BikeShopManager.AppCore.Features.Tokens;
 
 public class JwtBearerEventsValidator : JwtBearerEvents
 {

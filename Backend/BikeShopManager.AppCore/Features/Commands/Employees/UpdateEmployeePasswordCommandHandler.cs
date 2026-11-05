@@ -1,4 +1,4 @@
-using BikeShopManager.AppCore.Extensions;
+using BikeShopManager.AppCore.Extensions.Argon2;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Commands;
@@ -26,7 +26,7 @@ public class UpdateEmployeePasswordCommandHandler
             return Result.Failure(EmployeeError.NotFound);
 
         //Compare old password with user current password hash in database
-        bool isOldPasswordValid = HashingTools.VerifyPassword(
+        bool isOldPasswordValid = PasswordHashExtension.VerifyPassword(
             command.OldPassword,
             employee.PasswordHash
         );
@@ -35,7 +35,7 @@ public class UpdateEmployeePasswordCommandHandler
             return Result.Failure(EmployeeError.InvalidPassword);
 
         //Hash new password with Argon2
-        string newPasswordHash = HashingTools.HashPassword(command.NewPassword);
+        string newPasswordHash = PasswordHashExtension.HashPassword(command.NewPassword);
         //Generate new SecurityStamp (For JWT Claims)
         Guid guid = Guid.NewGuid();
         string securityStamp = guid.ToString("N");

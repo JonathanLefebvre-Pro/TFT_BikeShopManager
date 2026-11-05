@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using BikeShopManager.AppCore.Interfaces.Tokens;
 
-namespace BikeShopManager.Infrastructure.Services.Tokens;
+namespace BikeShopManager.AppCore.Features.Tokens;
 
 public class JwtUtilities : IJwtUtilities
 {

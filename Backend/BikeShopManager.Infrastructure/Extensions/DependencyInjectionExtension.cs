@@ -1,14 +1,12 @@
 using BikeShopManager.AppCore.Interfaces.Repositories;
-using BikeShopManager.AppCore.Interfaces.Tokens;
 using BikeShopManager.Infrastructure.Services.Repositories;
-using BikeShopManager.Infrastructure.Services.Tokens;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BikeShopManager.Infrastructure.Extensions;
 
-public static class DIExtension
+public static class DependencyInjectionExtension
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
@@ -16,8 +14,6 @@ public static class DIExtension
         services.AddScoped<IEmployeeRoleRepository, EmployeeRoleRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IAuthRepository, AuthRepository>();
-        services.AddScoped<IJwtProvider, JwtProvider>();
-        services.AddScoped<IJwtUtilities, JwtUtilities>();
 
         return services;
     }

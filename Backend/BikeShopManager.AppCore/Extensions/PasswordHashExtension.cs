@@ -2,9 +2,9 @@ using System.Security.Cryptography;
 using System.Text;
 using Konscious.Security.Cryptography;
 
-namespace BikeShopManager.AppCore.Extensions;
+namespace BikeShopManager.AppCore.Extensions.Argon2;
 
-public class HashingTools
+public class PasswordHashExtension
 {
     private const int parallelism = 1;
     private const int iterations = 2;
