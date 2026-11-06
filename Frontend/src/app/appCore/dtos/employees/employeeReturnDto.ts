@@ -18,7 +18,6 @@ export interface EmployeeReturnDto {
     zipCode: string | null;
     country: string | null;
     birthDate: Date | null;
-    allowMarketing: boolean;
 
     //Role
     roleId: number;

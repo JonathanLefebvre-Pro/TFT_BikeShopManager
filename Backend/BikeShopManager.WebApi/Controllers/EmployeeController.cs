@@ -4,7 +4,7 @@ using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos;
-using BikeShopManager.WebApi.Infrastructure.Extensions;
+using BikeShopManager.WebApi.Extensions.Controller;
 using BikeShopManager.WebApi.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -105,6 +105,19 @@ namespace BikeShopManager.WebApi.Controllers
                     dto.ToUserEntity(),
                     dto.RoleId
                 )
+            );
+            return this.FromResult(result);
+        }
+
+        [Route("UpdatePasswordAsync/{id}")]
+        [HttpPatch]
+        public async Task<IActionResult> UpdatePasswordAsync(
+            int id,
+            [FromBody] AuthUserUpdatePasswordDto dto
+        )
+        {
+            Result result = await Dispatcher.SendCommandAsync<UpdateEmployeePasswordCommand>(
+                new UpdateEmployeePasswordCommand(id, dto.OldPassword, dto.NewPassword)
             );
             return this.FromResult(result);
         }

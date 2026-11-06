@@ -11,11 +11,12 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = ("Admin, Manager"))]
+    [Authorize]
     public class RoleController(IDispatcher Dispatcher) : ControllerBase
     {
         [Route("GetAsync")]
         [HttpGet]
+        [Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public async Task<IActionResult> GetAsync()
         {
             Result<IEnumerable<Role>> result = await Dispatcher.SendQueryAsync<
@@ -37,6 +38,7 @@ namespace BikeShopManager.WebApi.Controllers
 
         [Route("GetByIdAsync/{id}")]
         [HttpGet]
+        [Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             Result<Role> result = await Dispatcher.SendQueryAsync<GetRoleByIdQuery, Role>(
@@ -50,6 +52,7 @@ namespace BikeShopManager.WebApi.Controllers
         }
 
         [Route("GetByEmployeeIdAsync/{id}")]
+        [Authorize(Roles = ("Admin, Manager"))]
         [HttpGet]
         public async Task<IActionResult> GetByEmployeeIdAsync(int id)
         {

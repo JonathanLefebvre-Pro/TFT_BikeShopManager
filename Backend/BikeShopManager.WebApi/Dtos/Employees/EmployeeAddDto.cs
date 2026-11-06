@@ -8,12 +8,6 @@ public class EmployeeAddDto
     [Required]
     public required string Password { get; set; }
 
-    //[Required]
-    //public required string SecurityStamp { get; set; }
-
-    //public int AccessFailedCount { get; set; }
-    //public DateTimeOffset LockoutEnd { get; set; }
-
     [Required]
     [DataType(DataType.Date)]
     public required DateOnly HiredAt { get; set; }
@@ -35,15 +29,11 @@ public class EmployeeAddDto
     public string? Address { get; set; }
     public string? City { get; set; }
 
-    //[RegularExpression(@"^\d{5}(-\d{4})?$", ErrorMessage = "Invalid ZipCode")]
     public string? ZipCode { get; set; }
     public string? Country { get; set; }
 
     [DataType(DataType.Date)]
     public DateOnly? BirthDate { get; set; }
-
-    //[Required]
-    //public bool AllowMarketing { get; set; }
     #endregion
 
     #region Role

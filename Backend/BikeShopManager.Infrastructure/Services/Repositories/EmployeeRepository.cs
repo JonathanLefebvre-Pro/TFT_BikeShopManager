@@ -184,4 +184,29 @@ public class EmployeeRepository(IDbSession DbSession) : IEmployeeRepository
 
         return rows is not 0;
     }
+
+    public async Task<bool> UpdateEmployeePassword(
+        int id,
+        string passwordHash,
+        string securityStamp
+    )
+    {
+        string employeeSqlQuery =
+            @$"UPDATE {_tableName} 
+                SET PasswordHash=@PasswordHash, SecurityStamp=@SecurityStamp, UpdatedAt=@UpdatedAt
+                WHERE {_tableName}.Id=@Id";
+        DynamicParameters employeeParameters = new DynamicParameters();
+        employeeParameters.Add("@Id", id);
+        employeeParameters.Add("@PasswordHash", passwordHash);
+        employeeParameters.Add("@SecurityStamp", securityStamp);
+        employeeParameters.Add("@UpdatedAt", DateTime.UtcNow);
+
+        int rows = await DbSession.Connection.ExecuteAsync(
+            employeeSqlQuery,
+            employeeParameters,
+            DbSession.Transaction
+        );
+
+        return rows is not 0;
+    }
 }

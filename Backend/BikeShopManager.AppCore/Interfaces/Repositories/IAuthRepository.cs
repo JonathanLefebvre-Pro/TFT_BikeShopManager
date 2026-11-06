@@ -12,5 +12,5 @@ public interface IAuthRepository
 
     Task<int> CreateRefreshToken(RefreshToken refreshToken);
 
-    Task<bool> UpdateReplacedByTokenHash(string oldTokenHash, string newTokenHash);
+    Task<bool> ReplaceTokenHash(string oldTokenHash, string newTokenHash);
 }

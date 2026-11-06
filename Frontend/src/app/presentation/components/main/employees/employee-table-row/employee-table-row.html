@@ -1,19 +1,21 @@
 <tr>
     <th scope="row">{{employee().id}}</th>
-    <td>{{employee().user.firstName | listFieldEmptyPlaceholder}}</td>
-    <td>{{employee().user.lastName | listFieldEmptyPlaceholder}}</td>
-    <td>{{employee().user.email | listFieldEmptyPlaceholder}}</td>
-    <td>{{employee().user.phoneNumber | listFieldEmptyPlaceholder}}</td>
-    <td>{{employee().user.address | listFieldEmptyPlaceholder}}</td>
-    <td>{{employee().user.city | listFieldEmptyPlaceholder}}</td>
-    <td>{{employee().user.zipCode | listFieldEmptyPlaceholder}}</td>
-    <td>{{employee().user.country | listFieldEmptyPlaceholder}}</td>
-    <td>{{employee().user.birthDate | date:'dd/MM/yyyy' | listFieldEmptyPlaceholder}}</td>
+    <td>{{employee().user.firstName | emptyStringPlaceholder}}</td>
+    <td>{{employee().user.lastName | emptyStringPlaceholder}}</td>
+    <td>{{employee().user.email | emptyStringPlaceholder}}</td>
+    <td>{{employee().user.phoneNumber | emptyStringPlaceholder}}</td>
+    <td>{{employee().user.address | emptyStringPlaceholder}}</td>
+    <td>{{employee().user.city | emptyStringPlaceholder}}</td>
+    <td>{{employee().user.zipCode | emptyStringPlaceholder}}</td>
+    <td>{{employee().user.country | emptyStringPlaceholder}}</td>
+    <td>{{employee().user.birthDate | date:'dd/MM/yyyy' | emptyStringPlaceholder}}</td>
     
     <td><input type="checkbox" disabled [checked]="employee().isActive"/></td>
 
-    <td>{{employee().hiredAt  | date:'dd/MM/yyyy' | listFieldEmptyPlaceholder}}</td>
-    <td>{{employee().contractEndAt  | date:'dd/MM/yyyy' | listFieldEmptyPlaceholder}}</td>
+    <td>{{employee().hiredAt  | date:'dd/MM/yyyy' | emptyStringPlaceholder}}</td>
+    <td>{{employee().contractEndAt  | date:'dd/MM/yyyy' | emptyStringPlaceholder}}</td>
+
+    <td>{{employee().role.name| emptyStringPlaceholder}}</td>
 
     <td class="actionButtons">
         <div>

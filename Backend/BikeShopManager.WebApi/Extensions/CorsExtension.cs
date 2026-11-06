@@ -1,6 +1,4 @@
-using System;
-
-namespace BikeShopManager.WebApi.Extensions;
+namespace BikeShopManager.WebApi.Extensions.Cors;
 
 public static class CorsExtension
 {

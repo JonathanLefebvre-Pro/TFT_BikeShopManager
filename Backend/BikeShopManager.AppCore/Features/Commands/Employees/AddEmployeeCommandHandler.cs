@@ -1,4 +1,5 @@
-using BikeShopManager.AppCore.Extensions;
+using BikeShopManager.AppCore.Extensions.Argon2;
+using BikeShopManager.AppCore.Extensions.Users;
 using BikeShopManager.AppCore.Features.Errors;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Commands;
@@ -38,7 +39,7 @@ public class AddEmployeeCommandHandler : ICommandHandlerAsync<AddEmployeeCommand
         if (existingUser is not null)
         {
             //Check if fields (email, FirstName, LastName and Birthdate) are the same between the existing user and the new one
-            isSameIdentity = UserExtension.IsSameIdentity(existingUser, command.User);
+            isSameIdentity = UsersExtension.IsSameIdentity(existingUser, command.User);
 
             if (isSameIdentity)
                 userRowId = existingUser.Id;
@@ -61,12 +62,12 @@ public class AddEmployeeCommandHandler : ICommandHandlerAsync<AddEmployeeCommand
         }
 
         //Hash password with Argon2
-        string passwordHash = HashingTools.HashPassword(command.Employee.Password);
+        string passwordHash = PasswordHashExtension.HashPassword(command.Employee.Password);
         command.Employee.PasswordHash = passwordHash;
 
-        //Temporary generate SecurityStamp -> TODO : Change this when adding JWT
+        //Generate new SecurityStamp (For JWT Claims)
         Guid guid = Guid.NewGuid();
-        command.Employee.SecurityStamp = guid.ToString();
+        command.Employee.SecurityStamp = guid.ToString("N");
 
         //Insert Employee data in Employee table and recover row id
         int employeeRowId;

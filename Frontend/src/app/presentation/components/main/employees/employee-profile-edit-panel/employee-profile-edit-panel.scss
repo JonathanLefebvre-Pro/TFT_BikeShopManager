@@ -1,0 +1,45 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    background-color: rgb(204, 204, 204);
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
+}
+
+h2 {
+    font-weight: 700;
+}
+
+.edit-employee-password-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group-submit {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+
+    input {
+        min-width: 100px;
+    }
+}
+
+.error-message {
+    color: red;
+    font-size: 0.8rem;
+    display: none;
+    margin-top: 0.5rem;
+
+    &.active {
+        display: block;
+    }
+}

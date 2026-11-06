@@ -17,11 +17,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if(err.status !== 401 || isAuthCall) return throwError(() => err);
 
       return authService.refreshToken().pipe(
-        switchMap(res => next(withToken(res.accessToken))),
         catchError(refreshErr => {
           authService.clearSession();
           return throwError(() => refreshErr);
-        })
+        }),
+        switchMap(res => next(withToken(res.accessToken)))
       );
     })
   );

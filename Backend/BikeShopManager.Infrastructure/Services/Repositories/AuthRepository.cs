@@ -19,7 +19,7 @@ public class AuthRepository(IDbSession DbSession) : IAuthRepository
         string sqlQuery =
             @$"UPDATE {_tableName} SET RevokedAt=@RevokedAt 
                 WHERE EmployeeId=@EmployeeId 
-                AND RevokedAt=NULL";
+                AND RevokedAt IS NULL";
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@RevokedAt", DateTime.UtcNow);
         parameters.Add("@EmployeeId", employeeId);
@@ -102,17 +102,19 @@ public class AuthRepository(IDbSession DbSession) : IAuthRepository
     }
 
     /// <summary>
-    /// Update the ReplacedByTokenHash for refresh token rotation
+    /// Replaced the old token hash by the new one for refresh token rotation
     /// </summary>
     /// <param name="oldTokenHash"></param>
     /// <param name="newTokenHash"></param>
     /// <returns></returns>
-    public async Task<bool> UpdateReplacedByTokenHash(string oldTokenHash, string newTokenHash)
+    public async Task<bool> ReplaceTokenHash(string oldTokenHash, string newTokenHash)
     {
         string sqlQuery =
             @$"UPDATE {_tableName} SET ReplacedByTokenHash=@ReplacedByTokenHash, RevokedAt=@RevokedAt WHERE TokenHash=@TokenHash";
         DynamicParameters parameters = new DynamicParameters();
+        //Set the replacedByTokenHash from the old refresh token by the new token hash
         parameters.Add("@ReplacedByTokenHash", newTokenHash);
+        //Set the revokedAt from the old refresh token to UtcNow
         parameters.Add("@RevokedAt", DateTime.UtcNow);
         parameters.Add("@TokenHash", oldTokenHash);
 

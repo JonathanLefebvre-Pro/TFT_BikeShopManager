@@ -19,7 +19,7 @@ export class EmployeeDtoMapper {
             zipCode: dto.zipCode,
             country: dto.country,
             birthDate: (dto.birthDate) ? new Date(dto.birthDate) : null,
-            allowMarketing: dto.allowMarketing
+            allowMarketing: false
         };
         return user;
     }
@@ -37,8 +37,6 @@ export class EmployeeDtoMapper {
         const employee: Employee = {
             id: dto.employeeId,
             userId: dto.userId,
-            passwordHash: dto.passwordHash,
-            securityStamp: dto.securityStamp,
             hiredAt: new Date(dto.hiredAt),
             contractEndAt: (dto.contractEndAt) ? new Date(dto.contractEndAt) : null, 
             isActive: dto.isActive,

@@ -38,8 +38,7 @@ export class LoginPage implements OnInit {
         this.routerService.navigate(['/main']);
       },
       error: (error) => {
-        console.error('Error : ',error);
-
+        //console.error('Error from login page : ',error);
         //Display error message : Login or password are not valid !
         this.displayErrorMessage.set(true);
         this.timeoutId = setTimeout(() => {this.displayErrorMessage.set(false)}, 5000);

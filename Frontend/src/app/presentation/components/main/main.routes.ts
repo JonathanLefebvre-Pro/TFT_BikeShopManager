@@ -1,6 +1,6 @@
 import { Routes } from "@angular/router";
-import { CustomersPage } from "./customers/customers-page/customers-page";
-import { EmployeesPage } from "./employees/employees-page/employees-page";
+import { CustomersPage } from "./customers/pages/customers-page/customers-page";
+import { EmployeesPage } from "./employees/pages/employees-page/employees-page";
 import { DisplayStock } from "./stock/display-stock/display-stock";
 import { DisplayShop } from "./shop/display-shop/display-shop";
 
