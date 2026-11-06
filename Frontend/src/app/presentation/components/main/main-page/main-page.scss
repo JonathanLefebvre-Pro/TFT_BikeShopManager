@@ -1,22 +1,39 @@
+@use 'variables' as var;
+
 nav {
-    background-color: rgb(206, 206, 206);
-    padding: 1rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
+    background-color: var.$primary-background-color;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    border-style: solid;
+    border-color: var.$selected-background-color;
+    border-bottom-width: 0.2rem;
+}
+
+a {
+    padding: 1rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    text-decoration: none;
+    color: var.$primary-text-color;
+}
+
+a:hover {
+    background-color: rgba(167, 167, 167, 0.5);
 }
 
 .content {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    margin-top: 1rem;
-    padding-left: 5rem;
-    padding-right: 5rem;
+    border-style: solid;
+    border-color: rgb(73, 73, 73);
+    border-top-width: 0.15rem;
 }
 
 .active {
-    color: orange;
+    color: var.$seleted-text-color;
+    background-color: var.$selected-background-color;
 }
