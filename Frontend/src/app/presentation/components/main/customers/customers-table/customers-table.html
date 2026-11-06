@@ -1,12 +1,12 @@
-<table class="customerTable">
-    <thead class="customerTableHead">
+<table>
+    <thead>
         <tr>
             @for (header of headers(); track $index) {
                 <th scope="col">{{header}}</th>
             }
         </tr>
     </thead>
-    <tbody class="customerTableBody">
+    <tbody>
         @defer(when isLoading())
         {
             @for (customer of customers(); track customer.id) {
@@ -27,7 +27,7 @@
             <div>Loading error !</div>
         }
     </tbody>
-    <tfoot class="customerTableFooter">
+    <tfoot>
         @if(maxPagesNumber() > 0){
             <input type="button" value="<" (click)="handlePreviousPage()"/>
             {{currentPageNumber()}}/{{maxPagesNumber()}}
