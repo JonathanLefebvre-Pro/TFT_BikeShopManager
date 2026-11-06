@@ -1,6 +1,6 @@
 <form class="form" method="post" [formRoot]="loginForm">
     <div class="input-group">
-        <label for="login">Login :</label>
+        <ng-icon name="matEmail"/>
         <input id="login" type="email" [formField]="loginForm.login" placeholder="Email"/>
     </div>
     @if (loginForm.login().invalid() && loginForm.login().touched()) {
@@ -12,7 +12,7 @@
     }
 
     <div class="input-group">
-        <label for="password">Password :</label>
+        <ng-icon name="matLock"/>
         <input type="password" [formField]="loginForm.password" placeholder="Password"/>
     </div>
     @if (loginForm.password().invalid() && loginForm.password().touched()) {

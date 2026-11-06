@@ -3,12 +3,15 @@ import { loginValidationSchema, passwordValidationSchema } from '@/app/presentat
 import { Component, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FormRoot, FormField, form, apply } from '@angular/forms/signals';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { matEmail, matLock } from '@ng-icons/material-icons/baseline';
 
 @Component({
-  imports: [FormsModule, FormRoot, FormField],
+  imports: [FormsModule, FormRoot, FormField, NgIcon],
   selector: 'app-login-panel',
   styleUrl: './login-panel.scss',
   templateUrl: './login-panel.html',
+  providers: [provideIcons({matEmail, matLock})]
 })
 export class LoginPanel {
 

@@ -18,7 +18,12 @@
       "@appCore/*": ["./src/app/appCore/*"],
       "@domain/*": ["./src/app/domain/*"],
       "@infrastructure/*": ["./src/app/infrastructure/*"],
-      "@presentation/*": ["./src/app/presentation/*"]
+      "@presentation/*": ["./src/app/presentation/*"],
+      "@components/*": ["./src/app/presentation/components/*"],
+      "@directives/*": ["./src/app/presentation/directives/*"],
+      "@forms/*": ["./src/app/presentation/forms/*"],
+      "@mappers/*": ["./src/app/presentation/mappers/*"],
+      "@styles/*": ["./src/app/presentation/styles/*"]
     },
   },
   "angularCompilerOptions": {
