@@ -22,7 +22,7 @@ export class EmployeesTable {
   protected readonly employeeTableRowElements = viewChildren(EmployeeTableRow);
 
   private readonly INITIAL_HEADERS : string[] = ['#','FirstName', 'LastName', 'Email', 'PhoneNumber', 
-    'Address', 'City', 'ZipCode', 'Country', 'BirthDate', 'IsActive', 'HiredAt', 'ContractEndAt', 'Actions'];
+    'Address', 'City', 'ZipCode', 'Country', 'BirthDate', 'IsActive', 'HiredAt', 'ContractEndAt', 'Role', 'Actions'];
   protected readonly headers = signal<string[]>([...this.INITIAL_HEADERS]);
 
   protected handleEmployeeEnable(employeeId: number){

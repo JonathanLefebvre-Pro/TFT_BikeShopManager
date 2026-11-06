@@ -1,6 +1,6 @@
 import { computed, inject, Service, signal } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { finalize, Observable, tap } from 'rxjs';
+import { finalize, Observable, shareReplay, tap } from 'rxjs';
 import { IAuthRepository } from '@/app/appCore/abstraction/repositories/iauth-repository';
 import { TokenResponseDto } from '@/app/appCore/dtos/auth/tokenResponseDto';
 import { LoginRequestDto } from '@/app/appCore/dtos/auth/loginRequestDto';
@@ -25,14 +25,27 @@ export class AuthService implements IAuthRepository {
                error: (err) => console.error(err)
             }));
     }
+
+    private refresh$?: Observable<TokenResponseDto>;
     public refreshToken(): Observable<TokenResponseDto> {
         const url:string = `${this.baseUrl}/${"api/Auth/RefreshAsync"}`;
-        return this.http.post<TokenResponseDto>(url, {}, { withCredentials: true })
-        .pipe(tap({
-               next: (res) => this._accessToken.set(res.accessToken),
-               error: (err) => console.error(err)
-            }));
+        //??= : Is refresh null or undefined
+        //True : do something
+        //False : do nothing
+        this.refresh$ ??= this.http.post<TokenResponseDto>(url, {}, { withCredentials: true })
+        .pipe(
+            tap((res) => this._accessToken.set(res.accessToken)),
+            finalize(() => (this.refresh$ = undefined)),
+            shareReplay(1)
+        );
+        return this.refresh$;
     }
+    //Old version
+    /*public refreshToken(): Observable<TokenResponseDto> {
+        const url:string = `${this.baseUrl}/${"api/Auth/RefreshAsync"}`;
+        return this.http.post<TokenResponseDto>(url, {}, { withCredentials: true })
+        .pipe(tap((res) => this._accessToken.set(res.accessToken)));
+    }*/
     public logout(): Observable<HttpResponse<Object>> {
         const url:string = `${this.baseUrl}/${"api/Auth/LogoutAsync"}`;
         return this.http.post<HttpResponse<Object>>(url, {}, { withCredentials: true })

@@ -11,8 +11,6 @@ public static class EmployeeDtoMapper
         {
             #region Employee
             EmployeeId = entity.Id,
-            PasswordHash = entity.PasswordHash,
-            SecurityStamp = entity.SecurityStamp,
             HiredAt = entity.HiredAt,
             ContractEndAt = entity.ContractEndAt,
             IsActive = entity.IsActive,
@@ -28,7 +26,6 @@ public static class EmployeeDtoMapper
             ZipCode = entity.User.ZipCode,
             Country = entity.User.Country,
             BirthDate = entity.User.BirthDate,
-            AllowMarketing = entity.User.AllowMarketing,
             #endregion
 
             #region Role
@@ -52,14 +49,7 @@ public static class EmployeeDtoMapper
 
     public static Employee ToEmployeeEntity(this EmployeeUpdateDto dto)
     {
-        return new Employee()
-        {
-            //PasswordHash = dto.PasswordHash,
-            //SecurityStamp = dto.SecurityStamp,
-            //Password = dto.Password,
-            HiredAt = dto.HiredAt,
-            ContractEndAt = dto.ContractEndAt,
-        };
+        return new Employee() { HiredAt = dto.HiredAt, ContractEndAt = dto.ContractEndAt };
     }
 
     public static User ToUserEntity(this EmployeeUpdateDto dto)
@@ -75,7 +65,7 @@ public static class EmployeeDtoMapper
             ZipCode = dto.ZipCode,
             Country = dto.Country,
             BirthDate = dto.BirthDate,
-            AllowMarketing = dto.AllowMarketing,
+            AllowMarketing = false,
         };
     }
 
@@ -83,8 +73,6 @@ public static class EmployeeDtoMapper
     {
         return new Employee()
         {
-            //PasswordHash = dto.PasswordHash,
-            //SecurityStamp = dto.SecurityStamp,
             Password = dto.Password,
             HiredAt = dto.HiredAt,
             ContractEndAt = dto.ContractEndAt,
@@ -104,7 +92,7 @@ public static class EmployeeDtoMapper
             ZipCode = dto.ZipCode,
             Country = dto.Country,
             BirthDate = dto.BirthDate,
-            AllowMarketing = dto.AllowMarketing,
+            AllowMarketing = false,
         };
     }
 }

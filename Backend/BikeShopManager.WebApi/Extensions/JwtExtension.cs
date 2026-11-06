@@ -1,19 +1,31 @@
-using System.Security.Claims;
 using System.Text;
+using BikeShopManager.AppCore.Features.Options;
+using BikeShopManager.AppCore.Features.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
 
-namespace BikeShopManager.WebApi.Extensions;
+namespace BikeShopManager.WebApi.Extensions.Jwt;
 
 public static class JwtExtension
 {
-    public static WebApplicationBuilder AddJwtConfiguration(this WebApplicationBuilder builder)
+    public static IServiceCollection AddJwtOptions(this IServiceCollection services)
     {
-        IConfigurationSection jwtSettings = builder.Configuration.GetSection("JwtSettings");
-        string? jwtSecret = jwtSettings.GetValue<string>("Secret");
-        string? jwtIssuer = jwtSettings.GetValue<string>("Issuer");
-        string? jwtAudience = jwtSettings.GetValue<string>("Audience");
+        services
+            .AddOptions<JwtOptions>()
+            .BindConfiguration(JwtOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        return services;
+    }
+
+    public static WebApplicationBuilder BuildJwtConfiguration(this WebApplicationBuilder builder)
+    {
+        JwtOptions? jwtOptions = builder
+            .Configuration.GetSection(JwtOptions.SectionName)
+            .Get<JwtOptions>();
+        string? jwtSecret = jwtOptions?.Secret;
+        string? jwtIssuer = jwtOptions?.Issuer;
+        string? jwtAudience = jwtOptions?.Audience;
         byte[] key = Encoding.UTF8.GetBytes(jwtSecret!);
 
         builder
@@ -25,20 +37,12 @@ public static class JwtExtension
             .AddJwtBearer(options =>
             {
                 options.MapInboundClaims = false;
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.Zero,
-
-                    ValidIssuer = jwtIssuer,
-                    ValidAudience = jwtAudience,
-                    NameClaimType = JwtRegisteredClaimNames.Name,
-                    RoleClaimType = ClaimTypes.Role,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                };
+                options.TokenValidationParameters = JwtProvider.GenerateTokenValidationObject(
+                    jwtIssuer,
+                    jwtAudience,
+                    jwtSecret
+                );
+                options.Events = new JwtBearerEventsValidator();
             });
 
         builder.Services.AddAuthorization();

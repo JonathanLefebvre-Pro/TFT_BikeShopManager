@@ -1,7 +1,7 @@
 export interface EmployeeUpdateDto {
     //Employee
-    hiredAt: Date | string;
-    contractEndAt: Date | string | null;
+    hiredAt: string;
+    contractEndAt: string | null;
 
     //User
     firstName: string;
@@ -12,8 +12,7 @@ export interface EmployeeUpdateDto {
     city: string | null;
     zipCode: string | null;
     country: string | null;
-    birthDate: Date | string | null;
-    allowMarketing: boolean;
+    birthDate: string | null;
 
     //Role
     roleId: number;

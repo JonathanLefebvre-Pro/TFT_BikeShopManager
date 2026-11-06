@@ -6,5 +6,5 @@ public interface IJwtProvider
 {
     TokenResponse GenerateToken(Employee employee);
     string GenerateRefreshToken();
-    string HashToken(string token);
+    string HashRefreshToken(string token);
 }

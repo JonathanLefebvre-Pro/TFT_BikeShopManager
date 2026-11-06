@@ -1,4 +1,4 @@
-<form method="post" class="editCustomerForm" [formRoot]="customerForm">
+<form method="post" class="edit-customer-form" [formRoot]="customerForm">
 
     <app-form-text-input label="FirstName : " id="FirstName" [field]="customerForm.firstName" [fieldState]="customerForm.firstName()"/>
     <app-form-text-input label="Lastname : " id="Lastname" [field]="customerForm.lastName" [fieldState]="customerForm.lastName()"/>
@@ -12,7 +12,9 @@
     <app-form-date-input label="Birthdate : " id="Birthdate" [field]="customerForm.birthDate" [fieldState]="customerForm.birthDate()"/>
     <app-form-checkbox-input label="Allow marketing : " id="AllowMarketing" [field]="customerForm.allowMarketing" [fieldState]="customerForm.allowMarketing()"/>
     
-    <div class="formGroup-Submit">
+    <p class="error-message" [class.active]="displayErrorMessage()">{{ errorMessage }}</p>
+
+    <div class="form-group-submit">
         <input type="submit" value="Save" [disabled]="customerForm().invalid()"/>
         <input type="button" value="Cancel" (click)="handleCancel($event)"/>
     </div>

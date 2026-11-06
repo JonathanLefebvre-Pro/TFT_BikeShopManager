@@ -23,5 +23,5 @@
         </div>
     }
 
-    <input type="submit" value="Connect"/>
+    <input type="submit" value="Connect" [disabled]="loginForm().invalid()"/>
 </form>

@@ -11,6 +11,6 @@ export interface CustomerAddDto {
     city: string | null;
     zipCode: string | null;
     country: string | null;
-    birthDate: Date | string | null;
+    birthDate: string | null;
     allowMarketing: boolean;
 }

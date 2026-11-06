@@ -1,0 +1,45 @@
+@if(employee() !== null) {
+    <div class="group">
+        <h2>Base information</h2>
+        <p>FirstName : {{employee()?.user?.firstName | emptyStringPlaceholder}}</p>
+        <p>LastName : {{employee()?.user?.lastName | emptyStringPlaceholder}}</p>
+        <p>Email : {{employee()?.user?.email | emptyStringPlaceholder}}</p>
+    </div>
+
+    <div class="group">
+        <h2>Account information</h2>
+        <p>Role : {{employee()?.role?.name | emptyStringPlaceholder}}</p>
+        <p>Is user active : {{employee()?.isActive}}</p>
+    </div>
+    
+    <div class="group">
+        <h2>Personnal information</h2>
+        <p>Address : {{employee()?.user?.address | emptyStringPlaceholder}}</p>
+        <p>City : {{employee()?.user?.city | emptyStringPlaceholder}}</p>
+        <p>ZipCode : {{employee()?.user?.zipCode | emptyStringPlaceholder}}</p>
+        <p>Country : {{employee()?.user?.country | emptyStringPlaceholder}}</p>
+        <p>Birthdate : {{employee()?.user?.birthDate | date:'dd/MM/yyyy' | emptyStringPlaceholder}}</p>
+        <p>Phone number : {{employee()?.user?.phoneNumber | emptyStringPlaceholder}}</p>
+    </div>
+    
+    <div class="group">
+        <h2>Employee information</h2>
+        <p>Start contract date : {{employee()?.hiredAt | date:'dd/MM/yyyy' | emptyStringPlaceholder}}</p>
+        <p>End contract date : {{employee()?.contractEndAt | date:'dd/MM/yyyy' | emptyStringPlaceholder}}</p>
+        <p>Allow marketing : {{employee()?.user?.allowMarketing}}</p>
+    </div>
+
+    <form method="post", class="edit-employee-password-profile-form" [formRoot]="employeeProfileForm">
+        <app-form-text-input label="Current Password" id="CurrentPassword" type="password" [field]="employeeProfileForm.currentPassword" [fieldState]="employeeProfileForm.currentPassword()"/>
+        <app-form-text-input label="New Password" id="NewPassword" type="password" [field]="employeeProfileForm.newPassword" [fieldState]="employeeProfileForm.newPassword()"/>
+    
+        <p class="error-message" [class.active]="displayErrorMessage()">{{ errorMessage }}</p>
+
+        <div class="form-group-submit">
+            <input type="submit" value="Save" [disabled]="employeeProfileForm().invalid()"/>
+            <input type="button" value="Clear" (click)="handleClear($event)"/>
+        </div>
+    </form>
+} @else {
+    <p>There is no data or you are not allow to display this content !</p>
+}

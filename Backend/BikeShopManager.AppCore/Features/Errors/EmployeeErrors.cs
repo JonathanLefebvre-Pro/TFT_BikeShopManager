@@ -3,6 +3,8 @@ namespace BikeShopManager.AppCore.Features.Errors;
 public static class EmployeeError
 {
     public static Error NotFound => new Error("EmployeeError.NotFound", "Employee not found !");
+    public static Error InvalidPassword =>
+        new Error("EmployeeError.InvalidPassword", "Invalid password !");
     public static Error NotInserted =>
         new Error("EmployeeError.NotInserted", "Employee not inserted !");
     public static Error NotUpdated =>

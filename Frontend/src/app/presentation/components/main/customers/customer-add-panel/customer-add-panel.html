@@ -1,9 +1,9 @@
-<form method="post" class="submitCustomerForm" [formRoot]="customerForm">
+<form method="post" class="submit-customer-form" [formRoot]="customerForm">
 
     <app-form-text-input label="FirstName : " id="FirstName" [field]="customerForm.firstName" [fieldState]="customerForm.firstName()"/>
     <app-form-text-input label="Lastname : " id="Lastname" [field]="customerForm.lastName" [fieldState]="customerForm.lastName()"/>
     <app-form-text-input label="VAT : " id="VatNumber" [field]="customerForm.vatNumber" [fieldState]="customerForm.vatNumber()"/>
-    <app-form-text-input label="Email : " id="Email" [field]="customerForm.email" [fieldState]="customerForm.email()" type="email"/>
+    <app-form-text-input label="Email : " id="Email" type="email" [field]="customerForm.email" [fieldState]="customerForm.email()"/>
     <app-form-text-input label="Phone number : " id="PhoneNumber" [field]="customerForm.phoneNumber" [fieldState]="customerForm.phoneNumber()"/>
     <app-form-text-input label="Address : " id="Address" [field]="customerForm.address" [fieldState]="customerForm.address()"/>
     <app-form-text-input label="City : " id="City" [field]="customerForm.city" [fieldState]="customerForm.city()"/>
@@ -12,7 +12,10 @@
     <app-form-date-input label="Birthdate : " id="Birthdate" [field]="customerForm.birthDate" [fieldState]="customerForm.birthDate()"/>
     <app-form-checkbox-input label="Allow marketing : " id="AllowMarketing" [field]="customerForm.allowMarketing" [fieldState]="customerForm.allowMarketing()"/>
     
-    <div class="formGroup-Submit">
+    <p class="error-message" [class.active]="displayErrorMessage()">{{ errorMessage }}</p>
+
+    <div class="form-group-submit">
         <input type="submit" value="Create" [disabled]="customerForm().invalid()"/>
     </div>
+
 </form>
