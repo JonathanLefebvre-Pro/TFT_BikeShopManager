@@ -1,15 +1,19 @@
 @use 'reset.scss';
 @use 'variables.scss' as *;
 
-/* You can add global styles to this file, and also import other style files */
 html,
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  font-family: "Assistant", sans-serif;
+  font-family: $primary-font-family, sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  font-size: 16px;
 }
 
 :root {
   --primary-icon-color: #{$primary-icon-color};
+  --primary-font-family: #{$primary-font-family};
 }

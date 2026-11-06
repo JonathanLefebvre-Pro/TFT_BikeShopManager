@@ -15,6 +15,7 @@ import { matEmail, matLock } from '@ng-icons/material-icons/baseline';
 })
 export class LoginPanel {
 
+  protected readonly displayErrorMessage = signal<boolean>(false);
   protected onConnectButtonClicked = output<{login: string, password: string}>();
 
   private readonly INITIAL_MODEL = {
@@ -38,4 +39,11 @@ export class LoginPanel {
       }
     }
   });
+
+  public DisplayErrorMessage() {
+    this.displayErrorMessage.set(true);
+  }
+  public HideErrorMessage() {
+    this.displayErrorMessage.set(false);
+  }
 }
