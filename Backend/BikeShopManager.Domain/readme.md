@@ -1,0 +1,4 @@
+## Project : Domain
+
+Directories :
+- Entities

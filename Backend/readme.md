@@ -1,44 +1,34 @@
-# 🎯 Projet DotNet 10 : API REST Sécurisée (Thème Libre)
+__Subprojects :__
+1. BikeShopManager.WebApi (Startup project)
+    - [Details du projet](./BikeShopManager.WebApi/readme.md)
+2. BikeShopManager.Infrastruture
+    - [Details du projet](./BikeShopManager.Infrastructure/readme.md)
+    - [Database description](./BikeShopManager.Infrastructure/Database/readme.md)
+3. BikeShopManager.Infrastructure.Test
+    - [Details du projet](./BikeShopManager.Infrastructure.Test/readme.md)
+4. BikeShopManager.AppCore
+    - [Details du projet](./BikeShopManager.AppCore/readme.md)
+5. BikeShopManager.Domain
+    - [Details du projet](./BikeShopManager.Domain/readme.md)
 
-## 📌 Contexte du Projet
+## 📋 Fonctionnalitées
 
-Développer une **API REST** complète avec authentification JWT sécurisée pour un domaine métier de votre choix. Le sujet doit permettre la gestion de ressources, d'utilisateurs avec différents rôles, et favoriser les interactions entre utilisateurs.
+### En cours de développement
+1. Gestion des clients
+2. Gestion des utilisateurs (employés), des roles et permissions
 
-### 🎨 Thème
-- Plateforme de gestion commerciale d'un magasin de vélo
+### A développer
+1. Gestion du stock
+2. Gestion des commandes
+3. __**Fonctionnalitée a définir**__
 
----
-
-## 📋 Exigences Fonctionnelles
-
-Le projet doit comporter au minimum 5 fonctionnalités majeurs liées à votre thème :
-
-### Fonctionnalité 1
-Gestion des clients
-
-### Fonctionnalité 2
-Gestion des utilisateurs (employés) et des roles
-
-### Fonctionnalité 3
-Gestion du stock
-
-### Fonctionnalité 4
-Gestion des commandes
-
-### Fonctionnalité 5
-Description générale des interactions/relations entre utilisateurs et ressources
-
----
-
-## 🗄️ Structure de Base de Données
+## 🗄️ Base de Données
 
 ### Exigences minimales
 - **5 tables minimum** (hors tables de jointure)
 - Clés primaires et étrangères appropriées
 - Timestamps (CreatedDate, UpdatedDate)
 - Soft deletes ou archivage si pertinent
-
----
 
 ## 🔐 Sécurité
 
@@ -61,8 +51,6 @@ Description générale des interactions/relations entre utilisateurs et ressourc
 - Validation des entrées
 - Logs d'audit
 
----
-
 ## 🚀 Endpoints REST
 
 ### Exigences minimales
@@ -71,8 +59,6 @@ Description générale des interactions/relations entre utilisateurs et ressourc
 - Tri et recherche
 - Codes HTTP appropriés
 - Réponses JSON cohérentes
-
----
 
 ## 📦 Architecture Technique
 
