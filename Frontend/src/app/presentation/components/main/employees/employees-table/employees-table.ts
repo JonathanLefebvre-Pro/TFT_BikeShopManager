@@ -10,6 +10,7 @@ import { Employee } from '@/app/domain/employee';
 })
 export class EmployeesTable {
   public readonly employees = input.required<Employee[]>();
+  public readonly authUser = input<Employee | null>();
   public readonly currentPageNumber = input.required<number>();
   public readonly maxPagesNumber = input.required<number>();
 

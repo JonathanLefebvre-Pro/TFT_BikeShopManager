@@ -40,12 +40,6 @@ export class AuthService implements IAuthRepository {
         );
         return this.refresh$;
     }
-    //Old version
-    /*public refreshToken(): Observable<TokenResponseDto> {
-        const url:string = `${this.baseUrl}/${"api/Auth/RefreshAsync"}`;
-        return this.http.post<TokenResponseDto>(url, {}, { withCredentials: true })
-        .pipe(tap((res) => this._accessToken.set(res.accessToken)));
-    }*/
     public logout(): Observable<HttpResponse<Object>> {
         const url:string = `${this.baseUrl}/${"api/Auth/LogoutAsync"}`;
         return this.http.post<HttpResponse<Object>>(url, {}, { withCredentials: true })
