@@ -15,4 +15,5 @@ public interface IEmployeeRepository
     Task<bool> UpdateEmployee(int id, Employee employee);
     Task<bool> UpdateEmployeePassword(int id, string passwordHash, string securityStamp);
     Task<bool> IsEmployeeExist(int id);
+    Task<bool> UpdateEmployeeSecurityStamp(int id, string securityStamp);
 }

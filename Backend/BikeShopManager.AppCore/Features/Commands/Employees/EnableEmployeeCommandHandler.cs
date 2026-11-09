@@ -17,11 +17,19 @@ public class EnableEmployeeCommandHandler(
         if (!isEmployeeExist)
             return Result.Failure(EmployeeError.NotFound);
 
-        bool result = await EmployeeRepository.EnableEmployee(command.Id);
-
-        //TODO : Replace SecurityStamp and Revoke all tokens
+        //Replace SecurityStamp
         string securityStamp = SecurityStampExtension.GenerateSecurityStamp();
+        bool isSecurityStampUpdated = await EmployeeRepository.UpdateEmployeeSecurityStamp(
+            command.Id,
+            securityStamp
+        );
+        if (!isSecurityStampUpdated)
+            Result.Failure(EmployeeError.NotEnabled);
+
+        //Revoke all tokens
         await AuthRepository.RevokeAllActiveTokensAsync(command.Id);
+
+        bool result = await EmployeeRepository.EnableEmployee(command.Id);
 
         return result ? Result.Success() : Result.Failure(EmployeeError.NotEnabled);
     }
