@@ -43,7 +43,9 @@ export class EmployeesListPage implements OnInit {
   }
 
   protected handleEnableEmployee(employeeId: number) {
-    this.employeeService.enableEmployee(employeeId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.employeeService.enableEmployee(employeeId)
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res.status));
         this.init();
@@ -54,13 +56,15 @@ export class EmployeesListPage implements OnInit {
     });
   }
   protected handleDisableEmployee(employeeId: number) {
-    this.employeeService.disableEmployee(employeeId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.employeeService.disableEmployee(employeeId)
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res.status));
         this.init();
       },
       error(error) {
-        console.error("Error" + error);
+        console.error("Error" + JSON.stringify(error));
       },
     });
   }

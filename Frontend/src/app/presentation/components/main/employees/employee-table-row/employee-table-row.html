@@ -1,32 +1,29 @@
-<tr>
+<tr (click)="handleDisplayDetails()">
     <th scope="row">{{employee().id}}</th>
     <td>{{employee().user.firstName | emptyStringPlaceholder}}</td>
     <td>{{employee().user.lastName | emptyStringPlaceholder}}</td>
     <td>{{employee().user.email | emptyStringPlaceholder}}</td>
-    <td>{{employee().user.phoneNumber | emptyStringPlaceholder}}</td>
-    <td>{{employee().user.address | emptyStringPlaceholder}}</td>
-    <td>{{employee().user.city | emptyStringPlaceholder}}</td>
-    <td>{{employee().user.zipCode | emptyStringPlaceholder}}</td>
-    <td>{{employee().user.country | emptyStringPlaceholder}}</td>
-    <td>{{employee().user.birthDate | date:'dd/MM/yyyy' | emptyStringPlaceholder}}</td>
-    
     <td><input type="checkbox" disabled [checked]="employee().isActive"/></td>
-
-    <td>{{employee().hiredAt  | date:'dd/MM/yyyy' | emptyStringPlaceholder}}</td>
-    <td>{{employee().contractEndAt  | date:'dd/MM/yyyy' | emptyStringPlaceholder}}</td>
-
     <td>{{employee().role.name| emptyStringPlaceholder}}</td>
 
     <td class="actionButtons">
         <div>
             @if(employee().isActive)
             {
-                <button type="button" class="disable" [disabled]="isEditModeEnabled()" (click)="handleDisableEmployee()">
-                    Disable
+                <button 
+                type="button" 
+                class="disable" 
+                [disabled]="isEditModeEnabled()" 
+                (click)="handleDisableEmployee($event)">
+                    <ng-icon name="matNoAccounts" />
                 </button>
             }@else {
-                <button type="button" class="enable" [disabled]="isEditModeEnabled()" (click)="handleEnableEmployee()">
-                    Enable
+                <button 
+                type="button" 
+                class="enable" 
+                [disabled]="isEditModeEnabled()" 
+                (click)="handleEnableEmployee($event)">
+                    <ng-icon name="matAccountCircle" />
                 </button>
             }
         </div>
@@ -34,9 +31,56 @@
         <div>
             <button type="button" class="edit" 
             [disabled]="isEditModeEnabled() || !employee().isActive" 
-            (click)="handleEditEmployee()">
-                Edit
+            (click)="handleEditEmployee($event)">
+                <ng-icon name="matEdit" />
             </button>
         </div>
     </td>
 </tr>
+@if(displayDetails()) {
+    <div class="details">
+        <label>Phone Number : 
+            <span>
+                {{employee().user.phoneNumber | emptyStringPlaceholder}}
+            </span>
+        </label>
+        <label>Address : 
+            <span>
+                {{employee().user.address | emptyStringPlaceholder}}
+            </span>
+        </label>
+        <label>City : 
+            <span>
+                {{employee().user.city | emptyStringPlaceholder}}
+            </span>
+        </label>
+        <label>Zip Code : 
+            <span>
+                {{employee().user.zipCode | emptyStringPlaceholder}}
+            </span>
+        </label>
+        <label>Country :
+            <span>    
+                {{employee().user.country | emptyStringPlaceholder}}
+            </span> 
+        </label>
+        <label>Birthdate :
+            <span>    
+                {{employee().user.birthDate | date:'dd/MM/yyyy' | emptyStringPlaceholder}}
+            </span> 
+        </label>
+        <label>Allow Marketing : 
+            <input type="checkbox" disabled [checked]="employee().user.allowMarketing"/>
+        </label>
+        <label>Hired Date : 
+            <span>
+                {{employee().hiredAt  | date:'dd/MM/yyyy' | emptyStringPlaceholder}}
+            </span>
+        </label>
+        <label>Contract End Date : 
+            <span>
+                {{employee().contractEndAt  | date:'dd/MM/yyyy' | emptyStringPlaceholder}}
+            </span>
+        </label>
+    </div>
+}

@@ -25,16 +25,8 @@ export class CustomersTable {
     '#',
     'FirstName', 
     'LastName', 
-    'Email'
-    /*, 'PhoneNumber', 
-    'Address', 
-    'City', 
-    'ZipCode', 
-    'Country', 
-    'BirthDate', 
-    'AllowMarketing'*/, 
+    'Email',
     'IsActive',
-    /* 'VatNumber',*/ 
     'Actions'
   ];
   protected readonly headers = signal<string[]>([...this.INITIAL_HEADERS]);

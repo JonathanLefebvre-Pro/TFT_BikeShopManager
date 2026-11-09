@@ -28,6 +28,7 @@ tr {
         flex-direction: row;
         justify-content: start;
         align-items: center;
+        gap: 0.25rem;
     }
 
     .edit, .save, .disable, .enable {

@@ -12,9 +12,10 @@
             @for (employee of employees(); track employee.id) {
                 <app-employee-table-row #employeeTableRow
                 [employee]="employee" 
-                (onEnableEmployeeEvent)="handleEmployeeEnable($event)"
-                (onDisableEmployeeEvent)="handleEmployeeDisable($event)"
-                (onEditEmployeeEvent)="handleEmployeeEdit($event)"/>
+                (onEnableEmployeeEvent)="handleEnableEmployee($event)"
+                (onDisableEmployeeEvent)="handleDisableEmployee($event)"
+                (onEditEmployeeEvent)="handleEditEmployee($event)"
+                (onDisplayDetailsEmployeeEvent)="handleDisplayEmployeeDetails($event)"/>
             }
         }
         @placeholder {
@@ -29,9 +30,9 @@
     </tbody>
     <tfoot class="employeeTableFooter">
         @if(maxPagesNumber() > 0){
-            <input type="button" value="<" (click)="handlePreviousPage()"/>
+            <input type="button" value="<" (click)="handleToPreviousPage()"/>
             {{currentPageNumber()}}/{{maxPagesNumber()}}
-            <input type="button" value=">" (click)="handleNextPage()"/>
+            <input type="button" value=">" (click)="handleToNextPage()"/>
         }
     </tfoot>
 </table>

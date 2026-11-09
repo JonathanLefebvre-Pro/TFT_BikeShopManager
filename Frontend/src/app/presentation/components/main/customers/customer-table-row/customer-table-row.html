@@ -9,11 +9,19 @@
         <div>
             @if(customer().isActive)
             {
-                <button type="button" class="disable" [disabled]="isEditModeEnabled()" (click)="handleDisableCustomer()">
+                <button 
+                type="button" 
+                class="disable" 
+                [disabled]="isEditModeEnabled()" 
+                (click)="handleDisableCustomer($event)">
                     <ng-icon name="matNoAccounts" />
                 </button>
             }@else {
-                <button type="button" class="enable" [disabled]="isEditModeEnabled()" (click)="handleEnableCustomer()">
+                <button 
+                type="button" 
+                class="enable" 
+                [disabled]="isEditModeEnabled()" 
+                (click)="handleEnableCustomer($event)">
                     <ng-icon name="matAccountCircle" />
                 </button>
             }
@@ -22,7 +30,7 @@
         <div>
             <button type="button" class="edit" 
             [disabled]="isEditModeEnabled() || !customer().isActive" 
-            (click)="handleEditCustomer()">
+            (click)="handleEditCustomer($event)">
                 <ng-icon name="matEdit" />
             </button>
         </div>

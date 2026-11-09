@@ -27,15 +27,21 @@ export class CustomerTableRow implements OnChanges {
     this.isEditModeEnabled.set(false);
   }
 
-  protected handleEnableCustomer() {
+  protected handleEnableCustomer(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
     this.onEnableCustomerEvent.emit(this.customer().id);
   }
 
-  protected handleDisableCustomer() {
+  protected handleDisableCustomer(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
     this.onDisableCustomerEvent.emit(this.customer().id);
   }
 
-  protected handleEditCustomer() {
+  protected handleEditCustomer(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
     this.isEditModeEnabled.set(true);
     this.onEditCustomerEvent.emit(this.customer().id);
   }
