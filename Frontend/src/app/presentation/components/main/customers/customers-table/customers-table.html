@@ -12,9 +12,10 @@
             @for (customer of customers(); track customer.id) {
                 <app-customer-table-row #customerTableRow
                 [customer]="customer" 
-                (onEnableCustomerEvent)="handleCustomerEnable($event)"
-                (onDisableCustomerEvent)="handleCustomerDisable($event)"
-                (onEditCustomerEvent)="handleCustomerEdit($event)"/>
+                (onEnableCustomerEvent)="handleEnableCustomer($event)"
+                (onDisableCustomerEvent)="handleDisableCustomer($event)"
+                (onEditCustomerEvent)="handleEditCustomer($event)"
+                (onDisplayDetailsCustomerEvent)="handleDisplayCustomerDetails($event)"/>
             }
         }
         @placeholder {
@@ -29,9 +30,9 @@
     </tbody>
     <tfoot>
         @if(maxPagesNumber() > 0){
-            <input type="button" value="<" (click)="handlePreviousPage()"/>
+            <input type="button" value="<" (click)="handleToPreviousPage()"/>
             {{currentPageNumber()}}/{{maxPagesNumber()}}
-            <input type="button" value=">" (click)="handleNextPage()"/>
+            <input type="button" value=">" (click)="handleToNextPage()"/>
         }
     </tfoot>
 </table>

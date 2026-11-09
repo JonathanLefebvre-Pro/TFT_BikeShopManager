@@ -6,8 +6,13 @@
 
 tr {
     display: grid;
-    grid-template-columns: 0.5rem repeat(13, minmax(0, 1fr));
+    grid-template-columns: 0.5rem repeat(5, minmax(0, 1fr));
     gap: 1rem;
+    max-height: 50px;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    margin-right: 0.4rem;
+    margin-left: 0.4rem;
 
     th, td {
         display: flex;
@@ -20,18 +25,21 @@ tr {
 
     td.actionButtons {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: start;
+        align-items: center;
     }
 
     .edit, .save, .disable, .enable {
-        margin: 0.5rem;
         border: none;
         color: rgb(220, 220, 220);
         border-radius: 0.5rem;
-        padding: 0.5rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        min-width: 90px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
     }
 
     .edit {
@@ -56,5 +64,17 @@ tr {
 
     .edit:hover, .disable:hover, .enable:hover {
         background-color: rgb(105, 105, 105);
+    }
+}
+
+.details {
+    background-color: rgb(211, 211, 211);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+
+    label span {
+        color: rgb(105, 105, 105);
+        font-size: 0.85rem;
     }
 }

@@ -28,7 +28,7 @@ export class CustomersListPage implements OnInit {
   protected readonly pageNumber = signal<number>(0);
   protected readonly hasNextPage = signal<boolean>(false);
   protected readonly hasPreviousPage = signal<boolean>(false);
-  protected readonly pageSize: number = 2;
+  protected readonly pageSize: number = 3;
 
   protected readonly customersTableElement = viewChild(CustomersTable);
 

@@ -8,8 +8,8 @@
 }
 
 
-app-customer-table-row:nth-child(even) {
-    background-color: rgba(0, 0, 255, 0.103);
+app-customer-table-row:nth-child(odd) {
+    background-color: rgba(140, 140, 255, 0.144);
 }
 
 app-customer-table-row:hover {
@@ -25,12 +25,14 @@ table {
     thead {
         display: flex;
         flex-direction: row;
-        margin: 0.2rem;
-        margin-top: 0.4rem;
+        padding-bottom: 0.2rem;
+        padding-top: 0.2rem;
+        padding-right: 0.4rem;
+        padding-left: 0.4rem;
 
         tr {
             display: grid;
-            grid-template-columns: 0.5rem repeat(13, minmax(0, 1fr));
+            grid-template-columns: 0.5rem repeat(5, minmax(0, 1fr));
             flex: 1;
             gap: 1rem;
             
@@ -46,15 +48,16 @@ table {
         display: flex;
         flex-direction: column;
         background-color: rgb(204, 204, 204);
-        margin: 1rem;
-        margin: 0.2rem;
+        padding-bottom: 0.2rem;
+        padding-top: 0.2rem;
     }
 
     tfoot {
         display: flex;
         flex-direction: row;
         justify-content: center;
-        margin: 0.3rem;
+        padding-bottom: 0.2rem;
+        padding-top: 0.2rem;
         gap: 1rem;
         align-items: center;
     }

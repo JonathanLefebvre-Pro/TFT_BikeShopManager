@@ -1,30 +1,20 @@
-<tr>
+<tr (click)="handleDisplayDetails()">
     <th scope="row">{{customer().id}}</th>
     <td>{{customer().user.firstName | emptyStringPlaceholder}}</td>
     <td>{{customer().user.lastName | emptyStringPlaceholder}}</td>
     <td>{{customer().user.email | emptyStringPlaceholder}}</td>
-    <td>{{customer().user.phoneNumber | emptyStringPlaceholder}}</td>
-    <td>{{customer().user.address | emptyStringPlaceholder}}</td>
-    <td>{{customer().user.city | emptyStringPlaceholder}}</td>
-    <td>{{customer().user.zipCode | emptyStringPlaceholder}}</td>
-    <td>{{customer().user.country | emptyStringPlaceholder}}</td>
-    <td>{{customer().user.birthDate | date:'dd/MM/yyyy' | emptyStringPlaceholder}}</td>
-    
-    <td><input type="checkbox" disabled [checked]="customer().user.allowMarketing"/></td>
     <td><input type="checkbox" disabled [checked]="customer().isActive"/></td>
-
-    <td>{{customer().vatNumber | emptyStringPlaceholder}}</td>
 
     <td class="actionButtons">
         <div>
             @if(customer().isActive)
             {
                 <button type="button" class="disable" [disabled]="isEditModeEnabled()" (click)="handleDisableCustomer()">
-                    Disable
+                    <ng-icon name="matNoAccounts" />
                 </button>
             }@else {
                 <button type="button" class="enable" [disabled]="isEditModeEnabled()" (click)="handleEnableCustomer()">
-                    Enable
+                    <ng-icon name="matAccountCircle" />
                 </button>
             }
         </div>
@@ -33,8 +23,50 @@
             <button type="button" class="edit" 
             [disabled]="isEditModeEnabled() || !customer().isActive" 
             (click)="handleEditCustomer()">
-                Edit
+                <ng-icon name="matEdit" />
             </button>
         </div>
     </td>
 </tr>
+@if(displayDetails()) {
+    <div class="details">
+        <label>Phone Number : 
+            <span>
+                {{customer().user.phoneNumber | emptyStringPlaceholder}}
+            </span>
+        </label>
+        <label>Address : 
+            <span>
+                {{customer().user.address | emptyStringPlaceholder}}
+            </span>
+        </label>
+        <label>City : 
+            <span>
+                {{customer().user.city | emptyStringPlaceholder}}
+            </span>
+        </label>
+        <label>Zip Code : 
+            <span>
+                {{customer().user.zipCode | emptyStringPlaceholder}}
+            </span>
+        </label>
+        <label>Country :
+            <span>    
+                {{customer().user.country | emptyStringPlaceholder}}
+            </span> 
+        </label>
+        <label>Birthdate :
+            <span>    
+                {{customer().user.birthDate | date:'dd/MM/yyyy' | emptyStringPlaceholder}}
+            </span> 
+        </label>
+        <label>Allow Marketing : 
+            <input type="checkbox" disabled [checked]="customer().user.allowMarketing"/>
+        </label>
+        <label>VAT Number : 
+            <span>
+                {{customer().vatNumber | emptyStringPlaceholder}}
+            </span>
+        </label>
+    </div>
+}
