@@ -1,3 +1,4 @@
+import { RoleReturnDto } from '@/app/appCore/dtos/roles/roleReturnDto';
 import { UserRoles } from '@/app/appCore/enum/role-enum';
 import { AuthUserService } from '@/app/infrastructure/services/auth-user-service';
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
@@ -14,7 +15,7 @@ export class EmployeesPage implements OnInit {
 
   protected readonly authUserService = inject(AuthUserService);
   protected readonly destroyRef = inject(DestroyRef);
-  protected readonly roleId = signal<number>(-1);
+  protected readonly role = signal<RoleReturnDto | null>(null);
 
   protected UserRolesEnum = UserRoles;
 
@@ -24,11 +25,15 @@ export class EmployeesPage implements OnInit {
     .subscribe({
       next: (res) => {
         //console.log('Role : ', res);
-        this.roleId.set(res.id);
+        this.role.set(res);
       },
       error: (err) => {
         console.error('Get AuthUser Role Error : ', err);
       }
     });
+  }
+
+  protected hasAnyRoles(roles: UserRoles[]) {
+    return roles.includes(this.role()?.id as UserRoles);
   }
 }

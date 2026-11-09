@@ -40,11 +40,13 @@ export class AuthService implements IAuthRepository {
         );
         return this.refresh$;
     }
+
     public logout(): Observable<HttpResponse<Object>> {
         const url:string = `${this.baseUrl}/${"api/Auth/LogoutAsync"}`;
         return this.http.post<HttpResponse<Object>>(url, {}, { withCredentials: true })
         .pipe(finalize(() => this.clearSession()));
     }
+    
     public clearSession(): void {
         this._accessToken.set(null);
         this.routerService.navigate(['/']);

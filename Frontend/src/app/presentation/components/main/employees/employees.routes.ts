@@ -3,26 +3,30 @@ import { EmployeesListPage } from "./pages/employees-list-page/employees-list-pa
 import { EmployeesEditPage } from "./pages/employees-edit-page/employees-edit-page";
 import { EmployeesAddPage } from "./pages/employees-add-page/employees-add-page";
 import { EmployeeProfilePage } from "./pages/employee-profile-page/employee-profile-page";
+import { RoleGuard } from "@/app/infrastructure/guards/RoleGuards";
 
 export const routes: Routes = [
     {
         path: 'list',
         component: EmployeesListPage,
-        //TODO : Add a guard that check if the user has the right to display the list
+        canActivate: [RoleGuard],
+        data: {roles : ['Admin', 'Manager', 'Seller']}
     },
     {
         path: 'edit/:id',
         component: EmployeesEditPage,
-        //TODO : Add a guard that check if the user has the right to edit
+        canActivate: [RoleGuard],
+        data: {roles : ['Admin', 'Manager']}
     },
     {
         path: 'add',
         component: EmployeesAddPage,
-         //TODO : Add a guard that check if the user has the right to add
+        canActivate: [RoleGuard],
+        data: {roles : ['Admin']}
     },
     {
         path: 'profile',
-        component: EmployeeProfilePage,
+        component: EmployeeProfilePage
     },
     {
         path: '',
