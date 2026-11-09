@@ -15,6 +15,7 @@ import { matAccountCircle, matEdit, matNoAccounts } from '@ng-icons/material-ico
 export class EmployeeTableRow implements OnChanges {
   
   public employee = input.required<Employee>();
+  public readonly disableActivationButton = input<boolean>(false);
   protected isEditModeEnabled = signal<boolean>(false);
   protected displayDetails = signal<boolean>(false);
 

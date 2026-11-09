@@ -13,7 +13,7 @@
                 <button 
                 type="button" 
                 class="disable" 
-                [disabled]="isEditModeEnabled()" 
+                [disabled]="isEditModeEnabled() || disableActivationButton()" 
                 (click)="handleDisableEmployee($event)">
                     <ng-icon name="matNoAccounts" />
                 </button>
@@ -21,7 +21,7 @@
                 <button 
                 type="button" 
                 class="enable" 
-                [disabled]="isEditModeEnabled()" 
+                [disabled]="isEditModeEnabled() || disableActivationButton()" 
                 (click)="handleEnableEmployee($event)">
                     <ng-icon name="matAccountCircle" />
                 </button>
