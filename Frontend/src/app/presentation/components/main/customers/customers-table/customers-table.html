@@ -7,25 +7,15 @@
         </tr>
     </thead>
     <tbody>
-        @defer(when isLoading())
-        {
-            @for (customer of customers(); track customer.id) {
-                <app-customer-table-row #customerTableRow
-                [customer]="customer" 
-                (onEnableCustomerEvent)="handleEnableCustomer($event)"
-                (onDisableCustomerEvent)="handleDisableCustomer($event)"
-                (onEditCustomerEvent)="handleEditCustomer($event)"
-                (onDisplayDetailsCustomerEvent)="handleDisplayCustomerDetails($event)"/>
-            }
-        }
-        @placeholder {
-            <p>Customers are loading !</p>
-        }
-        @loading(after 100ms; minimum 1s) {
-            <p>Customers are loading !</p>
-        }
-        @error {
-            <div>Loading error !</div>
+        @for (customer of customers(); track customer.id) {
+            <app-customer-table-row #customerTableRow
+            [customer]="customer" 
+            (onEnableCustomerEvent)="handleEnableCustomer($event)"
+            (onDisableCustomerEvent)="handleDisableCustomer($event)"
+            (onEditCustomerEvent)="handleEditCustomer($event)"
+            (onDisplayDetailsCustomerEvent)="handleDisplayCustomerDetails($event)"/>
+        }@empty {
+            <p>{{errorMessage()}}</p>
         }
     </tbody>
     <tfoot>

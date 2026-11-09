@@ -20,6 +20,9 @@ export class EmployeesTable {
   public onNextPageEvent = output();
   public onPreviousPageEvent = output();
 
+  private readonly defaultErrorMessage = "There is nothing to display !";
+  protected readonly errorMessage = signal<string>(this.defaultErrorMessage);
+
   protected readonly employeeTableRowElements = viewChildren(EmployeeTableRow);
 
   private readonly INITIAL_HEADERS : string[] = [
@@ -82,7 +85,17 @@ export class EmployeesTable {
       }
   }
 
+  public SetErrorMessage(message: string) {
+    if(!message)
+    {
+      this.errorMessage.set(this.defaultErrorMessage);
+      return;
+    }
+
+    this.errorMessage.set(message);
+  }
+
   protected isLoading() : boolean {
-    return (this.employees() && this.employees().length > 0);
+    return (!this.employees() || this.employees().length == 0);
   }
 }

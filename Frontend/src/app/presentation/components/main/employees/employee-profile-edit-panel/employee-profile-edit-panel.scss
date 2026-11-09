@@ -15,12 +15,14 @@
 
 h2 {
     font-weight: 700;
+    margin-bottom: 0.5rem;
 }
 
 .edit-employee-password-profile-form {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    max-width: 500px;
 }
 
 .form-group-submit {
@@ -29,7 +31,8 @@ h2 {
     gap: 0.5rem;
 
     input {
-        min-width: 100px;
+        //min-width: 100px;
+        flex: 1;
     }
 }
 

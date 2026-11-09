@@ -50,6 +50,14 @@ table {
         background-color: rgb(204, 204, 204);
         padding-bottom: 0.2rem;
         padding-top: 0.2rem;
+
+        p {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
     }
 
     tfoot {

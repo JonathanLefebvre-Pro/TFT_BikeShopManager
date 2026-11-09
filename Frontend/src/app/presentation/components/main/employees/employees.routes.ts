@@ -8,14 +8,17 @@ export const routes: Routes = [
     {
         path: 'list',
         component: EmployeesListPage,
+        //TODO : Add a guard that check if the user has the right to display the list
     },
     {
         path: 'edit/:id',
         component: EmployeesEditPage,
+        //TODO : Add a guard that check if the user has the right to edit
     },
     {
         path: 'add',
         component: EmployeesAddPage,
+         //TODO : Add a guard that check if the user has the right to add
     },
     {
         path: 'profile',
@@ -23,7 +26,7 @@ export const routes: Routes = [
     },
     {
         path: '',
-        redirectTo: 'list',
+        redirectTo: 'profile',
         pathMatch: 'full'
     }
 ];
