@@ -29,7 +29,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/app/presentation/styles/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/app/presentation/styles"]
+            }
           },
           "configurations": {
             "production": {

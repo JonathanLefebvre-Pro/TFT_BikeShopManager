@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, viewChild } from '@angular/core';
 import { LoginPanel } from '../login-panel/login-panel';
 import { Router } from '@angular/router';
 import { AuthService } from '@/app/infrastructure/services/auth-service';
@@ -11,18 +11,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrl: './login-page.scss',
   templateUrl: './login-page.html',
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
 
   protected routerService = inject(Router);
   private readonly authService = inject(AuthService);
-  protected readonly displayErrorMessage = signal<boolean>(false);
   protected readonly destroyRef = inject(DestroyRef);
-
-  private timeoutId: number = 0;
-
-  public ngOnInit(): void {
-    clearTimeout(this.timeoutId);
-  }
+  protected readonly loginPanelChild = viewChild(LoginPanel);
 
   protected OnLogin(value: {login: string, password: string}) {
 
@@ -34,14 +28,12 @@ export class LoginPage implements OnInit {
 
     this.authService.login(dto).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
-        this.displayErrorMessage.set(false);
+        this.loginPanelChild()?.HideErrorMessage();
         this.routerService.navigate(['/main']);
       },
       error: (error) => {
         //console.error('Error from login page : ',error);
-        //Display error message : Login or password are not valid !
-        this.displayErrorMessage.set(true);
-        this.timeoutId = setTimeout(() => {this.displayErrorMessage.set(false)}, 5000);
+        this.loginPanelChild()?.DisplayErrorMessage();
       },
     });
   }

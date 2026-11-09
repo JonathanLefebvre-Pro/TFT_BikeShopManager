@@ -26,7 +26,7 @@ public static class ConnectionExtension
             .Get<ConnectionStringsOptions>();
 
         builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(
-            connectionStringsOptions?.DefaultConnection
+            connectionStringsOptions?.TechnofuturConnection //.DefaultConnection
         ));
 
         return builder;

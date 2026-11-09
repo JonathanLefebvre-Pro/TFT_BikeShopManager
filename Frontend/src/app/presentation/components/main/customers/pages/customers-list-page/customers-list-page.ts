@@ -28,7 +28,7 @@ export class CustomersListPage implements OnInit {
   protected readonly pageNumber = signal<number>(0);
   protected readonly hasNextPage = signal<boolean>(false);
   protected readonly hasPreviousPage = signal<boolean>(false);
-  protected readonly pageSize: number = 2;
+  protected readonly pageSize: number = 3;
 
   protected readonly customersTableElement = viewChild(CustomersTable);
 
@@ -43,7 +43,9 @@ export class CustomersListPage implements OnInit {
   }
 
   protected handleEnableCustomer(customerId: number) {
-    this.customerService.enableCustomer(customerId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.customerService.enableCustomer(customerId)
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res.status));
         this.init();
@@ -54,7 +56,9 @@ export class CustomersListPage implements OnInit {
     });
   }
   protected handleDisableCustomer(customerId: number) {
-    this.customerService.disableCustomer(customerId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.customerService.disableCustomer(customerId)
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res.status));
         this.init();

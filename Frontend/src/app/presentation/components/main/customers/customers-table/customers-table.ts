@@ -21,24 +21,41 @@ export class CustomersTable {
 
   protected readonly customerTableRowElements = viewChildren(CustomerTableRow);
 
-  private readonly INITIAL_HEADERS : string[] = ['#','FirstName', 'LastName', 'Email', 'PhoneNumber', 
-    'Address', 'City', 'ZipCode', 'Country', 'BirthDate', 'AllowMarketing', 'IsActive', 'VatNumber', 'Actions'];
+  private readonly INITIAL_HEADERS : string[] = [
+    '#',
+    'FirstName', 
+    'LastName', 
+    'Email',
+    'IsActive',
+    'Actions'
+  ];
   protected readonly headers = signal<string[]>([...this.INITIAL_HEADERS]);
 
-  protected handleCustomerEnable(customerId: number){
+  protected handleEnableCustomer(customerId: number){
     this.onEnableCustomerEvent.emit(customerId);
   }
-  protected handleCustomerDisable(customerId: number){
+  protected handleDisableCustomer(customerId: number){
     this.onDisableCustomerEvent.emit(customerId);
   }
-  protected handleCustomerEdit(customerId: number) {
+  protected handleEditCustomer(customerId: number) {
     this.onEditCustomerEvent.emit(customerId);
   }
-  protected handleNextPage() {
+  protected handleToNextPage() {
     this.onNextPageEvent.emit();
   }
-  protected handlePreviousPage() {
+  protected handleToPreviousPage() {
     this.onPreviousPageEvent.emit();
+  }
+  protected handleDisplayCustomerDetails(id: number) {
+    if(this.customerTableRowElements() !== null && 
+      this.customerTableRowElements().length > 0)
+      {
+        for (let index = 0; index < this.customerTableRowElements().length; index++) {
+          const element = this.customerTableRowElements()[index];
+          if(element.customer().id !== id)
+            element.hideDetailsPanel();
+        }
+      }
   }
 
   public notifyEditModeEnabled() {

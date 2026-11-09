@@ -7,20 +7,31 @@
     gap: 2rem;
 }
 
-.employeeTable {
+app-employee-table-row:nth-child(odd) {
+    background-color: rgba(140, 140, 255, 0.144);
+}
+
+app-employee-table-row:hover {
+    background-color: rgb(219, 219, 219);
+}
+
+table {
     display: flex;
     flex-direction: column;
     background-color: grey;
     border-radius: 1rem;
 
-    .employeeTableHead {
+    thead {
         display: flex;
         flex-direction: row;
-        padding: 1rem;
+        padding-bottom: 0.2rem;
+        padding-top: 0.2rem;
+        padding-right: 0.4rem;
+        padding-left: 0.4rem;
 
         tr {
             display: grid;
-            grid-template-columns: 0.5rem repeat(14, minmax(0, 1fr));
+            grid-template-columns: 0.5rem repeat(7, minmax(0, 1fr));
             flex: 1;
             gap: 1rem;
             
@@ -32,18 +43,21 @@
         }
     }
 
-    .employeeTableBody {
+    tbody {
         display: flex;
         flex-direction: column;
         background-color: rgb(204, 204, 204);
-        padding: 1rem;
+        padding-bottom: 0.2rem;
+        padding-top: 0.2rem;
     }
 
-    .employeeTableFooter {
+    tfoot {
         display: flex;
         flex-direction: row;
         justify-content: center;
-        margin: 0.5rem;
+        padding-bottom: 0.2rem;
+        padding-top: 0.2rem;
         gap: 1rem;
+        align-items: center;
     }
 }

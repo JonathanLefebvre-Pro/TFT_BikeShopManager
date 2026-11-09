@@ -1,7 +1,10 @@
+<h1 class="title">Login to your account</h1>
+<p class="subtitle">Enter your email below to login to your account</p>
+
 <form class="form" method="post" [formRoot]="loginForm">
     <div class="input-group">
-        <label for="login">Login :</label>
-        <input id="login" type="email" [formField]="loginForm.login" placeholder="Email"/>
+        <ng-icon name="matEmail"/>
+        <input id="login" type="email" [class.error]="loginForm.login().invalid() && loginForm.login().touched()" [formField]="loginForm.login" placeholder="Email"/>
     </div>
     @if (loginForm.login().invalid() && loginForm.login().touched()) {
         <div class="error">
@@ -12,8 +15,8 @@
     }
 
     <div class="input-group">
-        <label for="password">Password :</label>
-        <input type="password" [formField]="loginForm.password" placeholder="Password"/>
+        <ng-icon name="matLock"/>
+        <input type="password" [class.error]="loginForm.password().invalid() && loginForm.password().touched()" [formField]="loginForm.password" placeholder="Password"/>
     </div>
     @if (loginForm.password().invalid() && loginForm.password().touched()) {
         <div class="error">
@@ -23,5 +26,7 @@
         </div>
     }
 
-    <input type="submit" value="Connect" [disabled]="loginForm().invalid()"/>
+    <p class="global-error-message" [class.active]="displayErrorMessage()">Invalid email or password.</p>
+
+    <input type="submit" value="Login" [disabled]="loginForm().invalid()"/>
 </form>
