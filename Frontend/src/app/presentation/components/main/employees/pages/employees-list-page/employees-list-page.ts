@@ -7,7 +7,6 @@ import { Employee } from '@/app/domain/employee';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthUserService } from '@/app/infrastructure/services/auth-user-service';
-
 @Component({
   imports: [EmployeesTable, EmployeeSearchInput],
   selector: 'app-employees-list-page',
@@ -115,7 +114,7 @@ export class EmployeesListPage implements OnInit {
         this.authUser.set(this.employeeDtoMapper.ToEmployeeEntity(res));
       },
       error: (err) => {
-        console.error(err);
+        //console.error('GetAuthEmployee - Error : ', err);
       }
     });
 
@@ -131,10 +130,9 @@ export class EmployeesListPage implements OnInit {
         this.employees.set(this.employeeDtoMapper.ToEmployeeEntities(res.data));
     },
       error: (err) => {
-        console.error(err);
-        //If the search returned an error (there is no employees related to these keywords, display a empty list !)
+        //console.error('GetEmployees - Error : ', err);
         this.employees.set([]);
       }
     });
-  }
+  }  
 }

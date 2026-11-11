@@ -15,9 +15,9 @@ public class RefreshTokenQueryHandler(
     IEmployeeRoleRepository EmployeeRoleRepository,
     IUserRepository UserRepository,
     IRoleRepository RoleRepository
-) : IQueryHandlerAsync<RefreshTokenQuery, TokenResponse>
+) : IQueryHandlerAsync<RefreshTokenQuery, AuthUser>
 {
-    public async Task<Result<TokenResponse>> HandleAsync(RefreshTokenQuery query)
+    public async Task<Result<AuthUser>> HandleAsync(RefreshTokenQuery query)
     {
         try
         {
@@ -28,7 +28,7 @@ public class RefreshTokenQueryHandler(
                 refreshTokenHash
             );
             if (existingRefreshToken is null)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
             //If the token exist but is not active :
             //  check if the token is not revoked yet : if so revoked it and return unauthorized
@@ -40,7 +40,7 @@ public class RefreshTokenQueryHandler(
                         existingRefreshToken.EmployeeId
                     );
 
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
             }
 
             //Now that we are sur that the token exist and is still active
@@ -50,16 +50,16 @@ public class RefreshTokenQueryHandler(
             );
             //If the employee is null -> Reject
             if (employee is null)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
             //If the employee account is disabled -> Reject
             if (!employee.IsActive)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
             //Get user data by id
             User? user = await UserRepository.GetUserById(employee.UserId);
             if (user is null)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
             //Set employer user data
             employee.User = user;
@@ -68,22 +68,25 @@ public class RefreshTokenQueryHandler(
             int roleId = await EmployeeRoleRepository.GetEmployeeRole(employee.Id);
             Role? role = await RoleRepository.GetRoleById(roleId);
             if (role is null)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
             //Set employee role data
             employee.Role = role;
 
             //The user is verified -> generate a new token
-            TokenResponse accessToken = JwtProvider.GenerateToken(employee);
+            JwtAccessToken jwtAccessToken = JwtProvider.GenerateAccessToken(employee);
+
+            //Generate the refresh token
+            JwtRefreshToken jwtRefreshToken = JwtProvider.GenerateRefreshToken();
 
             //Create a new refreshToken via the jwtProvider service
             //  set the new expiration time
             RefreshToken refreshToken = new RefreshToken()
             {
-                TokenHash = JwtProvider.HashRefreshToken(accessToken.RefreshToken),
+                TokenHash = JwtProvider.HashRefreshToken(jwtRefreshToken.Token),
                 EmployeeId = employee.Id,
                 CreatedAt = DateTime.UtcNow,
-                ExpiresAt = accessToken.RefreshExpireAt,
+                ExpiresAt = jwtRefreshToken.ExpireAt,
             };
 
             //Replace the old token by the new one
@@ -95,9 +98,17 @@ public class RefreshTokenQueryHandler(
             //Store the new refresh token object on DB
             int newRefreshTokenId = await AuthRepository.CreateRefreshToken(refreshToken);
             if (newRefreshTokenId is 0)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
-            return Result<TokenResponse>.Success(accessToken);
+            AuthUser result = new AuthUser()
+            {
+                Id = employee.Id,
+                Role = employee.Role,
+                AccessToken = jwtAccessToken,
+                RefreshToken = jwtRefreshToken,
+            };
+
+            return Result<AuthUser>.Success(result);
         }
         catch (Exception ex)
         {

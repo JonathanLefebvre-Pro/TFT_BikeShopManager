@@ -19,6 +19,9 @@ export class CustomersTable {
   public onNextPageEvent = output();
   public onPreviousPageEvent = output();
 
+  private readonly defaultErrorMessage = "There is nothing to display !";
+  protected readonly errorMessage = signal<string>(this.defaultErrorMessage);
+  
   protected readonly customerTableRowElements = viewChildren(CustomerTableRow);
 
   private readonly INITIAL_HEADERS : string[] = [

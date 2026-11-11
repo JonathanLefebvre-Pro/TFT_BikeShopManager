@@ -1,5 +1,6 @@
 using BikeShopManager.AppCore.Features.Commands.Employees;
 using BikeShopManager.AppCore.Features.Queries.Employees;
+using BikeShopManager.AppCore.Features.Queries.Roles;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.AppCore.Interfaces.Tokens;
@@ -18,9 +19,9 @@ namespace BikeShopManager.WebApi.Controllers
     public class AuthUserController(IDispatcher Dispatcher, IJwtUtilities JwtUtilities)
         : ControllerBase
     {
-        [Route("GetCurrentAsync")]
+        [Route("GetUserAsync")]
         [HttpGet]
-        public async Task<IActionResult> GetCurrentAsync()
+        public async Task<IActionResult> GetUserAsync()
         {
             //Get the employee id from the JWT claims
             int id = JwtUtilities.GetClaimSub(User);
@@ -51,6 +52,23 @@ namespace BikeShopManager.WebApi.Controllers
             );
 
             return this.FromResult(result);
+        }
+
+        [Route("GetRoleAsync")]
+        [HttpGet]
+        public async Task<IActionResult> GetRoleAsync()
+        {
+            //Get the employee id from the JWT claims
+            int id = JwtUtilities.GetClaimSub(User);
+
+            Result<Role> result = await Dispatcher.SendQueryAsync<GetRoleByEmployeeIdQuery, Role>(
+                new GetRoleByEmployeeIdQuery(id)
+            );
+
+            if (result.IsSuccess)
+                return this.Ok(result.Data.ToRoleResponseDto());
+
+            return this.NotFound(result.Error);
         }
     }
 }

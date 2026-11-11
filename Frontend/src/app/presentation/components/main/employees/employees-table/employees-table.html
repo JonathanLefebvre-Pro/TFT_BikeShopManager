@@ -7,26 +7,16 @@
         </tr>
     </thead>
     <tbody class="employeeTableBody">
-        @defer(when isLoading())
-        {
-            @for (employee of employees(); track employee.id) {
-                <app-employee-table-row #employeeTableRow
-                [employee]="employee" 
-                [disableActivationButton]="authUser()?.id === employee.id"
-                (onEnableEmployeeEvent)="handleEnableEmployee($event)"
-                (onDisableEmployeeEvent)="handleDisableEmployee($event)"
-                (onEditEmployeeEvent)="handleEditEmployee($event)"
-                (onDisplayDetailsEmployeeEvent)="handleDisplayEmployeeDetails($event)"/>
-            }
-        }
-        @placeholder {
-            <p>Employees are loading !</p>
-        }
-        @loading(after 100ms; minimum 1s) {
-            <p>Employees are loading !</p>
-        }
-        @error {
-            <div>Loading error !</div>
+        @for (employee of employees(); track employee.id) {
+            <app-employee-table-row #employeeTableRow
+            [employee]="employee" 
+            [disableActivationButton]="authUser()?.id === employee.id"
+            (onEnableEmployeeEvent)="handleEnableEmployee($event)"
+            (onDisableEmployeeEvent)="handleDisableEmployee($event)"
+            (onEditEmployeeEvent)="handleEditEmployee($event)"
+            (onDisplayDetailsEmployeeEvent)="handleDisplayEmployeeDetails($event)"/>
+        }@empty {
+            <p>{{errorMessage()}}</p>
         }
     </tbody>
     <tfoot class="employeeTableFooter">
