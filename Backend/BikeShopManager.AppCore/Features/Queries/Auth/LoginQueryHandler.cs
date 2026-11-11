@@ -9,38 +9,38 @@ using BikeShopManager.Domain.Entities.Auth;
 
 namespace BikeShopManager.AppCore.Features.Queries.Auth;
 
-public class LoginUserQueryHandler(
+public class LoginQueryHandler(
     IAuthRepository AuthRepository,
     IJwtProvider JwtProvider,
     IEmployeeRepository EmployeeRepository,
     IEmployeeRoleRepository EmployeeRoleRepository,
     IUserRepository UserRepository,
     IRoleRepository RoleRepository
-) : IQueryHandlerAsync<LoginUserQuery, TokenResponse>
+) : IQueryHandlerAsync<LoginQuery, AuthUser>
 {
-    public async Task<Result<TokenResponse>> HandleAsync(LoginUserQuery query)
+    public async Task<Result<AuthUser>> HandleAsync(LoginQuery query)
     {
         try
         {
             //Try to authenticate user
             //Check if the user exist by email (login)
-            ExistingUser? existingUser = await UserRepository.GetUserByMail(query.Request.Login);
+            ExistingUser? existingUser = await UserRepository.GetUserByMail(query.Login);
             if (existingUser is null)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
             //Get employee data by user id
             Employee? employee = await EmployeeRepository.GetEmployeeByUserId(existingUser.Id);
             if (employee is null)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
             //If employee account is disabled -> reject
             if (!employee.IsActive)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
             //Get user data by id
             User? user = await UserRepository.GetUserById(employee.UserId);
             if (user is null)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
             //Set employer user data
             employee.User = user;
@@ -49,40 +49,51 @@ public class LoginUserQueryHandler(
             int roleId = await EmployeeRoleRepository.GetEmployeeRole(employee.Id);
             Role? role = await RoleRepository.GetRoleById(roleId);
             if (role is null)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
             //Set employee role data
             employee.Role = role;
 
             //Verify password (check given password with stored password hash in DB)
             bool isPasswordVerified = PasswordHashExtension.VerifyPassword(
-                query.Request.Password,
+                query.Password,
                 employee.PasswordHash
             );
 
             //If password is not valid -> Reject
             if (!isPasswordVerified)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
             //The user is authenticated -> generate a new AccessToken
-            TokenResponse token = JwtProvider.GenerateToken(employee);
+            JwtAccessToken jwtAccessToken = JwtProvider.GenerateAccessToken(employee);
+
+            //Generate the refresh token
+            JwtRefreshToken jwtRefreshToken = JwtProvider.GenerateRefreshToken();
 
             //Create a new RefreshToken object from the one that is returned on the TokenResponse that also contains the AccessToken
             RefreshToken refreshToken = new RefreshToken()
             {
-                TokenHash = JwtProvider.HashRefreshToken(token.RefreshToken),
+                TokenHash = JwtProvider.HashRefreshToken(jwtRefreshToken.Token),
                 EmployeeId = employee.Id,
                 CreatedAt = DateTime.UtcNow,
-                ExpiresAt = token.RefreshExpireAt,
+                ExpiresAt = jwtAccessToken.ExpireAt,
             };
 
             //Store the new RefreshToken object on DB
             int newRefreshTokenId = await AuthRepository.CreateRefreshToken(refreshToken);
             if (newRefreshTokenId is 0)
-                return Result<TokenResponse>.Failure(AuthError.NotAuthorized);
+                return Result<AuthUser>.Failure(AuthError.NotAuthorized);
+
+            AuthUser result = new AuthUser()
+            {
+                Id = employee.Id,
+                Role = employee.Role,
+                AccessToken = jwtAccessToken,
+                RefreshToken = jwtRefreshToken,
+            };
 
             //Return the token response object (contains Access/Refresh tokens)
-            return Result<TokenResponse>.Success(token);
+            return Result<AuthUser>.Success(result);
         }
         catch (Exception ex)
         {

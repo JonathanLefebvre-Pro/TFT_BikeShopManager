@@ -1,8 +1,8 @@
   <nav>
-    @if(role() !== null && hasAnyRoles([UserRolesEnum.Admin, UserRolesEnum.Manager])) {
+    @if(hasAnyRoles([UserRolesEnum.Admin, UserRolesEnum.Manager])) {
       <a [routerLink]="['list']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">List</a>
     }
-    @if(role() !== null && hasAnyRoles([UserRolesEnum.Admin])) {
+    @if(hasAnyRoles([UserRolesEnum.Admin])) {
       <a [routerLink]="['add']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Add</a>
     }
     <a [routerLink]="['profile']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">My Profile</a>

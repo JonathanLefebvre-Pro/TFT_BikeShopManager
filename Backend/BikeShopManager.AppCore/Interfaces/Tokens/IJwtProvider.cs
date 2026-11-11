@@ -4,7 +4,7 @@ namespace BikeShopManager.AppCore.Interfaces.Tokens;
 
 public interface IJwtProvider
 {
-    TokenResponse GenerateToken(Employee employee);
-    string GenerateRefreshToken();
+    JwtAccessToken GenerateAccessToken(Employee employee);
+    JwtRefreshToken GenerateRefreshToken();
     string HashRefreshToken(string token);
 }

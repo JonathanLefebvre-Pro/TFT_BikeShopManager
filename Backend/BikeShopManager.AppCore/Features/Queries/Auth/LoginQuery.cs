@@ -3,4 +3,4 @@ using BikeShopManager.Domain.Entities;
 
 namespace BikeShopManager.AppCore.Features.Queries.Auth;
 
-public record LoginUserQuery(LoginRequest Request) : IQueryDefinition<TokenResponse>;
+public record LoginQuery(string Login, string Password) : IQueryDefinition<AuthUser>;

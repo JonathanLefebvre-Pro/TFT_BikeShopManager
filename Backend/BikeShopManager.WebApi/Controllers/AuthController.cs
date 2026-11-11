@@ -5,7 +5,6 @@ using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos.Auth;
 using BikeShopManager.WebApi.Extensions.Controller;
-using BikeShopManager.WebApi.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeShopManager.WebApi.Controllers
@@ -18,23 +17,27 @@ namespace BikeShopManager.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
         {
-            Result<TokenResponse> result = await Dispatcher.SendQueryAsync<
-                LoginUserQuery,
-                TokenResponse
-            >(new LoginUserQuery(dto.ToLoginRequestEntity()));
+            Result<AuthUser> result = await Dispatcher.SendQueryAsync<LoginQuery, AuthUser>(
+                new LoginQuery(dto.Login, dto.Password)
+            );
 
             if (result.IsFailure)
                 return this.Unauthorized(new { message = "Invalid username or password" });
 
-            this.SetRefreshTokenCookie(result.Data.RefreshToken, result.Data.RefreshExpireAt);
+            this.SetRefreshTokenCookie(
+                result.Data.RefreshToken.Token,
+                result.Data.RefreshToken.ExpireAt
+            );
 
-            AccessTokenResponseDto accessToken = new AccessTokenResponseDto
+            LoginResponseDto response = new LoginResponseDto
             {
-                AccessToken = result.Data.AccessToken,
-                ExpireAt = result.Data.AccessExpireAt,
+                UserId = result.Data.Id,
+                Role = result.Data.Role.Name,
+                AccessToken = result.Data.AccessToken.Token,
+                ExpireAt = result.Data.AccessToken.ExpireAt,
             };
 
-            return Ok(accessToken);
+            return Ok(response);
         }
 
         [Route("RefreshAsync")]
@@ -45,23 +48,27 @@ namespace BikeShopManager.WebApi.Controllers
             if (string.IsNullOrWhiteSpace(refreshToken))
                 return Unauthorized();
 
-            Result<TokenResponse> result = await Dispatcher.SendQueryAsync<
-                RefreshTokenQuery,
-                TokenResponse
-            >(new RefreshTokenQuery(refreshToken));
+            Result<AuthUser> result = await Dispatcher.SendQueryAsync<RefreshTokenQuery, AuthUser>(
+                new RefreshTokenQuery(refreshToken)
+            );
 
             if (result.IsFailure)
                 return this.Unauthorized(new { message = "Invalid refresh token" });
 
-            this.SetRefreshTokenCookie(result.Data.RefreshToken, result.Data.RefreshExpireAt);
+            this.SetRefreshTokenCookie(
+                result.Data.RefreshToken.Token,
+                result.Data.RefreshToken.ExpireAt
+            );
 
-            AccessTokenResponseDto accessToken = new AccessTokenResponseDto
+            RefreshResponseDto response = new RefreshResponseDto
             {
-                AccessToken = result.Data.AccessToken,
-                ExpireAt = result.Data.AccessExpireAt,
+                UserId = result.Data.Id,
+                Role = result.Data.Role.Name,
+                AccessToken = result.Data.AccessToken.Token,
+                ExpireAt = result.Data.AccessToken.ExpireAt,
             };
 
-            return Ok(accessToken);
+            return Ok(response);
         }
 
         [Route("LogoutAsync")]
