@@ -5,39 +5,61 @@ using BikeShopManager.WebApi.Extensions.Cors;
 using BikeShopManager.WebApi.Extensions.Jwt;
 using BikeShopManager.WebApi.Extensions.Seeding;
 using Scalar.AspNetCore;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
 
-builder.Services.AddCorsConfiguration();
-
-builder.Services.AddSeedingOptions();
-builder.Services.AddJwtOptions();
-builder.Services.AddConnectionOptions();
-
-builder.BuildConnectionConfiguration();
-builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices();
-builder.BuildJwtConfiguration();
-builder.Services.AddSeedingServices();
-
-builder.Services.AddControllers();
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference();
+    Log.Information("Starting server.");
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services.AddSerilog(
+        (services, lc) =>
+            lc.ReadFrom.Configuration(builder.Configuration).ReadFrom.Services(services)
+    );
+
+    builder.Services.AddCorsConfiguration();
+
+    builder.Services.AddSeedingOptions();
+    builder.Services.AddJwtOptions();
+    builder.Services.AddConnectionOptions();
+
+    builder.BuildConnectionConfiguration();
+    builder.Services.AddApplicationServices();
+    builder.Services.AddInfrastructureServices();
+    builder.BuildJwtConfiguration();
+    builder.Services.AddSeedingServices();
+
+    builder.Services.AddControllers();
+
+    // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+    builder.Services.AddOpenApi();
+
+    var app = builder.Build();
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.MapOpenApi();
+        app.MapScalarApiReference();
+    }
+
+    app.UseSerilogRequestLogging();
+    app.UseHttpsRedirection();
+    app.UseCors(CorsExtension.AllowedLocalOrigins);
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.MapControllers();
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-app.UseCors(CorsExtension.AllowedLocalOrigins);
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Server terminated unexpectedly.");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
