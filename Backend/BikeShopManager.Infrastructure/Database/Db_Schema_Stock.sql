@@ -198,3 +198,15 @@ VALUES
 ('Stock');
 
 GO
+
+USE TFT_BikeShopManager_WebApi;
+SELECT * FROM Stock.Images;
+SELECT * FROM Stock.BikeUnits;
+SELECT * FROM Stock.Articles;
+SELECT * FROM Stock.BikeModels;
+SELECT * FROM Stock.Categories;
+SELECT * FROM Stock.Locations;
+SELECT * FROM Stock.Brands;
+SELECT * FROM Stock.VatRates;
+
+GO
