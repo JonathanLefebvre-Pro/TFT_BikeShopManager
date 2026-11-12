@@ -6,6 +6,7 @@ using BikeShopManager.AppCore.Interfaces.Repositories;
 using BikeShopManager.AppCore.Interfaces.Tokens;
 using BikeShopManager.Domain.Entities;
 using BikeShopManager.Domain.Entities.Auth;
+using Microsoft.Extensions.Logging;
 
 namespace BikeShopManager.AppCore.Features.Queries.Auth;
 
@@ -15,11 +16,13 @@ public class LoginQueryHandler(
     IEmployeeRepository EmployeeRepository,
     IEmployeeRoleRepository EmployeeRoleRepository,
     IUserRepository UserRepository,
-    IRoleRepository RoleRepository
+    IRoleRepository RoleRepository,
+    ILogger<LoginQueryHandler> Logger
 ) : IQueryHandlerAsync<LoginQuery, AuthUser>
 {
     public async Task<Result<AuthUser>> HandleAsync(LoginQuery query)
     {
+        Logger.LogInformation("Entering login query");
         try
         {
             //Try to authenticate user
@@ -93,10 +96,12 @@ public class LoginQueryHandler(
             };
 
             //Return the token response object (contains Access/Refresh tokens)
+            Logger.LogInformation("Exiting login query");
             return Result<AuthUser>.Success(result);
         }
         catch (Exception ex)
         {
+            Logger.LogError("Error : {Message}", ex.Message);
             return ex;
         }
     }
