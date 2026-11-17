@@ -17,13 +17,8 @@ WORKDIR /src
 COPY ["Backend/BikeShopManager.AppCore/BikeShopManager.AppCore.csproj", "Backend/BikeShopManager.AppCore/"]
 COPY ["Backend/BikeShopManager.Domain/BikeShopManager.Domain.csproj", "Backend/BikeShopManager.Domain/"]
 COPY ["Backend/BikeShopManager.Infrastructure/BikeShopManager.Infrastructure.csproj", "Backend/BikeShopManager.Infrastructure/"]
-COPY ["Backend/BikeShopManager.Infrastructure.Test/BikeShopManager.Infrastructure.Test.csproj", "Backend/BikeShopManager.Infrastructure/"]
 COPY ["Backend/BikeShopManager.WebApi/BikeShopManager.WebApi.csproj", "Backend/BikeShopManager.WebApi/"]
 # Restore dependencies
-RUN dotnet restore "Backend/BikeShopManager.AppCore/BikeShopManager.AppCore.csproj"
-RUN dotnet restore "Backend/BikeShopManager.Domain/BikeShopManager.Domain.csproj"
-RUN dotnet restore "Backend/BikeShopManager.Infrastructure/BikeShopManager.Infrastructure.csproj"
-RUN dotnet restore "Backend/BikeShopManager.Infrastructure.Test/BikeShopManager.Infrastructure.Test.csproj"
 RUN dotnet restore "Backend/BikeShopManager.WebApi/BikeShopManager.WebApi.csproj"
 # Copy all source code and build
 COPY . .

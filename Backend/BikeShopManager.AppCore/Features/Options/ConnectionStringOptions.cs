@@ -11,4 +11,7 @@ public class ConnectionStringsOptions
 
     [Required(AllowEmptyStrings = false)]
     public string TechnofuturConnection { get; set; } = string.Empty;
+
+    [Required(AllowEmptyStrings = false)]
+    public string DockerConnection { get; set; } = string.Empty;
 }
