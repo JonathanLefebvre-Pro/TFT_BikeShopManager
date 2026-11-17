@@ -1,5 +1,6 @@
 using BikeShopManager.AppCore.Extensions.DependencyInjection;
 using BikeShopManager.Infrastructure.Extensions;
+using BikeShopManager.WebApi.Extensions;
 using BikeShopManager.WebApi.Extensions.Connection;
 using BikeShopManager.WebApi.Extensions.Cors;
 using BikeShopManager.WebApi.Extensions.Jwt;
@@ -7,7 +8,10 @@ using BikeShopManager.WebApi.Extensions.Seeding;
 using Scalar.AspNetCore;
 using Serilog;
 
-Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
 try
 {
@@ -26,10 +30,11 @@ try
     builder.Services.AddJwtOptions();
     builder.Services.AddConnectionOptions();
 
-    builder.BuildConnectionConfiguration();
+    builder.BuildVaultConfiguration();
+    await builder.BuildConnectionConfiguration();
     builder.Services.AddApplicationServices();
     builder.Services.AddInfrastructureServices();
-    builder.BuildJwtConfiguration();
+    await builder.BuildJwtConfiguration();
     builder.Services.AddSeedingServices();
 
     builder.Services.AddControllers();

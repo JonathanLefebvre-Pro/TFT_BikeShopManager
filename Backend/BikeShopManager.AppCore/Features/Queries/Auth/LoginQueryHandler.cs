@@ -68,10 +68,10 @@ public class LoginQueryHandler(
                 return Result<AuthUser>.Failure(AuthError.NotAuthorized);
 
             //The user is authenticated -> generate a new AccessToken
-            JwtAccessToken jwtAccessToken = JwtProvider.GenerateAccessToken(employee);
+            JwtAccessToken jwtAccessToken = await JwtProvider.GenerateAccessToken(employee);
 
             //Generate the refresh token
-            JwtRefreshToken jwtRefreshToken = JwtProvider.GenerateRefreshToken();
+            JwtRefreshToken jwtRefreshToken = await JwtProvider.GenerateRefreshToken();
 
             //Create a new RefreshToken object from the one that is returned on the TokenResponse that also contains the AccessToken
             RefreshToken refreshToken = new RefreshToken()
