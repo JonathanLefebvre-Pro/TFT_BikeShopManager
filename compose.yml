@@ -66,26 +66,26 @@ services:
     depends_on:
       bikeshopmanager-db-init:
         condition: service_completed_successfully
-    #   bikeshopmanager-vault:
-    #     condition: service_healthy
+      bikeshopmanager-vault:
+        condition: service_healthy
     networks:
       - bikeshopmanager-network
   
-  # bikeshopmanager-vault:
-  #   container_name: bikeshopmanager-vault
-  #   image: openbao/openbao:latest
-  #   command: server
-  #   ports:
-  #     - 8200:8200
-  #   volumes:
-  #     - ./openbao/config:/openbao/config:ro
-  #     - bikeshopmanager-vault-data:/openbao/file
-  #   environment:
-  #     - BAO_ADDR=http://localhost:8200
-  #   networks:
-  #     - bikeshopmanager-network
-  #   healthcheck:
-  #     test: ["CMD", "bao", "status"]
-  #     interval: 5s
-  #     timeout: 3s
-  #     retries: 20
+  bikeshopmanager-vault:
+    container_name: bikeshopmanager-vault
+    image: openbao/openbao:2.7.2
+    command: server
+    ports:
+      - 8200:8200
+    volumes:
+      - ./openbao/config:/openbao/config:ro
+      - bikeshopmanager-vault-data:/openbao/file
+    environment:
+      - BAO_ADDR=http://localhost:8200
+    networks:
+      - bikeshopmanager-network
+    healthcheck:
+      test: ["CMD", "bao", "status"]
+      interval: 5s
+      timeout: 3s
+      retries: 20

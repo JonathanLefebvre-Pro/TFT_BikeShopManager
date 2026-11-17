@@ -1,0 +1,16 @@
+services:
+  bikeshopmanager-api:
+    image: bikeshopmanager-api:dev
+    build:
+      target: dev
+    command: sleep infinity
+    depends_on: !override
+      bikeshopmanager-db-init: 
+        condition: service_completed_successfully
+    volumes:
+      - .:/workspace
+      - demo-webapp-nuget:/root/.nuget/packages
+
+volumes:
+  bikeshopmanager-nuget:
+    name: bikeshopmanager-nuget

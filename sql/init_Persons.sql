@@ -147,12 +147,15 @@ GO
 
 IF OBJECT_ID(N'Persons.Roles', N'U') IS NOT NULL
 BEGIN
-    INSERT INTO Persons.Roles (Name, NormalizedName)
-    VALUES 
-    ('Admin', 'ADMIN'), 
-    ('Manager', 'MANAGER'), 
-    ('Seller', 'SELLER'), 
-    ('Mechanic', 'MECHANIC');
+    IF(NOT EXISTS(SELECT 1 FROM Persons.Roles))
+    BEGIN
+        INSERT INTO Persons.Roles (Name, NormalizedName)
+        VALUES 
+        ('Admin', 'ADMIN'), 
+        ('Manager', 'MANAGER'), 
+        ('Seller', 'SELLER'), 
+        ('Mechanic', 'MECHANIC');
+    END
 END
 
 GO
