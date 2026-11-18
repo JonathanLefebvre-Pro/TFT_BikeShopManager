@@ -21,7 +21,7 @@ COPY ["Backend/BikeShopManager.WebApi/BikeShopManager.WebApi.csproj", "Backend/B
 # Restore dependencies
 RUN dotnet restore "Backend/BikeShopManager.WebApi/BikeShopManager.WebApi.csproj"
 # Copy all source code and build
-COPY . .
+COPY Backend/ Backend/
 WORKDIR "/src/Backend/BikeShopManager.WebApi"
 RUN dotnet build "BikeShopManager.WebApi.csproj" -c $configuration -o /app/build
 
@@ -36,7 +36,7 @@ RUN dotnet publish "BikeShopManager.WebApi.csproj" -c $configuration -o /app/pub
 # Stage : Dev (DevContainer)
 # --------------------------------------------
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS dev
-WORKDIR /workspace
+WORKDIR /workspaces
 
 # --------------------------------------------
 # Stage 4: Final image
