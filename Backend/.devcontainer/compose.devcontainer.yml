@@ -8,8 +8,8 @@ services:
       bikeshopmanager-db-init: 
         condition: service_completed_successfully
     volumes:
-      - .:/workspace
-      - demo-webapp-nuget:/root/.nuget/packages
+      - ./Backend:/workspaces/backend:cached
+      - bikeshopmanager-nuget:/root/.nuget/packages
 
 volumes:
   bikeshopmanager-nuget:

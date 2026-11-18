@@ -1,0 +1,8 @@
+services:
+  bikeshopmanager-frontend:
+    image: mcr.microsoft.com/devcontainers/typescript-node:5-24-trixie
+    command: sleep infinity
+    volumes:
+      - ./Frontend:/workspaces/frontend:cached
+    networks:
+      - bikeshopmanager-network
