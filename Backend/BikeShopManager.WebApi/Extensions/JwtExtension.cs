@@ -35,7 +35,7 @@ public static class JwtExtension
         IVaultClient vaultClient = serviceProvider.GetRequiredService<IVaultClient>();
         IDictionary<string, object> secrets = await AppCore.Extensions.VaultExtensions.GetSecret(
             vaultClient,
-            "bikeshopmanager-webapp/jwt"
+            "bikeshopmanager/jwt"
         );
         var jwtS = secrets["secret"];
         var jwtI = secrets["issuer"];

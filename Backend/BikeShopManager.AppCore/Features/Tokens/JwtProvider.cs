@@ -27,7 +27,7 @@ public class JwtProvider(IOptions<JwtOptions> Options, IVaultClient VaultClient)
 
         IDictionary<string, object> secrets = await VaultExtensions.GetSecret(
             VaultClient,
-            "bikeshopmanager-webapp/jwt"
+            "bikeshopmanager/jwt"
         );
         var jwtS = secrets["secret"];
         var jwtI = secrets["issuer"];
@@ -81,7 +81,7 @@ public class JwtProvider(IOptions<JwtOptions> Options, IVaultClient VaultClient)
         //int jwtRefreshExpiration = Options.Value.RefreshTokenDays;
         IDictionary<string, object> secrets = await VaultExtensions.GetSecret(
             VaultClient,
-            "bikeshopmanager-webapp/jwt"
+            "bikeshopmanager/jwt"
         );
         var jwtE = secrets["RefreshTokenDays"];
 

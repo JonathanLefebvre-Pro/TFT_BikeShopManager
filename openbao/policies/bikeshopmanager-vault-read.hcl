@@ -1,3 +1,3 @@
-path "secret/data/bikeshopmanager-webapp/*" {
+path "secret/data/bikeshopmanager/*" {
   capabilities = ["read"]
 }

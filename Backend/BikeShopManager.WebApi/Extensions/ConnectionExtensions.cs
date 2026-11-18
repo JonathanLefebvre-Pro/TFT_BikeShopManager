@@ -32,7 +32,7 @@ public static class ConnectionExtension
 
         IDictionary<string, object> secrets = await AppCore.Extensions.VaultExtensions.GetSecret(
             vaultClient,
-            "bikeshopmanager-webapp/db"
+            "bikeshopmanager/db"
         );
         var serverSecret = secrets["server"];
         var databaseSecret = secrets["database"];
