@@ -4,5 +4,7 @@ services:
     build: 
       target: dev
     command: sleep infinity
+    ports: !override
+      - 4200:4200
     volumes:
       - ./Frontend:/workspaces/frontend:cached
