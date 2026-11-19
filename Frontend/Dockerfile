@@ -27,6 +27,7 @@ RUN npm run build
 # --------------------------------------------
 FROM mcr.microsoft.com/devcontainers/typescript-node:5-24-trixie AS dev
 WORKDIR /workspaces
+EXPOSE 4200
 
 # --------------------------------------------
 # Stage 2: Prepare Nginx to Serve Static Files
