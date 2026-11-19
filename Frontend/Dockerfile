@@ -1,6 +1,6 @@
-# =========================================
+# --------------------------------------------
 # Stage 1: Build the Angular Application
-# =========================================
+# --------------------------------------------
 ARG NODE_VERSION=24.15.0
 ARG NGINX_VERSION=alpine3.24-perl
 
@@ -22,10 +22,15 @@ COPY Frontend/ .
 # Build the Angular application
 RUN npm run build
 
-# =========================================
-# Stage 2: Prepare Nginx to Serve Static Files
-# =========================================
+# --------------------------------------------
+# Stage : Dev (DevContainer)
+# --------------------------------------------
+FROM mcr.microsoft.com/devcontainers/typescript-node:5-24-trixie AS dev
+WORKDIR /workspaces
 
+# --------------------------------------------
+# Stage 2: Prepare Nginx to Serve Static Files
+# --------------------------------------------
 FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS final
 
 # Copy custom Nginx config

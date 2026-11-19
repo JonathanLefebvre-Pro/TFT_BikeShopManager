@@ -1,8 +1,8 @@
 services:
-  bikeshopmanager-frontend:
-    image: mcr.microsoft.com/devcontainers/typescript-node:5-24-trixie
+  bikeshopmanager-client:
+    image: bikeshopmanager-client:dev
+    build: 
+      target: dev
     command: sleep infinity
     volumes:
       - ./Frontend:/workspaces/frontend:cached
-    networks:
-      - bikeshopmanager-network
