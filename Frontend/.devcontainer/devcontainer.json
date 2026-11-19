@@ -35,7 +35,7 @@
 	},
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "cd Frontend && npm ci",
+	"postCreateCommand": "npm ci",
 
 	// Configure tool-specific properties.
 	"customizations": {
