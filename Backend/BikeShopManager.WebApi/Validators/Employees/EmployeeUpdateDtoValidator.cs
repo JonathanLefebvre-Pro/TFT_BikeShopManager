@@ -7,8 +7,10 @@ public class EmployeeUpdateDtoValidator : AbstractValidator<EmployeeUpdateDto>
 {
     public EmployeeUpdateDtoValidator()
     {
+        //TODO : Check validation
         RuleFor(dto => dto.HiredAt).Cascade(CascadeMode.Stop);
 
+        //TODO : Check validation
         RuleFor(dto => dto.ContractEndAt).Cascade(CascadeMode.Stop);
 
         RuleFor(dto => dto.FirstName)
@@ -56,7 +58,8 @@ public class EmployeeUpdateDtoValidator : AbstractValidator<EmployeeUpdateDto>
 
         RuleFor(dto => dto.BirthDate).Cascade(CascadeMode.Stop).Must(BeValidDate);
 
-        RuleFor(dto => dto.RoleId).Cascade(CascadeMode.Stop);
+        //TODO : Check validation
+        RuleFor(dto => dto.RoleId).Cascade(CascadeMode.Stop).NotEmpty();
     }
 
     private bool BeValidDate(DateOnly? birthdate)
