@@ -8,6 +8,7 @@ public class EmployeeAddDtoValidator : AbstractValidator<EmployeeAddDto>
     public EmployeeAddDtoValidator()
     {
         //TODO : Check validation
+        //TODO : Check for best practive password validation
         RuleFor(dto => dto.Password).Cascade(CascadeMode.Stop).NotEmpty();
 
         //TODO : Check validation

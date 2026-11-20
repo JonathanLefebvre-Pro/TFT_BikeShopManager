@@ -7,16 +7,17 @@ public class AuthUserUpdatePasswordDtoValidator : AbstractValidator<AuthUserUpda
 {
     public AuthUserUpdatePasswordDtoValidator()
     {
+        //TODO : Check for best practive password validation
         RuleFor(dto => dto.NewPassword)
-        .Cascade(CascadeMode.Stop)
-        .NotEmpty()
-        .MinimumLength(5)
-        .MaximumLength(100);
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty()
+            .MinimumLength(5)
+            .MaximumLength(100);
 
         RuleFor(dto => dto.OldPassword)
-        .Cascade(CascadeMode.Stop)
-        .NotEmpty()
-        .MinimumLength(5)
-        .MaximumLength(100);
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty()
+            .MinimumLength(5)
+            .MaximumLength(100);
     }
 }
