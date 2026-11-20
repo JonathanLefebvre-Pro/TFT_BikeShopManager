@@ -44,6 +44,12 @@ Run `unseal` repeatedly, with a different unseal key each time, until the vault 
 | Unseal Key 5       | `487BomMe0hq1AxIx0davL2LbiFYjqP/y/yaooTuK4WP6`  |
 | Initial Root Token | `s.gn1bj6Q3RYC073vUNCYoZatM`                    |
 
+```bash
+docker compose exec bikeshopmanager-vault bao operator unseal kV99kZi/b/kmPsm/zu6iRXzutrOeWFtnc5PtOrBegEFI
+docker compose exec bikeshopmanager-vault bao operator unseal GJz6OrXwceyYxRFhYZiLfv2riNaOLSwKftTBBoT8YoiJ
+docker compose exec bikeshopmanager-vault bao operator unseal 70mBF3Rj9+frOnF06SdihkY77IvgKsPPTktgaHWC95/8
+```
+
 ### 2. Enable the KV engine
 
 ```bash

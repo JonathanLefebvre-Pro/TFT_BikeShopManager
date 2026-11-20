@@ -1,6 +1,6 @@
 {
-    "/api/*": {
-        "target": "https://localhost:7105",
+    "/api": {
+        "target": "https://bikeshopmanager-api:7105",
         "secure": false,
         "changeOrigin": true,
         "logLevel": "debug"

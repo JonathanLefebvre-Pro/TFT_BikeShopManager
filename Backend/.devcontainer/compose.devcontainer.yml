@@ -4,6 +4,10 @@ services:
     build:
       target: dev
     command: sleep infinity
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports: !override
+      - 127.0.0.1:7105:7105
     depends_on: !override
       bikeshopmanager-db-init: 
         condition: service_completed_successfully
@@ -12,7 +16,12 @@ services:
     volumes:
       - ./Backend:/workspaces/backend:cached
       - bikeshopmanager-nuget:/root/.nuget/packages
-
+  bikeshopmanager-db:
+    ports: !override
+      - 127.0.0.1:1433:1433
+  bikeshopmanager-vault:
+    ports: !override
+      - 127.0.0.1:8200:8200
 volumes:
   bikeshopmanager-nuget:
     name: bikeshopmanager-nuget

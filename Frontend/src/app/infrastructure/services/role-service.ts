@@ -7,15 +7,15 @@ import { Observable } from "rxjs";
 @Service()
 export class RoleService implements IRoleRepository {
 
-    protected readonly baseUrl = 'https://localhost:7105';
+    // protected readonly baseUrl = 'https://localhost:7105';
     readonly http = inject(HttpClient);
 
     getRoles(): Observable<RoleReturnDto[]> {
-        const url:string = `${this.baseUrl}/${"api/Role/GetAsync"}`;
+        const url:string = `/${"api/Role/GetAsync"}`;
         return this.http.get<RoleReturnDto[]>(url);
     }
     getRoleById(id: number): Observable<RoleReturnDto> {
-        const url:string = `${this.baseUrl}/${"api/Role/GetAsync"}/${id}`;
+        const url:string = `/${"api/Role/GetAsync"}/${id}`;
         return this.http.get<RoleReturnDto>(url);
     }
 }

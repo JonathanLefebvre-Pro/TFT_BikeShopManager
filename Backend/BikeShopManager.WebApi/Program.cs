@@ -27,8 +27,8 @@ try
     builder.Services.AddCorsConfiguration();
 
     builder.Services.AddSeedingOptions();
-    builder.Services.AddJwtOptions();
-    builder.Services.AddConnectionOptions();
+    // builder.Services.AddJwtOptions();
+    // builder.Services.AddConnectionOptions();
 
     builder.BuildVaultConfiguration();
     await builder.BuildConnectionConfiguration();

@@ -13,8 +13,6 @@ services:
   bikeshopmanager-db:
     container_name: bikeshopmanager-db
     image: mcr.microsoft.com/mssql/server:2019-latest
-    ports:
-      - 1433:1433
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
@@ -48,13 +46,11 @@ services:
     build: 
       context: .
       dockerfile: Backend/Dockerfile
-    ports:
-      - "7105:7105"
     volumes:
       - ./certs:/https:ro
     environment:
       - ASPNETCORE_URLS=https://+:7105
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
       - DB_HOST=bikeshopmanager-db
@@ -75,8 +71,6 @@ services:
     container_name: bikeshopmanager-vault
     image: openbao/openbao:2.7.2
     command: server
-    ports:
-      - 8200:8200
     volumes:
       - ./openbao/config:/openbao/config:ro
       - bikeshopmanager-vault-data:/openbao/file
@@ -95,6 +89,8 @@ services:
     build:
       context: .
       dockerfile: Frontend/Dockerfile
+    depends_on:
+      - bikeshopmanager-api
     ports:
       - 8080:8080
     networks:
