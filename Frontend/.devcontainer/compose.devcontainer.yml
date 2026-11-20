@@ -4,7 +4,8 @@ services:
     build: 
       target: dev
     command: sleep infinity
+    depends_on: !reset []
     ports: !override
-      - 4200:4200
+      - 8080:4200
     volumes:
       - ./Frontend:/workspaces/frontend:cached
