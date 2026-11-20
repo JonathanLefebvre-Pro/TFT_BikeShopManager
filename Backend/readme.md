@@ -23,3 +23,14 @@
 1. Gestion du stock
 2. Gestion des commandes
 3. __**Fonctionnalitée a définir**__
+
+## Work with DevContainer
+
+1. In VS Code, run **Reopen in Container** (or **Rebuild and Reopen in Container**).
+2. Unseal the Vault
+3. Then start the app with :
+
+```bash
+dotnet watch run --project BikeShopManager.WebApi --no-launch-profile
+```
+4. API : https://localhost:7105/scalar

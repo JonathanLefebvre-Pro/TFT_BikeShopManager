@@ -1,9 +1,9 @@
 {
-  "name": "bike-shop-manager",
+  "name": "bikeshopmanager-client",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 127.0.0.1 --port 4200 --watch --poll 2000",
+    "start": "ng serve --host 0.0.0.0 --port 4200 --watch --poll 2000",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

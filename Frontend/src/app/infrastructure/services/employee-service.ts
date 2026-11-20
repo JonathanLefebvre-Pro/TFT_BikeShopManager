@@ -10,46 +10,46 @@ import { EmployeeUpdateDto } from '@/app/appCore/dtos/employees/employeeUpdateDt
 @Service()
 export class EmployeeService implements IEmployeeRepository {
 
-    protected readonly baseUrl = 'https://localhost:7105';
+    // protected readonly baseUrl = 'https://localhost:7105';
     readonly http = inject(HttpClient);
     
     public getEmployees(pageNumber: number, pageSize: number, keywords: string | null) : Observable<PageResponseDto<EmployeeReturnDto>> {
-        const url:string = `${this.baseUrl}/${"api/Employee/GetAsync"}?keywords=${keywords}&pageNumber=${pageNumber}&pageSize=${pageSize}`;
+        const url:string = `/${"api/Employee/GetAsync"}?keywords=${keywords}&pageNumber=${pageNumber}&pageSize=${pageSize}`;
         return this.http.get<PageResponseDto<EmployeeReturnDto>>(url);
     }
 
     public getEmployeesCount(): Observable<number> {
-        const url:string = `${this.baseUrl}/${"api/Employee/GetCountAsync"}`;
+        const url:string = `/${"api/Employee/GetCountAsync"}`;
         return this.http.get<number>(url);
     }
 
     public getEmployeesByRoleId(id: number): Observable<EmployeeReturnDto[]> {
-        const url:string = `${this.baseUrl}/${"api/Employee/GetByRoleIdAsync"}/${id}`;
+        const url:string = `/${"api/Employee/GetByRoleIdAsync"}/${id}`;
         return this.http.get<EmployeeReturnDto[]>(url);
     }
 
     public getEmployeeById(id: number) : Observable<EmployeeReturnDto> {
-        const url:string = `${this.baseUrl}/${"api/Employee/GetAsync"}/${id}`;
+        const url:string = `/${"api/Employee/GetAsync"}/${id}`;
         return this.http.get<EmployeeReturnDto>(url);
     }
 
     public addEmployee(Employee: EmployeeAddDto) : Observable<number> {
-        const url:string = `${this.baseUrl}/${"api/Employee/AddAsync"}`;
+        const url:string = `/${"api/Employee/AddAsync"}`;
         return this.http.post<number>(url, Employee);
     }
 
     public disableEmployee(id: number): Observable<HttpResponse<Object>> {
-       const url:string = `${this.baseUrl}/${"api/Employee/DisableAsync"}/${id}`;
+       const url:string = `/${"api/Employee/DisableAsync"}/${id}`;
        return this.http.patch(url, null, { observe: 'response' });
     }
 
     public enableEmployee(id: number): Observable<HttpResponse<Object>> {
-       const url:string = `${this.baseUrl}/${"api/Employee/EnableAsync"}/${id}`;
+       const url:string = `/${"api/Employee/EnableAsync"}/${id}`;
        return this.http.patch(url, null, { observe: 'response' });
     }
 
     public updateEmployee(id: number, Employee: EmployeeUpdateDto) : Observable<HttpResponse<Object>> {
-        const url:string = `${this.baseUrl}/${"api/Employee/UpdateAsync"}/${id}`;
+        const url:string = `/${"api/Employee/UpdateAsync"}/${id}`;
         return this.http.put(url, Employee, { observe: 'response' });
     }
 }

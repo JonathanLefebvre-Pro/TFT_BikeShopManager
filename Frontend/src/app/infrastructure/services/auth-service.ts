@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 @Service()
 export class AuthService implements IAuthRepository {
 
-    protected readonly baseUrl = 'https://localhost:7105';
+    // protected readonly baseUrl = 'https://localhost:7105';
     private readonly http = inject(HttpClient);
     private readonly routerService = inject(Router);
 
@@ -23,7 +23,7 @@ export class AuthService implements IAuthRepository {
     public AuthUserId = this._authUserId.asReadonly();
     
     public login(loginRequestDto: LoginRequestDto): Observable<LoginResponseDto> {
-        const url:string = `${this.baseUrl}/${"api/Auth/LoginAsync"}`;
+        const url:string = `/${"api/Auth/LoginAsync"}`;
         return this.http.post<LoginResponseDto>(url, loginRequestDto, { withCredentials: true })
         .pipe(tap({
                next: (res) => {
@@ -37,7 +37,7 @@ export class AuthService implements IAuthRepository {
 
     private refresh$?: Observable<RefreshResponseDto>;
     public refreshToken(): Observable<RefreshResponseDto> {
-        const url:string = `${this.baseUrl}/${"api/Auth/RefreshAsync"}`;
+        const url:string = `/${"api/Auth/RefreshAsync"}`;
         //??= : Is refresh null or undefined
         //True : do something
         //False : do nothing
@@ -55,7 +55,7 @@ export class AuthService implements IAuthRepository {
     }
 
     public logout(): Observable<HttpResponse<Object>> {
-        const url:string = `${this.baseUrl}/${"api/Auth/LogoutAsync"}`;
+        const url:string = `/${"api/Auth/LogoutAsync"}`;
         return this.http.post<HttpResponse<Object>>(url, {}, { withCredentials: true })
         .pipe(finalize(() => this.clearSession()));
     }

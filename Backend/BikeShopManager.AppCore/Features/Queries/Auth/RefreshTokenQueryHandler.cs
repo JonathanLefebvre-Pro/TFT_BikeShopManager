@@ -74,10 +74,10 @@ public class RefreshTokenQueryHandler(
             employee.Role = role;
 
             //The user is verified -> generate a new token
-            JwtAccessToken jwtAccessToken = JwtProvider.GenerateAccessToken(employee);
+            JwtAccessToken jwtAccessToken = await JwtProvider.GenerateAccessToken(employee);
 
             //Generate the refresh token
-            JwtRefreshToken jwtRefreshToken = JwtProvider.GenerateRefreshToken();
+            JwtRefreshToken jwtRefreshToken = await JwtProvider.GenerateRefreshToken();
 
             //Create a new refreshToken via the jwtProvider service
             //  set the new expiration time
