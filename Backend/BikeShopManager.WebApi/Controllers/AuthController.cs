@@ -6,17 +6,22 @@ using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos.Auth;
 using BikeShopManager.WebApi.Extensions.Controller;
 using Microsoft.AspNetCore.Mvc;
+using FluentValidation;
 
 namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IDispatcher Dispatcher) : ControllerBase
+    public class AuthController(IDispatcher Dispatcher, IValidator<LoginRequestDto> Validator) : ControllerBase
     {
         [Route("LoginAsync")]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
         {
+            FluentValidation.Results.ValidationResult validationResult = await Validator.ValidateAsync(dto);
+            if(!validationResult.IsValid)
+                return this.ValidationProblem(new ValidationProblemDetails(validationResult.ToDictionary()));
+
             Result<AuthUser> result = await Dispatcher.SendQueryAsync<LoginQuery, AuthUser>(
                 new LoginQuery(dto.Login, dto.Password)
             );

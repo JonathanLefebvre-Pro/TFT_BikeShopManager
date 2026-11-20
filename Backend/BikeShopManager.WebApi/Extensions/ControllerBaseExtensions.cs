@@ -1,4 +1,6 @@
 using BikeShopManager.AppCore.Features.Results;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeShopManager.WebApi.Extensions.Controller;
@@ -23,6 +25,15 @@ public static class ControllerBaseExtensions
 
         return controller.NotFound(result.Error);
     }
+
+    // public static IActionResult FromValidator<TContext>(this ControllerBase controller, IValidator<TContext> validator, TContext context)
+    // {
+    //     ValidationResult result = validator.Validate(context);
+    //     if(!result.IsValid)
+    //         return controller.ValidationProblem(new ValidationProblemDetails(result.ToDictionary()));
+
+    //     return null!;
+    // }
 
     public static void SetRefreshTokenCookie(
         this ControllerBase controller,

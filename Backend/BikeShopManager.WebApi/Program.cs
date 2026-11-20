@@ -5,8 +5,10 @@ using BikeShopManager.WebApi.Extensions.Connection;
 using BikeShopManager.WebApi.Extensions.Cors;
 using BikeShopManager.WebApi.Extensions.Jwt;
 using BikeShopManager.WebApi.Extensions.Seeding;
+using FluentValidation;
 using Scalar.AspNetCore;
 using Serilog;
+using MicroElements.AspNetCore.OpenApi.FluentValidation;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -25,8 +27,8 @@ try
     );
 
     builder.Services.AddCorsConfiguration();
-
     builder.Services.AddSeedingOptions();
+    //Removed because we get these data from Vault from now on.
     // builder.Services.AddJwtOptions();
     // builder.Services.AddConnectionOptions();
 
@@ -41,6 +43,15 @@ try
 
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
     builder.Services.AddOpenApi();
+    // Register FluentValidation validators
+    builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+    // Register FluentValidation rules for OpenAPI
+    builder.Services.AddFluentValidationRulesToOpenApi();
+    // Add OpenApi with FluentValidation transformer
+    builder.Services.AddOpenApi(options =>
+    {
+        options.AddFluentValidationRules();
+    });
 
     var app = builder.Build();
 
