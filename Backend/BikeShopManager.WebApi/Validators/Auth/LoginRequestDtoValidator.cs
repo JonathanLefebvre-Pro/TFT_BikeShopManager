@@ -9,14 +9,15 @@ public class LoginRequestDtoValidator : AbstractValidator<LoginRequestDto>
     {
         RuleFor(dto => dto.Login)
         .Cascade(CascadeMode.Stop)
-        .NotEmpty().WithMessage("The {PropertyName} is requireddddddd.")
+        .NotEmpty().WithMessage("The {PropertyName} is required.")
         .EmailAddress()
         .MinimumLength(6)
-        .MaximumLength(254);
+        .MaximumLength(254)
+        .Matches(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$");
 
         RuleFor(dto => dto.Password)
         .Cascade(CascadeMode.Stop)
-        .NotEmpty().WithMessage("The {PropertyName} is requiredddddd.")
+        .NotEmpty().WithMessage("The {PropertyName} is required.")
         .MinimumLength(5)
         .MaximumLength(100);
     }

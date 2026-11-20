@@ -8,6 +8,7 @@ using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos;
 using BikeShopManager.WebApi.Extensions.Controller;
 using BikeShopManager.WebApi.Mappers;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ namespace BikeShopManager.WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AuthUserController(IDispatcher Dispatcher, IJwtUtilities JwtUtilities)
+    public class AuthUserController(IDispatcher Dispatcher, IJwtUtilities JwtUtilities, IValidator<AuthUserUpdatePasswordDto> Validator)
         : ControllerBase
     {
         [Route("GetUserAsync")]
@@ -41,9 +42,12 @@ namespace BikeShopManager.WebApi.Controllers
         [Route("UpdatePasswordAsync")]
         [HttpPatch]
         public async Task<IActionResult> UpdatePasswordAsync(
-            [FromBody] AuthUserUpdatePasswordDto dto
+            [FromBody] AuthUserUpdatePasswordDto dto, CancellationToken cancellationToken
         )
         {
+            FluentValidation.Results.ValidationResult validationResult = await Validator.ValidateAsync(dto, cancellationToken);
+            if(!validationResult.IsValid) return this.ValidationProblem(new ValidationProblemDetails(validationResult.ToDictionary()));
+
             //Get the employee id from the JWT claims
             int id = JwtUtilities.GetClaimSub(User);
 
