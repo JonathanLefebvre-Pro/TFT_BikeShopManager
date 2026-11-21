@@ -1,4 +1,5 @@
 using BikeShopManager.WebApi.Dtos;
+using BikeShopManager.WebApi.Extensions;
 using FluentValidation;
 
 namespace BikeShopManager.WebApi.Validators.Employees;
@@ -60,14 +61,11 @@ public class EmployeeAddDtoValidator : AbstractValidator<EmployeeAddDto>
             .MaximumLength(50)
             .Matches(@"^\p{L}+(?:[ '’\-.]\p{L}+)*$");
 
-        RuleFor(dto => dto.BirthDate).Cascade(CascadeMode.Stop).Must(BeValidDate);
+        RuleFor(dto => dto.BirthDate)
+            .Cascade(CascadeMode.Stop)
+            .Must(ValidatorExtensions.BeValidBirthDate);
 
         //TODO : Check validation
         RuleFor(dto => dto.RoleId).Cascade(CascadeMode.Stop).NotEmpty();
-    }
-
-    private bool BeValidDate(DateOnly? birthdate)
-    {
-        return birthdate <= DateOnly.FromDateTime(DateTime.Today);
     }
 }

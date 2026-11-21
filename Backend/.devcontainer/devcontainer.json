@@ -41,7 +41,10 @@
 			"extensions": [
 				"ms-dotnettools.csdevkit",
 				"csharpier.csharpier-vscode"
-			]
+			],
+			"settings": {
+				"remote.autoForwardPorts": false
+			}
 		}
 	}
 

@@ -40,7 +40,10 @@
 	// Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
-			"extensions": ["Angular.ng-template"]
+			"extensions": ["Angular.ng-template"],
+			"settings": {
+				"remote.autoForwardPorts": false
+			}
 		}
 	}
 

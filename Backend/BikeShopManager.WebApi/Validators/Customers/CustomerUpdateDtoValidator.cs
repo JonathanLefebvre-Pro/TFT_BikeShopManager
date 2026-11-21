@@ -1,4 +1,5 @@
 using BikeShopManager.WebApi.Dtos;
+using BikeShopManager.WebApi.Extensions;
 using FluentValidation;
 
 namespace BikeShopManager.WebApi.Validators.Customers;
@@ -55,11 +56,8 @@ public class CustomerUpdateDtoValidator : AbstractValidator<CustomerUpdateDto>
             .MaximumLength(50)
             .Matches(@"^\p{L}+(?:[ '’\-.]\p{L}+)*$");
 
-        RuleFor(dto => dto.BirthDate).Cascade(CascadeMode.Stop).Must(BeValidDate);
-    }
-
-    private bool BeValidDate(DateOnly? birthdate)
-    {
-        return birthdate <= DateOnly.FromDateTime(DateTime.Today);
+        RuleFor(dto => dto.BirthDate)
+            .Cascade(CascadeMode.Stop)
+            .Must(ValidatorExtensions.BeValidBirthDate);
     }
 }
