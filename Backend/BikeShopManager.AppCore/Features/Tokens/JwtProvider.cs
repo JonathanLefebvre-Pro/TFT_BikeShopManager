@@ -12,7 +12,8 @@ using VaultSharp;
 
 namespace BikeShopManager.AppCore.Features.Tokens;
 
-public class JwtProvider(IOptions<JwtOptions> Options, IVaultClient VaultClient) : IJwtProvider
+public class JwtProvider(IOptions<JwtOptions> Options, IVaultClient VaultClient, bool useVault)
+    : IJwtProvider
 {
     public async Task<JwtAccessToken> GenerateAccessToken(Employee employee)
     {
@@ -20,21 +21,31 @@ public class JwtProvider(IOptions<JwtOptions> Options, IVaultClient VaultClient)
             throw new ArgumentException("Invalid user");
 
         JsonWebTokenHandler tokenHandler = new JsonWebTokenHandler();
-        // string? jwtSecret = Options.Value.Secret;
-        // string? jwtIssuer = Options.Value.Issuer;
-        // string? jwtAudience = Options.Value.Audience;
-        // int jwtAccessExpiration = Options.Value.ExpirationInMinutes;
+        string? jwtSecret = string.Empty;
+        string? jwtIssuer = string.Empty;
+        string? jwtAudience = string.Empty;
+        int jwtAccessExpiration = 0;
 
-        IDictionary<string, object> secrets = await VaultExtensions.GetSecret(
-            VaultClient,
-            "bikeshopmanager/jwt"
-        );
-        var jwtS = secrets["secret"];
-        var jwtI = secrets["issuer"];
-        var jwtA = secrets["audience"];
-        var jwtE = secrets["ExpirationInMinutes"];
+        if (useVault)
+        {
+            IDictionary<string, object> secrets = await VaultExtensions.GetSecret(
+                VaultClient,
+                "bikeshopmanager/jwt"
+            );
+            jwtSecret = (string)secrets["secret"];
+            jwtIssuer = (string)secrets["issuer"];
+            jwtAudience = (string)secrets["audience"];
+            jwtAccessExpiration = int.Parse((string)secrets["ExpirationInMinutes"]);
+        }
+        else
+        {
+            jwtSecret = Options.Value.Secret;
+            jwtIssuer = Options.Value.Issuer;
+            jwtAudience = Options.Value.Audience;
+            jwtAccessExpiration = Options.Value.ExpirationInMinutes;
+        }
 
-        byte[] key = Encoding.UTF8.GetBytes((string)jwtS!);
+        byte[] key = Encoding.UTF8.GetBytes(jwtSecret!);
 
         List<Claim> claims = new List<Claim>
         {
@@ -52,12 +63,12 @@ public class JwtProvider(IOptions<JwtOptions> Options, IVaultClient VaultClient)
             new Claim("SecurityStamp", employee.SecurityStamp),
         };
 
-        DateTime accessExpirationTime = DateTime.UtcNow.AddMinutes(int.Parse((string)jwtE));
+        DateTime accessExpirationTime = DateTime.UtcNow.AddMinutes(jwtAccessExpiration);
 
         SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor()
         {
-            Issuer = (string)jwtI,
-            Audience = (string)jwtA,
+            Issuer = jwtIssuer,
+            Audience = jwtAudience,
             Subject = new ClaimsIdentity(claims),
             Expires = accessExpirationTime,
             IssuedAt = DateTime.UtcNow,
@@ -78,14 +89,21 @@ public class JwtProvider(IOptions<JwtOptions> Options, IVaultClient VaultClient)
 
     public async Task<JwtRefreshToken> GenerateRefreshToken()
     {
-        //int jwtRefreshExpiration = Options.Value.RefreshTokenDays;
-        IDictionary<string, object> secrets = await VaultExtensions.GetSecret(
-            VaultClient,
-            "bikeshopmanager/jwt"
-        );
-        var jwtE = secrets["RefreshTokenDays"];
+        int jwtRefreshExpiration = 0;
+        if (useVault)
+        {
+            IDictionary<string, object> secrets = await VaultExtensions.GetSecret(
+                VaultClient,
+                "bikeshopmanager/jwt"
+            );
+            jwtRefreshExpiration = int.Parse((string)secrets["RefreshTokenDays"]);
+        }
+        else
+        {
+            jwtRefreshExpiration = Options.Value.RefreshTokenDays;
+        }
 
-        DateTime refreshExpirationTime = DateTime.UtcNow.AddDays(int.Parse((string)jwtE));
+        DateTime refreshExpirationTime = DateTime.UtcNow.AddDays(jwtRefreshExpiration);
         byte[] randomBytes = RandomNumberGenerator.GetBytes(64);
 
         JwtRefreshToken token = new JwtRefreshToken()

@@ -19,31 +19,41 @@ public static class ConnectionExtension
     }
 
     public static async Task<WebApplicationBuilder> BuildConnectionConfiguration(
-        this WebApplicationBuilder builder
+        this WebApplicationBuilder builder,
+        bool useVault
     )
     {
-        // ConnectionStringsOptions? connectionStringsOptions = builder
-        //     .Configuration.GetSection(ConnectionStringsOptions.SectionName)
-        //     .Get<ConnectionStringsOptions>();
-
         //Serilog.ILogger logger = Log.ForContext(typeof(ConnectionExtension));
-        IServiceProvider serviceProvider = builder.Services.BuildServiceProvider();
-        IVaultClient vaultClient = serviceProvider.GetRequiredService<IVaultClient>();
+        string? connectionString = string.Empty;
 
-        IDictionary<string, object> secrets = await AppCore.Extensions.VaultExtensions.GetSecret(
-            vaultClient,
-            "bikeshopmanager/db"
-        );
-        var serverSecret = secrets["server"];
-        var databaseSecret = secrets["database"];
-        var saPasswordSecret = secrets["sa_password"];
-        string connectionString =
-            $@"Server={serverSecret};Database={databaseSecret};User Id=sa;Password={saPasswordSecret};Trust Server Certificate=True";
+        if (useVault)
+        {
+            IServiceProvider serviceProvider = builder.Services.BuildServiceProvider();
+            IVaultClient vaultClient = serviceProvider.GetRequiredService<IVaultClient>();
+
+            IDictionary<string, object> secrets =
+                await AppCore.Extensions.VaultExtensions.GetSecret(
+                    vaultClient,
+                    "bikeshopmanager/db"
+                );
+
+            string? serverSecret = (string)secrets["server"];
+            string? databaseSecret = (string)secrets["database"];
+            string? saPasswordSecret = (string)secrets["sa_password"];
+            connectionString =
+                $@"Server={serverSecret};Database={databaseSecret};User Id=sa;Password={saPasswordSecret};Trust Server Certificate=True";
+        }
+        else
+        {
+            ConnectionStringsOptions? connectionStringsOptions = builder
+                .Configuration.GetSection(ConnectionStringsOptions.SectionName)
+                .Get<ConnectionStringsOptions>();
+
+            connectionString = connectionStringsOptions?.DockerConnection;
+        }
+
         //logger.Debug(connectionString);
-
-        builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(
-            connectionString //connectionStringsOptions?.DockerConnection
-        ));
+        builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
 
         return builder;
     }

@@ -6,9 +6,9 @@ using BikeShopManager.WebApi.Extensions.Cors;
 using BikeShopManager.WebApi.Extensions.Jwt;
 using BikeShopManager.WebApi.Extensions.Seeding;
 using FluentValidation;
+using MicroElements.AspNetCore.OpenApi.FluentValidation;
 using Scalar.AspNetCore;
 using Serilog;
-using MicroElements.AspNetCore.OpenApi.FluentValidation;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -21,32 +21,53 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
+    //Change this (in development) to use the Vault (the vault container have to be started and unsealed !!!)
+    //False => use jwt and connection secrets from appSettings.development.json sections as IOptions<JwtOptions> or IOptions<ConnectionOptions>
+    //True => use secrets from Vault
+    bool useVault = !builder.Environment.IsDevelopment();
+
     builder.Services.AddSerilog(
         (services, lc) =>
             lc.ReadFrom.Configuration(builder.Configuration).ReadFrom.Services(services)
     );
 
+    //Add CORS config
     builder.Services.AddCorsConfiguration();
-    builder.Services.AddSeedingOptions();
-    //Removed because we get these data from Vault from now on.
-    // builder.Services.AddJwtOptions();
-    // builder.Services.AddConnectionOptions();
 
+    //Add data seeding options (Seed default admin user)
+    builder.Services.AddSeedingOptions();
+
+    //Add jwt and db connection options used in dev mode
+    builder.Services.AddJwtOptions();
+    builder.Services.AddConnectionOptions();
+
+    //Build and add Vault config (even in dev mode)
     builder.BuildVaultConfiguration();
-    await builder.BuildConnectionConfiguration();
-    builder.Services.AddApplicationServices();
+
+    //Build and add Db Connection config
+    await builder.BuildConnectionConfiguration(useVault);
+
+    //Add AppCore and Infra services
+    builder.Services.AddApplicationServices(useVault);
     builder.Services.AddInfrastructureServices();
-    await builder.BuildJwtConfiguration();
+
+    //Build and add Jwt config
+    await builder.BuildJwtConfiguration(useVault);
+
+    //Add data seeding hosted services
     builder.Services.AddSeedingServices();
 
     builder.Services.AddControllers();
 
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
     builder.Services.AddOpenApi();
+
     // Register FluentValidation validators
     builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
     // Register FluentValidation rules for OpenAPI
     builder.Services.AddFluentValidationRulesToOpenApi();
+
     // Add OpenApi with FluentValidation transformer
     builder.Services.AddOpenApi(options =>
     {

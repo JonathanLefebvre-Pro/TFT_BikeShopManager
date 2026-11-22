@@ -20,29 +20,42 @@ public static class JwtExtension
     }
 
     public static async Task<WebApplicationBuilder> BuildJwtConfiguration(
-        this WebApplicationBuilder builder
+        this WebApplicationBuilder builder,
+        bool useVault
     )
     {
-        // JwtOptions? jwtOptions = builder
-        //     .Configuration.GetSection(JwtOptions.SectionName)
-        //     .Get<JwtOptions>();
-        // string? jwtSecret = jwtOptions?.Secret;
-        // string? jwtIssuer = jwtOptions?.Issuer;
-        // string? jwtAudience = jwtOptions?.Audience;
-
         //Serilog.ILogger logger = Log.ForContext(typeof(JwtExtension));
-        IServiceProvider serviceProvider = builder.Services.BuildServiceProvider();
-        IVaultClient vaultClient = serviceProvider.GetRequiredService<IVaultClient>();
-        IDictionary<string, object> secrets = await AppCore.Extensions.VaultExtensions.GetSecret(
-            vaultClient,
-            "bikeshopmanager/jwt"
-        );
-        var jwtS = secrets["secret"];
-        var jwtI = secrets["issuer"];
-        var jwtA = secrets["audience"];
-        //logger.Debug((string)jwtS);
+        string? jwtSecret = string.Empty;
+        string? jwtIssuer = string.Empty;
+        string? jwtAudience = string.Empty;
 
-        byte[] key = Encoding.UTF8.GetBytes((string)jwtS!);
+        if (useVault)
+        {
+            IServiceProvider serviceProvider = builder.Services.BuildServiceProvider();
+            IVaultClient vaultClient = serviceProvider.GetRequiredService<IVaultClient>();
+            IDictionary<string, object> secrets =
+                await AppCore.Extensions.VaultExtensions.GetSecret(
+                    vaultClient,
+                    "bikeshopmanager/jwt"
+                );
+
+            jwtSecret = (string)secrets["secret"];
+            jwtIssuer = (string)secrets["issuer"];
+            jwtAudience = (string)secrets["audience"];
+        }
+        else
+        {
+            JwtOptions? jwtOptions = builder
+                .Configuration.GetSection(JwtOptions.SectionName)
+                .Get<JwtOptions>();
+
+            jwtSecret = jwtOptions?.Secret;
+            jwtIssuer = jwtOptions?.Issuer;
+            jwtAudience = jwtOptions?.Audience;
+        }
+
+        //logger.Debug(jwtSecret);
+        byte[] key = Encoding.UTF8.GetBytes(jwtSecret!);
 
         builder
             .Services.AddAuthentication(options =>
@@ -54,9 +67,9 @@ public static class JwtExtension
             {
                 options.MapInboundClaims = false;
                 options.TokenValidationParameters = JwtProvider.GenerateTokenValidationObject(
-                    (string)jwtI,
-                    (string)jwtA,
-                    (string)jwtS
+                    jwtIssuer,
+                    jwtAudience,
+                    jwtSecret
                 );
                 options.Events = new JwtBearerEventsValidator();
             });
