@@ -7,11 +7,11 @@ public class ConnectionStringsOptions
     public const string SectionName = "ConnectionStrings";
 
     [Required(AllowEmptyStrings = false)]
-    public string DefaultConnection { get; set; } = string.Empty;
+    public string Server { get; set; } = string.Empty;
 
     [Required(AllowEmptyStrings = false)]
-    public string TechnofuturConnection { get; set; } = string.Empty;
+    public string Database { get; set; } = string.Empty;
 
     [Required(AllowEmptyStrings = false)]
-    public string DockerConnection { get; set; } = string.Empty;
+    public string Sa_Password { get; set; } = string.Empty;
 }

@@ -24,7 +24,7 @@ try
     //Change this (in development) to use the Vault (the vault container have to be started and unsealed !!!)
     //False => use jwt and connection secrets from appSettings.development.json sections as IOptions<JwtOptions> or IOptions<ConnectionOptions>
     //True => use secrets from Vault
-    bool useVault = !builder.Environment.IsDevelopment();
+    //bool useVault = !builder.Environment.IsDevelopment();
 
     builder.Services.AddSerilog(
         (services, lc) =>
@@ -37,22 +37,22 @@ try
     //Add data seeding options (Seed default admin user)
     builder.Services.AddSeedingOptions();
 
+    //Build and add Vault config
+    builder.BuildVaultConfiguration();
+
     //Add jwt and db connection options used in dev mode
     builder.Services.AddJwtOptions();
     builder.Services.AddConnectionOptions();
 
-    //Build and add Vault config (even in dev mode)
-    builder.BuildVaultConfiguration();
-
     //Build and add Db Connection config
-    await builder.BuildConnectionConfiguration(useVault);
+    await builder.BuildConnectionConfiguration();
 
     //Add AppCore and Infra services
-    builder.Services.AddApplicationServices(useVault);
+    builder.Services.AddApplicationServices();
     builder.Services.AddInfrastructureServices();
 
     //Build and add Jwt config
-    await builder.BuildJwtConfiguration(useVault);
+    await builder.BuildJwtConfiguration();
 
     //Add data seeding hosted services
     builder.Services.AddSeedingServices();

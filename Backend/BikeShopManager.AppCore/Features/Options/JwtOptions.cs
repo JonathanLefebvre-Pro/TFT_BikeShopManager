@@ -16,8 +16,8 @@ public class JwtOptions
     public string Audience { get; set; } = string.Empty;
 
     [Range(1, 15)]
-    public int ExpirationInMinutes { get; init; }
+    public int ExpirationInMinutes { get; set; }
 
     [Range(1, 7)]
-    public int RefreshTokenDays { get; init; }
+    public int RefreshTokenDays { get; set; }
 }

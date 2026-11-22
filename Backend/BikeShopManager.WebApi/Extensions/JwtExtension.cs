@@ -2,7 +2,6 @@ using System.Text;
 using BikeShopManager.AppCore.Features.Options;
 using BikeShopManager.AppCore.Features.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using VaultSharp;
 
 namespace BikeShopManager.WebApi.Extensions.Jwt;
 
@@ -20,8 +19,7 @@ public static class JwtExtension
     }
 
     public static async Task<WebApplicationBuilder> BuildJwtConfiguration(
-        this WebApplicationBuilder builder,
-        bool useVault
+        this WebApplicationBuilder builder
     )
     {
         //Serilog.ILogger logger = Log.ForContext(typeof(JwtExtension));
@@ -29,30 +27,13 @@ public static class JwtExtension
         string? jwtIssuer = string.Empty;
         string? jwtAudience = string.Empty;
 
-        if (useVault)
-        {
-            IServiceProvider serviceProvider = builder.Services.BuildServiceProvider();
-            IVaultClient vaultClient = serviceProvider.GetRequiredService<IVaultClient>();
-            IDictionary<string, object> secrets =
-                await AppCore.Extensions.VaultExtensions.GetSecret(
-                    vaultClient,
-                    "bikeshopmanager/jwt"
-                );
+        JwtOptions? jwtOptions = builder
+            .Configuration.GetSection(JwtOptions.SectionName)
+            .Get<JwtOptions>();
 
-            jwtSecret = (string)secrets["secret"];
-            jwtIssuer = (string)secrets["issuer"];
-            jwtAudience = (string)secrets["audience"];
-        }
-        else
-        {
-            JwtOptions? jwtOptions = builder
-                .Configuration.GetSection(JwtOptions.SectionName)
-                .Get<JwtOptions>();
-
-            jwtSecret = jwtOptions?.Secret;
-            jwtIssuer = jwtOptions?.Issuer;
-            jwtAudience = jwtOptions?.Audience;
-        }
+        jwtSecret = jwtOptions?.Secret;
+        jwtIssuer = jwtOptions?.Issuer;
+        jwtAudience = jwtOptions?.Audience;
 
         //logger.Debug(jwtSecret);
         byte[] key = Encoding.UTF8.GetBytes(jwtSecret!);
