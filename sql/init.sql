@@ -9,7 +9,7 @@ GO
 
 :r init_Persons.sql
 GO
--- :r init_Stock.sql
--- GO
+:r init_Stock.sql
+GO
 -- :r init_Shop.sql
 -- GO

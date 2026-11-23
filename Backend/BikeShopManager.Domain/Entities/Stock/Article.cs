@@ -5,7 +5,7 @@ public class Article : Audit
     public int Id { get; set; }
     public required string Name { get; set; } = string.Empty;
     public required int BrandId { get; set; }
-    public required string Description { get; set; } = string.Empty;
+    public string? Description { get; set; } = string.Empty;
     public required int CategoryId { get; set; }
     public required decimal PurchasePriceExclVat { get; set; }
     public required decimal SalePriceInclVat { get; set; }
