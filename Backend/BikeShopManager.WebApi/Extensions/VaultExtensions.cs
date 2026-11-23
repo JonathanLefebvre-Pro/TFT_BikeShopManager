@@ -1,3 +1,5 @@
+using BikeShopManager.AppCore.Features.Options;
+using BikeShopManager.AppCore.Features.Vault;
 using VaultSharp;
 using VaultSharp.V1.AuthMethods;
 using VaultSharp.V1.AuthMethods.AppRole;
@@ -8,6 +10,7 @@ public static class VaultExtensions
 {
     public static WebApplicationBuilder BuildVaultConfiguration(this WebApplicationBuilder builder)
     {
+        //Get roleId, secretId and baoAddr from config (env vars)
         string? roleId =
             builder.Configuration["BAO_ROLE_ID"]
             ?? throw new InvalidOperationException("BAO_ROLE_ID manquant");
@@ -17,9 +20,24 @@ public static class VaultExtensions
         string? baoAddr =
             builder.Configuration["BAO_ADDR"]
             ?? throw new InvalidOperationException("BAO_ADDR manquant");
+
         IAuthMethodInfo authMethod = new AppRoleAuthMethodInfo(roleId, secretId);
         VaultClientSettings vaultClientSettings = new VaultClientSettings(baoAddr, authMethod);
-        builder.Services.AddSingleton<IVaultClient>(new VaultClient(vaultClientSettings));
+        IVaultClient client = new VaultClient(vaultClientSettings);
+
+        //Add service as singleton (one instance only)
+        builder.Services.AddSingleton<IVaultClient>(client);
+
+        //Add Vault config sources
+        builder.Configuration.Sources.Add(
+            new VaultConfigurationSource(
+                client,
+                [
+                    new("bikeshopmanager/jwt", JwtOptions.SectionName),
+                    new("bikeshopmanager/db", ConnectionStringsOptions.SectionName),
+                ]
+            )
+        );
 
         return builder;
     }

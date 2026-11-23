@@ -34,3 +34,18 @@
 dotnet watch run --project BikeShopManager.WebApi --no-launch-profile
 ```
 4. API : https://localhost:7105/scalar
+
+
+## Save appSettings.Development.json
+"JwtSettings": {
+    "Secret": "2141ce53a8880b92984a4d2496f3c2bcff5354757e30b3a4566cda137558d25a",
+    "Issuer": "JwtApp",
+    "Audience": "JwtAppUsers",
+    "ExpirationInMinutes": 15,
+    "RefreshTokenDays": 7
+  },
+"ConnectionStrings": {
+    "DefaultConnection": "Data Source=JONATHAN\\DATAVIZ;Initial Catalog=TFT_BikeShopManager_WebApi;Integrated Security=True;Trust Server Certificate=True",
+    "TechnofuturConnection" : "Data Source=GOS-VDI406\\TFTIC;Initial Catalog=TFT_BikeShopManager_WebApi;Integrated Security=True;Trust Server Certificate=True",
+    "DockerConnection" : "Server=bikeshopmanager-db;Database=BikeShopManagerWebApp;User Id=sa;Password=Test1234=;Trust Server Certificate=True"
+  },

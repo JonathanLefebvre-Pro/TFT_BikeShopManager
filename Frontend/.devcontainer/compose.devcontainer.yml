@@ -6,6 +6,14 @@ services:
     command: sleep infinity
     depends_on: !reset []
     ports: !override
-      - 8080:4200
+      - 127.0.0.1:8080:4200
     volumes:
       - ./Frontend:/workspaces/frontend:cached
+      - bikeshopmanager-client-node-modules:/workspaces/frontend/node_modules
+      - bikeshopmanager-client-angular-cache:/workspaces/frontend/.angular
+
+volumes:
+  bikeshopmanager-client-node-modules:
+    name: bikeshopmanager-client-node-modules
+  bikeshopmanager-client-angular-cache:
+    name: bikeshopmanager-client-angular-cache

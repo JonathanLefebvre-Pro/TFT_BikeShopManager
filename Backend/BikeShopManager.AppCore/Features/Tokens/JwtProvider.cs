@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using BikeShopManager.AppCore.Extensions;
 using BikeShopManager.AppCore.Features.Options;
 using BikeShopManager.AppCore.Interfaces.Tokens;
 using BikeShopManager.Domain.Entities;
@@ -12,7 +11,7 @@ using VaultSharp;
 
 namespace BikeShopManager.AppCore.Features.Tokens;
 
-public class JwtProvider(IOptions<JwtOptions> Options, IVaultClient VaultClient) : IJwtProvider
+public class JwtProvider(IOptions<JwtOptions> Options) : IJwtProvider
 {
     public async Task<JwtAccessToken> GenerateAccessToken(Employee employee)
     {
@@ -20,21 +19,12 @@ public class JwtProvider(IOptions<JwtOptions> Options, IVaultClient VaultClient)
             throw new ArgumentException("Invalid user");
 
         JsonWebTokenHandler tokenHandler = new JsonWebTokenHandler();
-        // string? jwtSecret = Options.Value.Secret;
-        // string? jwtIssuer = Options.Value.Issuer;
-        // string? jwtAudience = Options.Value.Audience;
-        // int jwtAccessExpiration = Options.Value.ExpirationInMinutes;
+        string? jwtSecret = Options.Value.Secret;
+        string? jwtIssuer = Options.Value.Issuer;
+        string? jwtAudience = Options.Value.Audience;
+        int jwtAccessExpiration = Options.Value.ExpirationInMinutes;
 
-        IDictionary<string, object> secrets = await VaultExtensions.GetSecret(
-            VaultClient,
-            "bikeshopmanager/jwt"
-        );
-        var jwtS = secrets["secret"];
-        var jwtI = secrets["issuer"];
-        var jwtA = secrets["audience"];
-        var jwtE = secrets["ExpirationInMinutes"];
-
-        byte[] key = Encoding.UTF8.GetBytes((string)jwtS!);
+        byte[] key = Encoding.UTF8.GetBytes(jwtSecret!);
 
         List<Claim> claims = new List<Claim>
         {
@@ -52,12 +42,12 @@ public class JwtProvider(IOptions<JwtOptions> Options, IVaultClient VaultClient)
             new Claim("SecurityStamp", employee.SecurityStamp),
         };
 
-        DateTime accessExpirationTime = DateTime.UtcNow.AddMinutes(int.Parse((string)jwtE));
+        DateTime accessExpirationTime = DateTime.UtcNow.AddMinutes(jwtAccessExpiration);
 
         SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor()
         {
-            Issuer = (string)jwtI,
-            Audience = (string)jwtA,
+            Issuer = jwtIssuer,
+            Audience = jwtAudience,
             Subject = new ClaimsIdentity(claims),
             Expires = accessExpirationTime,
             IssuedAt = DateTime.UtcNow,
@@ -78,14 +68,9 @@ public class JwtProvider(IOptions<JwtOptions> Options, IVaultClient VaultClient)
 
     public async Task<JwtRefreshToken> GenerateRefreshToken()
     {
-        //int jwtRefreshExpiration = Options.Value.RefreshTokenDays;
-        IDictionary<string, object> secrets = await VaultExtensions.GetSecret(
-            VaultClient,
-            "bikeshopmanager/jwt"
-        );
-        var jwtE = secrets["RefreshTokenDays"];
+        int jwtRefreshExpiration = Options.Value.RefreshTokenDays;
 
-        DateTime refreshExpirationTime = DateTime.UtcNow.AddDays(int.Parse((string)jwtE));
+        DateTime refreshExpirationTime = DateTime.UtcNow.AddDays(jwtRefreshExpiration);
         byte[] randomBytes = RandomNumberGenerator.GetBytes(64);
 
         JwtRefreshToken token = new JwtRefreshToken()

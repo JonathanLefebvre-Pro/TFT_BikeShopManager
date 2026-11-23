@@ -6,6 +6,7 @@ using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos;
 using BikeShopManager.WebApi.Extensions.Controller;
 using BikeShopManager.WebApi.Mappers;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -80,8 +81,11 @@ namespace BikeShopManager.WebApi.Controllers
         [Route("UpdateAsync/{id}")]
         [HttpPut]
         [Authorize(Roles = ("Admin, Manager, Seller"))]
-        public async Task<IActionResult> UpdateAsync(int id, [FromBody] CustomerUpdateDto dto)
+        public async Task<IActionResult> UpdateAsync(int id, [FromBody] CustomerUpdateDto dto, [FromServices] IValidator<CustomerUpdateDto> validator ,CancellationToken cancellationToken)
         {
+            FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(dto, cancellationToken);
+            if(!validationResult.IsValid) return this.ValidationProblem(new ValidationProblemDetails(validationResult.ToDictionary()));
+
             Result result = await Dispatcher.SendCommandAsync<UpdateCustomerCommand>(
                 new UpdateCustomerCommand(id, dto.ToCustomerEntity(), dto.ToUserEntity())
             );
@@ -113,8 +117,11 @@ namespace BikeShopManager.WebApi.Controllers
         [Route("AddAsync")]
         [HttpPost]
         [Authorize(Roles = ("Admin, Manager, Seller"))]
-        public async Task<IActionResult> AddAsync([FromBody] CustomerAddDto dto)
+        public async Task<IActionResult> AddAsync([FromBody] CustomerAddDto dto, [FromServices] IValidator<CustomerAddDto> validator, CancellationToken cancellationToken)
         {
+            FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(dto, cancellationToken);
+            if(!validationResult.IsValid) return this.ValidationProblem(new ValidationProblemDetails(validationResult.ToDictionary()));
+
             Result<int> result = await Dispatcher.SendCommandAsync<AddCustomerCommand, int>(
                 new AddCustomerCommand(dto.ToCustomerEntity(), dto.ToUserEntity())
             );
