@@ -1,4 +1,5 @@
 using BikeShopManager.AppCore.Interfaces.Repositories;
+using BikeShopManager.AppCore.Interfaces.Repositories.Stock;
 using BikeShopManager.Infrastructure.Services.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,12 @@ public static class DependencyInjectionExtension
         services.AddScoped<IEmployeeRoleRepository, EmployeeRoleRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IAuthRepository, AuthRepository>();
+        services.Scan(scan =>
+            scan.FromAssemblies(typeof(DependencyInjectionExtension).Assembly)
+                .AddClasses(classes => classes.AssignableToAny(typeof(IStockRepositoryBase<>)))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
+        );
 
         return services;
     }

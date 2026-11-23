@@ -1,32 +1,85 @@
-using BikeShopManager.AppCore.Interfaces.Repositories.Stock;
+using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.Domain.Entities.Stock;
+using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services.Repositories.Stock;
 
-public class StockVatRateRepository : IStockVatRateRepository
+public class StockVatRateRepository : StockBaseRepository<VatRate>
 {
-    public Task<int> Add(VatRate obj)
+    private IDbSession _dbSession;
+
+    public StockVatRateRepository(IDbSession dbSession)
+        : base(dbSession)
     {
-        throw new NotImplementedException();
+        _dbSession = dbSession;
     }
 
-    public Task<bool> Delete(int id)
+    public override string GetTableName()
     {
-        throw new NotImplementedException();
+        return "VatRates";
     }
 
-    public Task<VatRate> Get(int id)
+    public override async Task<int> AddAsync(VatRate obj)
     {
-        throw new NotImplementedException();
+        string sqlQuery =
+            @$"INSERT INTO {GetTableCompleteName()} (Label, Rate)
+                OUTPUT INSERTED.ID
+                VALUES(@Label, @Rate)";
+
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@Label", obj.Label);
+        parameters.Add("@Rate", obj.Rate);
+
+        return await _dbSession.Connection.ExecuteScalarAsync<int>(
+            sqlQuery,
+            parameters,
+            _dbSession.Transaction
+        );
     }
 
-    public Task<VatRate> Get(string name)
+    public override async Task<VatRate?> GetAsync(int id)
     {
-        throw new NotImplementedException();
+        string sqlQuery =
+            @$"SELECT Id, Label, Rate, CreatedAt, UpdatedAt
+                FROM {GetTableCompleteName()}
+                WHERE {GetTableCompleteName}.Id=@Id";
+
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@Id", id);
+
+        return await _dbSession.Connection.QuerySingleOrDefaultAsync<VatRate>(
+            sqlQuery,
+            parameters,
+            _dbSession.Transaction
+        );
     }
 
-    public Task<IEnumerable<VatRate>> Get()
+    public override async Task<VatRate?> GetAsync(string label)
     {
-        throw new NotImplementedException();
+        string sqlQuery =
+            @$"SELECT Id, Label, Rate, CreatedAt, UpdatedAt
+                FROM {GetTableCompleteName()}
+                WHERE {GetTableCompleteName}.Label=@Label";
+
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@Label", label);
+
+        return await _dbSession.Connection.QuerySingleOrDefaultAsync<VatRate>(
+            sqlQuery,
+            parameters,
+            _dbSession.Transaction
+        );
+    }
+
+    public override async Task<IEnumerable<VatRate>> GetAsync()
+    {
+        string sqlQuery =
+            @$"SELECT Id, Label, Rate, CreatedAt, UpdatedAt
+                FROM {GetTableCompleteName()}";
+
+        return await _dbSession.Connection.QueryAsync<VatRate>(
+            sqlQuery,
+            transaction: _dbSession.Transaction
+        );
     }
 }
