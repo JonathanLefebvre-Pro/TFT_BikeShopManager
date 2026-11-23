@@ -17,17 +17,19 @@ public static class ConnectionExtension
         return services;
     }
 
-    public static WebApplicationBuilder BuildConnectionConfiguration(
+    public static async Task<WebApplicationBuilder> BuildConnectionConfiguration(
         this WebApplicationBuilder builder
     )
     {
+        //Serilog.ILogger logger = Log.ForContext(typeof(ConnectionExtension));
         ConnectionStringsOptions? connectionStringsOptions = builder
             .Configuration.GetSection(ConnectionStringsOptions.SectionName)
             .Get<ConnectionStringsOptions>();
+        string connectionString =
+            $@"Server={connectionStringsOptions?.Server};Database={connectionStringsOptions?.Database};User Id=sa;Password={connectionStringsOptions?.Sa_Password};Trust Server Certificate=True";
 
-        builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(
-            connectionStringsOptions?.DefaultConnection
-        ));
+        //logger.Debug(connectionString);
+        builder.Services.AddScoped<IDbConnection>(db => new SqlConnection(connectionString));
 
         return builder;
     }

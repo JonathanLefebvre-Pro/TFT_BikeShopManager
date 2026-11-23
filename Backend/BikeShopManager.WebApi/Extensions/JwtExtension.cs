@@ -18,14 +18,24 @@ public static class JwtExtension
         return services;
     }
 
-    public static WebApplicationBuilder BuildJwtConfiguration(this WebApplicationBuilder builder)
+    public static async Task<WebApplicationBuilder> BuildJwtConfiguration(
+        this WebApplicationBuilder builder
+    )
     {
+        //Serilog.ILogger logger = Log.ForContext(typeof(JwtExtension));
+        string? jwtSecret = string.Empty;
+        string? jwtIssuer = string.Empty;
+        string? jwtAudience = string.Empty;
+
         JwtOptions? jwtOptions = builder
             .Configuration.GetSection(JwtOptions.SectionName)
             .Get<JwtOptions>();
-        string? jwtSecret = jwtOptions?.Secret;
-        string? jwtIssuer = jwtOptions?.Issuer;
-        string? jwtAudience = jwtOptions?.Audience;
+
+        jwtSecret = jwtOptions?.Secret;
+        jwtIssuer = jwtOptions?.Issuer;
+        jwtAudience = jwtOptions?.Audience;
+
+        //logger.Debug(jwtSecret);
         byte[] key = Encoding.UTF8.GetBytes(jwtSecret!);
 
         builder

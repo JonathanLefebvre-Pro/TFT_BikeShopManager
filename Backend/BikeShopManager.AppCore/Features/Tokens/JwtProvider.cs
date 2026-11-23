@@ -7,12 +7,13 @@ using BikeShopManager.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using VaultSharp;
 
 namespace BikeShopManager.AppCore.Features.Tokens;
 
 public class JwtProvider(IOptions<JwtOptions> Options) : IJwtProvider
 {
-    public TokenResponse GenerateToken(Employee employee)
+    public async Task<JwtAccessToken> GenerateAccessToken(Employee employee)
     {
         if (employee is null || employee.User is null)
             throw new ArgumentException("Invalid user");
@@ -22,7 +23,7 @@ public class JwtProvider(IOptions<JwtOptions> Options) : IJwtProvider
         string? jwtIssuer = Options.Value.Issuer;
         string? jwtAudience = Options.Value.Audience;
         int jwtAccessExpiration = Options.Value.ExpirationInMinutes;
-        int jwtRefreshExpiration = Options.Value.RefreshTokenDays;
+
         byte[] key = Encoding.UTF8.GetBytes(jwtSecret!);
 
         List<Claim> claims = new List<Claim>
@@ -42,7 +43,6 @@ public class JwtProvider(IOptions<JwtOptions> Options) : IJwtProvider
         };
 
         DateTime accessExpirationTime = DateTime.UtcNow.AddMinutes(jwtAccessExpiration);
-        DateTime refreshExpirationTime = DateTime.UtcNow.AddDays(jwtRefreshExpiration);
 
         SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor()
         {
@@ -57,21 +57,29 @@ public class JwtProvider(IOptions<JwtOptions> Options) : IJwtProvider
             ),
         };
 
-        TokenResponse response = new TokenResponse()
+        JwtAccessToken token = new JwtAccessToken()
         {
-            AccessToken = tokenHandler.CreateToken(tokenDescriptor),
-            AccessExpireAt = accessExpirationTime,
-            RefreshToken = GenerateRefreshToken(),
-            RefreshExpireAt = refreshExpirationTime,
+            Token = tokenHandler.CreateToken(tokenDescriptor),
+            ExpireAt = accessExpirationTime,
         };
 
-        return response;
+        return token;
     }
 
-    public string GenerateRefreshToken()
+    public async Task<JwtRefreshToken> GenerateRefreshToken()
     {
+        int jwtRefreshExpiration = Options.Value.RefreshTokenDays;
+
+        DateTime refreshExpirationTime = DateTime.UtcNow.AddDays(jwtRefreshExpiration);
         byte[] randomBytes = RandomNumberGenerator.GetBytes(64);
-        return Convert.ToBase64String(randomBytes);
+
+        JwtRefreshToken token = new JwtRefreshToken()
+        {
+            Token = Convert.ToBase64String(randomBytes),
+            ExpireAt = refreshExpirationTime,
+        };
+
+        return token;
     }
 
     public string HashRefreshToken(string token)

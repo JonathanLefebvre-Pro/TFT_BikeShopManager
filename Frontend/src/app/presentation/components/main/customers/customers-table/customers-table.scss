@@ -7,20 +7,32 @@
     gap: 2rem;
 }
 
-.customerTable {
+
+app-customer-table-row:nth-child(odd) {
+    background-color: rgba(140, 140, 255, 0.144);
+}
+
+app-customer-table-row:hover {
+    background-color: rgb(219, 219, 219);
+}
+
+table {
     display: flex;
     flex-direction: column;
     background-color: grey;
     border-radius: 1rem;
 
-    .customerTableHead {
+    thead {
         display: flex;
         flex-direction: row;
-        padding: 1rem;
+        padding-bottom: 0.2rem;
+        padding-top: 0.2rem;
+        padding-right: 0.4rem;
+        padding-left: 0.4rem;
 
         tr {
             display: grid;
-            grid-template-columns: 0.5rem repeat(13, minmax(0, 1fr));
+            grid-template-columns: 0.5rem repeat(5, minmax(0, 1fr));
             flex: 1;
             gap: 1rem;
             
@@ -32,18 +44,29 @@
         }
     }
 
-    .customerTableBody {
+    tbody {
         display: flex;
         flex-direction: column;
         background-color: rgb(204, 204, 204);
-        padding: 1rem;
+        padding-bottom: 0.2rem;
+        padding-top: 0.2rem;
+
+        p {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
     }
 
-    .customerTableFooter {
+    tfoot {
         display: flex;
         flex-direction: row;
         justify-content: center;
-        margin: 0.5rem;
+        padding-bottom: 0.2rem;
+        padding-top: 0.2rem;
         gap: 1rem;
+        align-items: center;
     }
 }

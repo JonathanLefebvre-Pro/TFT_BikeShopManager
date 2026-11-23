@@ -1,19 +1,84 @@
+@use 'variables' as var;
+
 :host {
-    background-color: rgb(209, 209, 209);
+    background-color: var.$primary-background-color;
     padding: 1.5rem;
     border-radius: 1rem;
+    border-style: solid;
+    border-color: var.$secondary-style-color;
+    border-width: 0.1rem;
+}
+
+.title {
+    font-weight: 700;
+}
+
+.subtitle {
+    font-weight: 300;
+    margin-top: 0.5rem;
 }
 
 .form {
     display: flex;
     flex-direction: column;
-    max-width: 300px;
     gap: 0.5rem;
+    margin-top: 1.5rem;
+
+    input[type='submit'] {
+        margin-top: 1rem;
+    }
 }
 
 .input-group {
     display: flex;
     flex-direction: row;
     gap: 1rem;
-    justify-content: space-between;
+    align-items: center;
+
+    input {
+        border-radius: 0.3rem;
+        border-width: 0.1rem;
+        border-style: solid;
+        border-color: var.$secondary-style-color;
+        display: flex;
+        flex: 1;
+
+        &:focus {
+            border-style: solid;
+            border-color: var.$secondary-style-color;
+            outline: none;
+            box-shadow: 0 0 0 2px var.$secondary-style-color;
+        }
+    }
+
+    input.error {
+        border-radius: 0.3rem;
+        border-style: solid;
+        border-color: var.$primary-error-color;
+    }
+}
+
+.error {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.error-message, .global-error-message {
+    color: var.$primary-error-color;
+    font-size: var.$error-font-size;
+}
+
+.global-error-message{
+    display: none;
+    margin-top: 0.5rem;
+    justify-content: center;
+}
+
+.active {
+    display: flex;
+}
+
+ng-icon {
+    color: var.$primary-icon-color;
 }

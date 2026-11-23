@@ -1,37 +1,28 @@
-<table class="customerTable">
-    <thead class="customerTableHead">
+<table>
+    <thead>
         <tr>
             @for (header of headers(); track $index) {
                 <th scope="col">{{header}}</th>
             }
         </tr>
     </thead>
-    <tbody class="customerTableBody">
-        @defer(when isLoading())
-        {
-            @for (customer of customers(); track customer.id) {
-                <app-customer-table-row #customerTableRow
-                [customer]="customer" 
-                (onEnableCustomerEvent)="handleCustomerEnable($event)"
-                (onDisableCustomerEvent)="handleCustomerDisable($event)"
-                (onEditCustomerEvent)="handleCustomerEdit($event)"/>
-            }
-        }
-        @placeholder {
-            <p>Customers are loading !</p>
-        }
-        @loading(after 100ms; minimum 1s) {
-            <p>Customers are loading !</p>
-        }
-        @error {
-            <div>Loading error !</div>
+    <tbody>
+        @for (customer of customers(); track customer.id) {
+            <app-customer-table-row #customerTableRow
+            [customer]="customer" 
+            (onEnableCustomerEvent)="handleEnableCustomer($event)"
+            (onDisableCustomerEvent)="handleDisableCustomer($event)"
+            (onEditCustomerEvent)="handleEditCustomer($event)"
+            (onDisplayDetailsCustomerEvent)="handleDisplayCustomerDetails($event)"/>
+        }@empty {
+            <p>{{errorMessage()}}</p>
         }
     </tbody>
-    <tfoot class="customerTableFooter">
+    <tfoot>
         @if(maxPagesNumber() > 0){
-            <input type="button" value="<" (click)="handlePreviousPage()"/>
+            <input type="button" value="<" (click)="handleToPreviousPage()"/>
             {{currentPageNumber()}}/{{maxPagesNumber()}}
-            <input type="button" value=">" (click)="handleNextPage()"/>
+            <input type="button" value=">" (click)="handleToNextPage()"/>
         }
     </tfoot>
 </table>

@@ -6,7 +6,7 @@ import { EmployeeDtoMapper } from '@/app/presentation/mappers/employees/employee
 import { Employee } from '@/app/domain/employee';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
+import { AuthUserService } from '@/app/infrastructure/services/auth-user-service';
 @Component({
   imports: [EmployeesTable, EmployeeSearchInput],
   selector: 'app-employees-list-page',
@@ -18,10 +18,12 @@ export class EmployeesListPage implements OnInit {
   protected readonly routerService = inject(Router);
   protected readonly routeService = inject(ActivatedRoute);
   protected readonly destroyRef = inject(DestroyRef);
-  protected readonly employeeService : EmployeeService = inject(EmployeeService);
-  protected readonly employeeDtoMapper : EmployeeDtoMapper = inject(EmployeeDtoMapper);
+  protected readonly employeeService = inject(EmployeeService);
+  protected readonly authUserService = inject(AuthUserService);
+  protected readonly employeeDtoMapper = inject(EmployeeDtoMapper);
 
   protected readonly employees = signal<Employee[]>([]);
+  protected readonly authUser = signal<Employee | null>(null);
 
   protected readonly keywords = signal<string>('');
   protected readonly totalPages = signal<number>(0);
@@ -43,7 +45,9 @@ export class EmployeesListPage implements OnInit {
   }
 
   protected handleEnableEmployee(employeeId: number) {
-    this.employeeService.enableEmployee(employeeId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.employeeService.enableEmployee(employeeId)
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res.status));
         this.init();
@@ -54,13 +58,15 @@ export class EmployeesListPage implements OnInit {
     });
   }
   protected handleDisableEmployee(employeeId: number) {
-    this.employeeService.disableEmployee(employeeId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.employeeService.disableEmployee(employeeId)
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
       next: (res) => {
         console.log("Result : " + JSON.stringify(res.status));
         this.init();
       },
       error(error) {
-        console.error("Error" + error);
+        console.error("Error" + JSON.stringify(error));
       },
     });
   }
@@ -102,6 +108,17 @@ export class EmployeesListPage implements OnInit {
   }
 
   private getEmployees() {
+    //Get auth employee data
+    this.authUserService.getEmployee().subscribe({
+      next: (res) => {
+        this.authUser.set(this.employeeDtoMapper.ToEmployeeEntity(res));
+      },
+      error: (err) => {
+        //console.error('GetAuthEmployee - Error : ', err);
+      }
+    });
+
+    //Get employees data (with pagination and search)
     this.employeeService.getEmployees(this.pageNumber(),this.pageSize, this.keywords())
     .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe({
@@ -112,11 +129,10 @@ export class EmployeesListPage implements OnInit {
         this.hasPreviousPage.set(res.hasPreviousPage);
         this.employees.set(this.employeeDtoMapper.ToEmployeeEntities(res.data));
     },
-      error: (error) => {
-        console.error(error);
-        //If the search returned an error (there is no employees related to these keywords, display a empty list !)
+      error: (err) => {
+        //console.error('GetEmployees - Error : ', err);
         this.employees.set([]);
       }
     });
-  }
+  }  
 }

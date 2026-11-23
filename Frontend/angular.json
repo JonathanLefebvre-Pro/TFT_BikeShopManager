@@ -29,7 +29,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/app/presentation/styles/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/app/presentation/styles"]
+            }
           },
           "configurations": {
             "production": {
@@ -57,6 +60,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "proxyConfig": "src/proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "BikeShopManager:build:production"

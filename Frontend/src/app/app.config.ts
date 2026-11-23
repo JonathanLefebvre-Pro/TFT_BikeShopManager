@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-import { authInterceptor } from './appCore/interceptors/auth-interceptor';
+import { authInterceptor } from './infrastructure/interceptors/auth-interceptor';
 import { catchError, firstValueFrom, of } from 'rxjs';
 import { AuthService } from './infrastructure/services/auth-service';
 

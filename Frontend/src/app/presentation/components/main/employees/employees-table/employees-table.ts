@@ -10,6 +10,7 @@ import { Employee } from '@/app/domain/employee';
 })
 export class EmployeesTable {
   public readonly employees = input.required<Employee[]>();
+  public readonly authUser = input<Employee | null>();
   public readonly currentPageNumber = input.required<number>();
   public readonly maxPagesNumber = input.required<number>();
 
@@ -19,26 +20,47 @@ export class EmployeesTable {
   public onNextPageEvent = output();
   public onPreviousPageEvent = output();
 
+  private readonly defaultErrorMessage = "There is nothing to display !";
+  protected readonly errorMessage = signal<string>(this.defaultErrorMessage);
+
   protected readonly employeeTableRowElements = viewChildren(EmployeeTableRow);
 
-  private readonly INITIAL_HEADERS : string[] = ['#','FirstName', 'LastName', 'Email', 'PhoneNumber', 
-    'Address', 'City', 'ZipCode', 'Country', 'BirthDate', 'IsActive', 'HiredAt', 'ContractEndAt', 'Role', 'Actions'];
+  private readonly INITIAL_HEADERS : string[] = [
+    '#',
+    'FirstName', 
+    'LastName', 
+    'Email', 
+    'IsActive', 
+    'Role', 
+    'Actions'
+  ];
   protected readonly headers = signal<string[]>([...this.INITIAL_HEADERS]);
 
-  protected handleEmployeeEnable(employeeId: number){
+  protected handleEnableEmployee(employeeId: number){
     this.onEnableEmployeeEvent.emit(employeeId);
   }
-  protected handleEmployeeDisable(employeeId: number){
+  protected handleDisableEmployee(employeeId: number){
     this.onDisableEmployeeEvent.emit(employeeId);
   }
-  protected handleEmployeeEdit(employeeId: number) {
+  protected handleEditEmployee(employeeId: number) {
     this.onEditEmployeeEvent.emit(employeeId);
   }
-  protected handleNextPage() {
+  protected handleToNextPage() {
     this.onNextPageEvent.emit();
   }
-  protected handlePreviousPage() {
+  protected handleToPreviousPage() {
     this.onPreviousPageEvent.emit();
+  }
+  protected handleDisplayEmployeeDetails(id: number) {
+    if(this.employeeTableRowElements() !== null && 
+      this.employeeTableRowElements().length > 0)
+      {
+        for (let index = 0; index < this.employeeTableRowElements().length; index++) {
+          const element = this.employeeTableRowElements()[index];
+          if(element.employee().id !== id)
+            element.hideDetailsPanel();
+        }
+      }
   }
 
   public notifyEditModeEnabled() {
@@ -63,7 +85,17 @@ export class EmployeesTable {
       }
   }
 
+  public SetErrorMessage(message: string) {
+    if(!message)
+    {
+      this.errorMessage.set(this.defaultErrorMessage);
+      return;
+    }
+
+    this.errorMessage.set(message);
+  }
+
   protected isLoading() : boolean {
-    return (this.employees() && this.employees().length > 0);
+    return (!this.employees() || this.employees().length == 0);
   }
 }

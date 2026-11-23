@@ -6,6 +6,7 @@
 
 <app-employees-table #employeesTable
 [employees]="employees()"
+[authUser]="authUser()"
 [currentPageNumber]="pageNumber()"
 [maxPagesNumber]="totalPages()"
 (onEnableEmployeeEvent)="handleEnableEmployee($event)"

@@ -1,0 +1,20 @@
+@use 'reset.scss';
+@use 'variables.scss' as *;
+
+html,
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: $primary-font-family, sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-weight: 300;
+  color: $default-text-color;
+  font-variation-settings: "wdth" 100;
+}
+
+:root {
+  --primary-icon-color: #{$primary-icon-color};
+  --primary-font-family: #{$primary-font-family};
+}

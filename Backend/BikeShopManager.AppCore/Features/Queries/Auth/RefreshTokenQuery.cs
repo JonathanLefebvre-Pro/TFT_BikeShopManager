@@ -3,4 +3,4 @@ using BikeShopManager.Domain.Entities;
 
 namespace BikeShopManager.AppCore.Features.Queries.Auth;
 
-public record RefreshTokenQuery(string RefreshToken) : IQueryDefinition<TokenResponse>;
+public record RefreshTokenQuery(string RefreshToken) : IQueryDefinition<AuthUser>;

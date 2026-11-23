@@ -29,17 +29,20 @@
         <p>Allow marketing : {{employee()?.user?.allowMarketing}}</p>
     </div>
 
-    <form method="post", class="edit-employee-password-profile-form" [formRoot]="employeeProfileForm">
-        <app-form-text-input label="Current Password" id="CurrentPassword" type="password" [field]="employeeProfileForm.currentPassword" [fieldState]="employeeProfileForm.currentPassword()"/>
-        <app-form-text-input label="New Password" id="NewPassword" type="password" [field]="employeeProfileForm.newPassword" [fieldState]="employeeProfileForm.newPassword()"/>
-    
-        <p class="error-message" [class.active]="displayErrorMessage()">{{ errorMessage }}</p>
-
-        <div class="form-group-submit">
-            <input type="submit" value="Save" [disabled]="employeeProfileForm().invalid()"/>
-            <input type="button" value="Clear" (click)="handleClear($event)"/>
-        </div>
-    </form>
+    <div class="group">
+        <h2>Password change :</h2>
+        <form method="post", class="edit-employee-password-profile-form" [formRoot]="employeeProfileForm">
+            <app-form-text-input label="Current Password :" id="CurrentPassword" type="password" [field]="employeeProfileForm.currentPassword" [fieldState]="employeeProfileForm.currentPassword()"/>
+            <app-form-text-input label="New Password :" id="NewPassword" type="password" [field]="employeeProfileForm.newPassword" [fieldState]="employeeProfileForm.newPassword()"/>
+            
+            <p class="error-message" [class.active]="displayErrorMessage()">{{ errorMessage }}</p>
+            
+            <div class="form-group-submit">
+                <input type="submit" value="Save" [disabled]="employeeProfileForm().invalid()"/>
+                <input type="button" value="Clear" (click)="handleClear($event)"/>
+            </div>
+        </form>
+    </div>
 } @else {
     <p>There is no data or you are not allow to display this content !</p>
 }

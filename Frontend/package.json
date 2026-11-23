@@ -1,9 +1,9 @@
 {
-  "name": "bike-shop-manager",
+  "name": "bikeshopmanager-client",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 127.0.0.1 --port 4200 --watch --poll 2000",
+    "start": "ng serve --host 0.0.0.0 --port 4200 --watch --poll 2000",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -17,6 +17,8 @@
     "@angular/forms": "^22.2.0",
     "@angular/platform-browser": "^22.2.0",
     "@angular/router": "^22.2.0",
+    "@ng-icons/core": "^36.1.0",
+    "@ng-icons/material-icons": "^36.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
