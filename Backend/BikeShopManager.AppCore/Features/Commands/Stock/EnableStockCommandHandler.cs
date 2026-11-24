@@ -6,13 +6,14 @@ using BikeShopManager.Domain.Entities.Stock;
 
 namespace BikeShopManager.AppCore.Features.Commands.Stock;
 
-public class EnableStockArticleCommandHandler(IStockActivableRepository<Article> Repository)
-    : ICommandHandlerAsync<EnableStockArticleCommand>
+public class EnableStockArticleCommandHandler<T>(IStockActivableRepository<T> Repository)
+    : ICommandHandlerAsync<EnableStockCommand<T>>
+    where T : StockBase
 {
-    public async Task<Result> HandleAsync(EnableStockArticleCommand command)
+    public async Task<Result> HandleAsync(EnableStockCommand<T> command)
     {
         return await Repository.Enable(command.Id)
             ? Result.Success()
-            : Result.Failure(StockArticleError.NotEnabled);
+            : Result.Failure(StockError<T>.NotEnabled);
     }
 }

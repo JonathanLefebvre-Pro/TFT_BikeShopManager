@@ -6,15 +6,16 @@ using BikeShopManager.Domain.Entities.Stock;
 
 namespace BikeShopManager.AppCore.Features.Commands.Stock;
 
-public class AddStockArticleCommandHandler(IStockRepository<Article> Repository)
-    : ICommandHandlerAsync<AddStockArticleCommand, int>
+public class AddStockCommandHandler<T>(IStockRepository<T> Repository)
+    : ICommandHandlerAsync<AddStockCommand<T>, int>
+    where T : StockBase
 {
-    public async Task<Result<int>> HandleAsync(AddStockArticleCommand command)
+    public async Task<Result<int>> HandleAsync(AddStockCommand<T> command)
     {
         int newArticleId = 0;
         try
         {
-            newArticleId = await Repository.AddAsync(command.article);
+            newArticleId = await Repository.AddAsync(command.stockObj);
         }
         catch (Exception ex)
         {
@@ -22,7 +23,7 @@ public class AddStockArticleCommandHandler(IStockRepository<Article> Repository)
         }
 
         return (newArticleId is 0)
-            ? Result<int>.Failure(StockArticleError.NotInserted)
+            ? Result<int>.Failure(StockError<T>.NotInserted)
             : Result<int>.Success(newArticleId);
     }
 }

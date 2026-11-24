@@ -1,6 +1,6 @@
 namespace BikeShopManager.Domain.Entities.Stock;
 
-public class BikeModel : Audit
+public class BikeModel : StockBase
 {
     public int Id { get; set; }
     public required string Name { get; set; } = string.Empty;

@@ -3,4 +3,5 @@ using BikeShopManager.Domain.Entities.Stock;
 
 namespace BikeShopManager.AppCore.Features.Commands.Stock;
 
-public record AddStockArticleCommand(Article article) : ICommandDefinition<int>;
+public record EnableStockCommand<T>(int Id) : ICommandDefinition
+    where T : StockBase;
