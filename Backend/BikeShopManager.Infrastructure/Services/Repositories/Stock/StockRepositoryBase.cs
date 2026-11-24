@@ -4,7 +4,8 @@ using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services.Repositories.Stock;
 
-public abstract class StockBaseRepository<T>(IDbSession DbSession) : IStockRepositoryBase<T>
+public abstract class StockRepositoryBase<T>(IDbSession DbSession) : IStockRepositoryBase<T>
+    where T : class
 {
     private const string _schemaName = @"Stock";
 

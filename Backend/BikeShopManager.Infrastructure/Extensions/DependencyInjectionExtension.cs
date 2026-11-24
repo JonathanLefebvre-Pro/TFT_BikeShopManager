@@ -1,5 +1,4 @@
 using BikeShopManager.AppCore.Interfaces.Repositories;
-using BikeShopManager.AppCore.Interfaces.Repositories.Stock;
 using BikeShopManager.Infrastructure.Services.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 

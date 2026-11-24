@@ -4,7 +4,7 @@ using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services.Repositories.Stock;
 
-public class StockBikeUnitRepository : StockBaseRepository<BikeUnit>
+public class StockBikeUnitRepository : StockRepositoryBase<BikeUnit>
 {
     private IDbSession _dbSession;
 
