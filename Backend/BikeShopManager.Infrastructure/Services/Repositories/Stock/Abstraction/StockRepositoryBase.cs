@@ -2,9 +2,9 @@ using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.AppCore.Interfaces.Repositories;
 using Dapper;
 
-namespace BikeShopManager.Infrastructure.Services.Repositories.Stock;
+namespace BikeShopManager.Infrastructure.Services.Repositories.Stock.Abstract;
 
-public abstract class StockRepositoryBase<T>(IDbSession DbSession) : IStockRepositoryBase<T>
+public abstract class StockRepositoryBase<T>(IDbSession DbSession) : IStockRepository<T>
     where T : class
 {
     private const string _schemaName = @"Stock";

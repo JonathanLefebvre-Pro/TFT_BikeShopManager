@@ -1,5 +1,6 @@
 using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.Domain.Entities.Stock;
+using BikeShopManager.Infrastructure.Services.Repositories.Stock.Abstract;
 using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services.Repositories.Stock;

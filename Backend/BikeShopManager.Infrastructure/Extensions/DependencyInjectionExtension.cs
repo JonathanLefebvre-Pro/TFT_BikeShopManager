@@ -16,7 +16,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IAuthRepository, AuthRepository>();
         services.Scan(scan =>
             scan.FromAssemblies(typeof(DependencyInjectionExtension).Assembly)
-                .AddClasses(classes => classes.AssignableToAny(typeof(IStockRepositoryBase<>)))
+                .AddClasses(classes => classes.AssignableToAny(typeof(IStockRepository<>)))
                 .AsImplementedInterfaces()
                 .WithScopedLifetime()
         );

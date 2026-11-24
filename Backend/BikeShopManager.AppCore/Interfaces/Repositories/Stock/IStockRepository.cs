@@ -1,6 +1,6 @@
 namespace BikeShopManager.AppCore.Interfaces.Repositories;
 
-public interface IStockRepositoryBase<T>
+public interface IStockRepository<T>
 {
     Task<T?> GetAsync(int id);
     Task<T?> GetAsync(string name);

@@ -2,11 +2,11 @@ using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.AppCore.Interfaces.Repositories;
 using Dapper;
 
-namespace BikeShopManager.Infrastructure.Services.Repositories.Stock;
+namespace BikeShopManager.Infrastructure.Services.Repositories.Stock.Abstract;
 
 public abstract class StockActivableRepositoryBase<T>
     : StockRepositoryBase<T>,
-        IStockActivableRepository
+        IStockActivableRepository<T>
     where T : class
 {
     private IDbSession _dbSession;
