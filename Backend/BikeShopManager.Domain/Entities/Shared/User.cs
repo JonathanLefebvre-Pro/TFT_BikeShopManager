@@ -1,8 +1,9 @@
+using BikeShopManager.Domain.Entities.Shared;
+
 namespace BikeShopManager.Domain.Entities;
 
-public class User : Audit
+public class User : EntityBase, IAudit
 {
-    public int Id { get; set; } = 0;
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public string? Email { get; set; }
@@ -13,4 +14,6 @@ public class User : Audit
     public string? Country { get; set; }
     public DateOnly? BirthDate { get; set; }
     public bool AllowMarketing { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

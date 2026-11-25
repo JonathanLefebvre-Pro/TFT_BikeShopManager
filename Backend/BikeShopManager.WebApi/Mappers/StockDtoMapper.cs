@@ -4,7 +4,7 @@ using BikeShopManager.WebApi.Dtos.Stock;
 namespace BikeShopManager.WebApi.Mappers;
 
 public interface IStockDtoMapper<E, D>
-    where E : StockBase
+    where E : StockEntityBase
 {
     static abstract E ToEntity(D dto);
     static abstract IEnumerable<E> ToEntities(IEnumerable<D> dtos);

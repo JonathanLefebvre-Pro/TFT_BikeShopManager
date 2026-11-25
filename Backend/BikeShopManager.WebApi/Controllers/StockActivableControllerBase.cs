@@ -1,6 +1,7 @@
 using BikeShopManager.AppCore.Features.Commands.Stock;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
+using BikeShopManager.Domain.Entities.Shared;
 using BikeShopManager.Domain.Entities.Stock;
 using BikeShopManager.WebApi.Extensions.Controller;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [ApiController]
     public abstract class StockActivableControllerBase<T> : StockControllerBase<T>
-        where T : StockBase
+        where T : StockEntityBase, IActivable
     {
         private IDispatcher Dispatcher;
 

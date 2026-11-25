@@ -6,15 +6,15 @@ using BikeShopManager.Domain.Entities.Stock;
 
 namespace BikeShopManager.AppCore.Features.Queries.Stock;
 
-public class GetStockByNameQueryHandler<T>(IStockRepository<T> Repository)
-    : IQueryHandlerAsync<GetStockByNameQuery<T>, T>
-    where T : StockBase
+public class GetStockByNameQueryHandler<TEntity>(IStockRepository<TEntity> Repository)
+    : IQueryHandlerAsync<GetStockByNameQuery<TEntity>, TEntity>
+    where TEntity : StockEntityBase
 {
-    public async Task<Result<T>> HandleAsync(GetStockByNameQuery<T> query)
+    public async Task<Result<TEntity>> HandleAsync(GetStockByNameQuery<TEntity> query)
     {
-        T? obj = await Repository.GetAsync(query.Name);
+        TEntity? obj = await Repository.GetAsync(query.Name);
         if (obj is null)
-            return Result<T>.Failure(StockError<T>.NotFound);
+            return Result<TEntity>.Failure(StockError<TEntity>.NotFound);
 
         return obj;
     }

@@ -1,4 +1,3 @@
-using BikeShopManager.AppCore.Features.Commands;
 using BikeShopManager.AppCore.Features.Commands.Stock;
 using BikeShopManager.AppCore.Features.Queries.Stock;
 using BikeShopManager.AppCore.Features.Results;
@@ -12,7 +11,7 @@ namespace BikeShopManager.WebApi.Controllers
     //[Route("api/[controller]")]
     [ApiController]
     public abstract class StockControllerBase<T>(IDispatcher Dispatcher) : ControllerBase
-        where T : StockBase
+        where T : StockEntityBase
     {
         [Route("GetAsync")]
         [HttpGet]

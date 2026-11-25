@@ -3,5 +3,5 @@ using BikeShopManager.Domain.Entities.Stock;
 
 namespace BikeShopManager.AppCore.Features.Queries.Stock;
 
-public record GetStockQuery<T> : IQueryDefinition<IEnumerable<T>>
-    where T : StockBase;
+public record GetStockQuery<TEntity> : IQueryDefinition<IEnumerable<TEntity>>
+    where TEntity : StockEntityBase;

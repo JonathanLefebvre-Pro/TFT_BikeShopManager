@@ -1,8 +1,9 @@
+using BikeShopManager.Domain.Entities.Shared;
+
 namespace BikeShopManager.Domain.Entities.Stock;
 
-public class BikeModel : StockBase, IActivable
+public class BikeModel : StockEntityBase, IActivable
 {
-    public int Id { get; set; }
     public required string Name { get; set; } = string.Empty;
     public required int BrandId { get; set; }
     public required string Model { get; set; } = string.Empty;

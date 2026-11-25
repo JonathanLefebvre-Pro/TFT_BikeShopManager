@@ -1,7 +1,7 @@
 using BikeShopManager.AppCore.Interfaces.Commands;
 using BikeShopManager.Domain.Entities.Stock;
 
-namespace BikeShopManager.AppCore.Features.Commands;
+namespace BikeShopManager.AppCore.Features.Commands.Stock;
 
-public record DeleteStockCommand<T>(int Id) : ICommandDefinition
-    where T : StockBase;
+public record DeleteStockCommand<TEntity>(int Id) : ICommandDefinition
+    where TEntity : StockEntityBase;

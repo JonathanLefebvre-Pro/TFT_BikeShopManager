@@ -1,8 +1,7 @@
 namespace BikeShopManager.Domain.Entities.Stock;
 
-public class Category : StockBase
+public class Category : StockEntityBase
 {
-    public int Id { get; set; }
     public required string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public int? ParentCategoryId { get; set; }

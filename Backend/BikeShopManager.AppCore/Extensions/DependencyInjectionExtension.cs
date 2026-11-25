@@ -7,6 +7,7 @@ using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.AppCore.Interfaces.Queries;
 using BikeShopManager.AppCore.Interfaces.Tokens;
 using Microsoft.Extensions.DependencyInjection;
+using Scrutor;
 
 namespace BikeShopManager.AppCore.Extensions.DependencyInjection;
 
@@ -34,7 +35,9 @@ public static class DependencyInjectionExtension
                         typeof(ICommandHandlerAsync<,>),
                         typeof(IQueryHandlerAsync<,>)
                     )
+                //.Where(_ => !_.IsGenericType)
                 )
+                .UsingRegistrationStrategy(RegistrationStrategy.Skip)
                 .AsImplementedInterfaces()
                 .WithScopedLifetime()
         );

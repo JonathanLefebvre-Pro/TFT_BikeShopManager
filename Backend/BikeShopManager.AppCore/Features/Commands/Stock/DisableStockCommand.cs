@@ -1,7 +1,8 @@
 using BikeShopManager.AppCore.Interfaces.Commands;
+using BikeShopManager.Domain.Entities.Shared;
 using BikeShopManager.Domain.Entities.Stock;
 
 namespace BikeShopManager.AppCore.Features.Commands.Stock;
 
-public record DisableStockCommand<T>(int Id) : ICommandDefinition
-    where T : StockBase;
+public record DisableStockCommand<TEntity>(int Id) : ICommandDefinition
+    where TEntity : StockEntityBase, IActivable;

@@ -1,8 +1,9 @@
+using BikeShopManager.Domain.Entities.Shared;
+
 namespace BikeShopManager.Domain.Entities;
 
-public class ExistingUser
+public class ExistingUser : EntityBase
 {
-    public int Id { get; set; } = 0;
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public string? Email { get; set; }

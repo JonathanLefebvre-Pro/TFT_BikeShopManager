@@ -1,8 +1,7 @@
 namespace BikeShopManager.Domain.Entities.Stock;
 
-public class Image : StockBase
+public class Image : StockEntityBase
 {
-    public int Id { get; set; }
     public int? ArticleId { get; set; }
     public int? BikeModelId { get; set; }
     public required string Url { get; set; } = string.Empty;

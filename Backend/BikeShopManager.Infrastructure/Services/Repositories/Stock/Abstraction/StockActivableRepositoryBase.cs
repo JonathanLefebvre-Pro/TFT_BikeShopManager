@@ -1,13 +1,14 @@
 using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.AppCore.Interfaces.Repositories;
+using BikeShopManager.Domain.Entities.Stock;
 using Dapper;
 
 namespace BikeShopManager.Infrastructure.Services.Repositories.Stock.Abstract;
 
-public abstract class StockActivableRepositoryBase<T>
-    : StockRepositoryBase<T>,
-        IStockActivableRepository<T>
-    where T : class
+public abstract class StockActivableRepositoryBase<TEntity>
+    : StockRepositoryBase<TEntity>,
+        IStockActivableRepository<TEntity>
+    where TEntity : StockEntityBase
 {
     private IDbSession _dbSession;
 
