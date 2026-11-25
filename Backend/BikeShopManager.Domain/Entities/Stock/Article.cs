@@ -1,6 +1,6 @@
 namespace BikeShopManager.Domain.Entities.Stock;
 
-public class Article : StockBase
+public class Article : StockBase, IActivable
 {
     public int Id { get; set; }
     public required string Name { get; set; } = string.Empty;
