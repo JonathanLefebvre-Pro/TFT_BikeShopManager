@@ -45,7 +45,7 @@ public class StockBikeUnitRepository : StockRepositoryBase<BikeUnit>
         string sqlQuery =
             @$"SELECT Id, BikeModelId, SerialNumber, LocationId, Status, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.Id=@Id";
+                WHERE {GetTableCompleteName()}.Id=@Id";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Id", id);
@@ -62,7 +62,7 @@ public class StockBikeUnitRepository : StockRepositoryBase<BikeUnit>
         string sqlQuery =
             @$"SELECT Id, BikeModelId, SerialNumber, LocationId, Status, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.SerialNumber=@SerialNumber";
+                WHERE {GetTableCompleteName()}.SerialNumber=@SerialNumber";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@SerialNumber", serialNumber);

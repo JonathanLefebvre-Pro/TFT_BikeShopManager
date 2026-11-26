@@ -43,7 +43,7 @@ public class StockVatRateRepository : StockRepositoryBase<VatRate>
         string sqlQuery =
             @$"SELECT Id, Label, Rate, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.Id=@Id";
+                WHERE {GetTableCompleteName()}.Id=@Id";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Id", id);
@@ -60,7 +60,7 @@ public class StockVatRateRepository : StockRepositoryBase<VatRate>
         string sqlQuery =
             @$"SELECT Id, Label, Rate, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.Label=@Label";
+                WHERE {GetTableCompleteName()}.Label=@Label";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Label", label);

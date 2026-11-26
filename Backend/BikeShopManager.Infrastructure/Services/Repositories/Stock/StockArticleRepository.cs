@@ -52,7 +52,7 @@ public class StockArticleRepository : StockActivableRepositoryBase<Article>
         string sqlQuery =
             @$"SELECT Id, Name, BrandId, Description, CategoryId, PurchasePriceExclVat, SalePriceInclVat, VatRateId, AvailableQuantity, MinQuantity, MaxQuantity, EAN, IsActive, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.Id=@Id";
+                WHERE {GetTableCompleteName()}.Id=@Id";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Id", id);
@@ -69,7 +69,7 @@ public class StockArticleRepository : StockActivableRepositoryBase<Article>
         string sqlQuery =
             @$"SELECT Id, Name, BrandId, Description, CategoryId, PurchasePriceExclVat, SalePriceInclVat, VatRateId, AvailableQuantity, MinQuantity, MaxQuantity, EAN, IsActive, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.Name=@Name";
+                WHERE {GetTableCompleteName()}.Name=@Name";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Name", name);

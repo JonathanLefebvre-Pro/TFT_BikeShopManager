@@ -45,7 +45,7 @@ public class StockImageRepository : StockRepositoryBase<Image>
         string sqlQuery =
             @$"SELECT Id, ArticleId, BikeModelId, Url, ImageName, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.Id=@Id";
+                WHERE {GetTableCompleteName()}.Id=@Id";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Id", id);
@@ -62,7 +62,7 @@ public class StockImageRepository : StockRepositoryBase<Image>
         string sqlQuery =
             @$"SELECT Id, ArticleId, BikeModelId, Url, ImageName, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.ImageName=@ImageName";
+                WHERE {GetTableCompleteName()}.ImageName=@ImageName";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@ImageName", imageName);

@@ -7,9 +7,8 @@ using BikeShopManager.Domain.Entities.Stock;
 
 namespace BikeShopManager.AppCore.Features.Commands.Stock;
 
-public class EnableStockArticleCommandHandler<TEntity>(
-    IStockActivableRepository<TEntity> Repository
-) : ICommandHandlerAsync<EnableStockCommand<TEntity>>
+public class EnableStockCommandHandler<TEntity>(IStockActivableRepository<TEntity> Repository)
+    : ICommandHandlerAsync<EnableStockCommand<TEntity>>
     where TEntity : StockEntityBase, IActivable
 {
     public async Task<Result> HandleAsync(EnableStockCommand<TEntity> command)

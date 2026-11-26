@@ -45,7 +45,7 @@ public class StockCategoryRepository : StockRepositoryBase<Category>
         string sqlQuery =
             @$"SELECT Id, Name, Description, ParentCategoryId, Domain, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.Id=@Id";
+                WHERE {GetTableCompleteName()}.Id=@Id";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Id", id);
@@ -62,7 +62,7 @@ public class StockCategoryRepository : StockRepositoryBase<Category>
         string sqlQuery =
             @$"SELECT Id, Name, Description, ParentCategoryId, Domain, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.Name=@Name";
+                WHERE {GetTableCompleteName()}.Name=@Name";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Name", name);

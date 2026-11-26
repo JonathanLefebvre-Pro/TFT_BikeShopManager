@@ -50,7 +50,7 @@ public class StockBikeModelRepository : StockActivableRepositoryBase<BikeModel>
         string sqlQuery =
             @$"SELECT Id, Name, BrandId, Model, Description, CategoryId, PurchasePriceExclVat, SalePriceInclVat, VatRateId, EAN, IsActive, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.Id=@Id";
+                WHERE {GetTableCompleteName()}.Id=@Id";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Id", id);
@@ -67,7 +67,7 @@ public class StockBikeModelRepository : StockActivableRepositoryBase<BikeModel>
         string sqlQuery =
             @$"SELECT Id, Name, BrandId, Model, Description, CategoryId, PurchasePriceExclVat, SalePriceInclVat, VatRateId, EAN, IsActive, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.Name=@Name";
+                WHERE {GetTableCompleteName()}.Name=@Name";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Name", name);

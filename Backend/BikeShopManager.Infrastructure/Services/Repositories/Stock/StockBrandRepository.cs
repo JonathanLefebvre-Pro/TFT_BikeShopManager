@@ -42,7 +42,7 @@ public class StockBrandRepository : StockRepositoryBase<Brand>
         string sqlQuery =
             @$"SELECT Id, Name, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.Id=@Id";
+                WHERE {GetTableCompleteName()}.Id=@Id";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Id", id);
@@ -59,7 +59,7 @@ public class StockBrandRepository : StockRepositoryBase<Brand>
         string sqlQuery =
             @$"SELECT Id, Name, CreatedAt, UpdatedAt
                 FROM {GetTableCompleteName()}
-                WHERE {GetTableCompleteName}.Name=@name";
+                WHERE {GetTableCompleteName()}.Name=@name";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Name", name);
