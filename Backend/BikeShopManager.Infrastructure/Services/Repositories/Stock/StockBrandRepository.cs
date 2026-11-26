@@ -82,4 +82,9 @@ public class StockBrandRepository : StockRepositoryBase<Brand>
             transaction: _dbSession.Transaction
         );
     }
+
+    public override async Task<bool> UpdateAsync(Brand obj)
+    {
+        throw new NotImplementedException();
+    }
 }

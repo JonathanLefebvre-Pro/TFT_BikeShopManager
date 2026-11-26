@@ -39,6 +39,7 @@ public abstract class StockRepositoryBase<TEntity> : IStockRepository<TEntity>
     public abstract Task<TEntity?> GetAsync(int id);
     public abstract Task<TEntity?> GetAsync(string name);
     public abstract Task<IEnumerable<TEntity>> GetAsync();
+    public abstract Task<bool> UpdateAsync(TEntity obj);
 
     public string GetSchemaName()
     {

@@ -13,5 +13,4 @@ public class StockAddArticleDto
     public required int MinQuantity { get; set; }
     public int? MaxQuantity { get; set; }
     public string? EAN { get; set; }
-    public bool IsActive { get; set; } = true;
 }

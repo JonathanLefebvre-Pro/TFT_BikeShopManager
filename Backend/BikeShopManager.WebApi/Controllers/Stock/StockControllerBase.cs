@@ -9,64 +9,76 @@ using Microsoft.AspNetCore.Mvc;
 namespace BikeShopManager.WebApi.Controllers.Stock
 {
     [ApiController]
-    public abstract class StockControllerBase<T>(IDispatcher Dispatcher) : ControllerBase
-        where T : StockEntityBase
+    public abstract class StockControllerBase<TEntity>(IDispatcher Dispatcher) : ControllerBase
+        where TEntity : StockEntityBase
     {
         [Route("GetAsync")]
         [HttpGet]
         //[Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public virtual async Task<IActionResult> GetAsync()
         {
-            Result<IEnumerable<T>> result = await Dispatcher.SendQueryAsync<
-                GetStockQuery<T>,
-                IEnumerable<T>
-            >(new GetStockQuery<T>());
+            Result<IEnumerable<TEntity>> result = await Dispatcher.SendQueryAsync<
+                GetStockQuery<TEntity>,
+                IEnumerable<TEntity>
+            >(new GetStockQuery<TEntity>());
 
             return this.FromResult(result);
         }
 
-        [Route("GetByIdAsync")]
+        [Route("GetByIdAsync/{id}")]
         [HttpGet]
         public virtual async Task<IActionResult> GetByIdAsync(int id)
         {
-            Result<T> result = await Dispatcher.SendQueryAsync<GetStockByIdQuery<T>, T>(
-                new GetStockByIdQuery<T>(id)
-            );
+            Result<TEntity> result = await Dispatcher.SendQueryAsync<
+                GetStockByIdQuery<TEntity>,
+                TEntity
+            >(new GetStockByIdQuery<TEntity>(id));
 
             return this.FromResult(result);
         }
 
-        [Route("GetByNameAsync")]
+        [Route("GetByNameAsync/{name}")]
         [HttpGet]
         public virtual async Task<IActionResult> GetByNameAsync(string name)
         {
-            Result<T> result = await Dispatcher.SendQueryAsync<GetStockByNameQuery<T>, T>(
-                new GetStockByNameQuery<T>(name)
-            );
+            Result<TEntity> result = await Dispatcher.SendQueryAsync<
+                GetStockByNameQuery<TEntity>,
+                TEntity
+            >(new GetStockByNameQuery<TEntity>(name));
 
             return this.FromResult(result);
         }
 
-        [Route("AddAsync")]
-        [HttpPost]
-        public virtual async Task<IActionResult> AddAsync<DObject>([FromBody] DObject Dto)
-        {
-            //TODO : Convert DTO DObject to T object
-            //T tmpObj = new T();
-
-            Result<int> result = await Dispatcher.SendCommandAsync<AddStockCommand<T>, int>(
-                new AddStockCommand<T>(null)
-            );
-
-            return this.FromResult(result);
-        }
-
-        [Route("DeleteAsync")]
+        [Route("DeleteAsync/{id}")]
         [HttpDelete]
         public virtual async Task<IActionResult> DeleteAsync(int id)
         {
-            Result result = await Dispatcher.SendCommandAsync<DeleteStockCommand<T>>(
-                new DeleteStockCommand<T>(id)
+            Result result = await Dispatcher.SendCommandAsync<DeleteStockCommand<TEntity>>(
+                new DeleteStockCommand<TEntity>(id)
+            );
+
+            return this.FromResult(result);
+        }
+
+        protected async Task<IActionResult> AddAsyncCore<TAddDto>(TAddDto Dto)
+        {
+            //TODO : Convert DTO TObject to T object
+            //T tmpObj = new T();
+
+            Result<int> result = await Dispatcher.SendCommandAsync<AddStockCommand<TEntity>, int>(
+                new AddStockCommand<TEntity>(null)
+            );
+
+            return this.FromResult(result);
+        }
+
+        protected async Task<IActionResult> UpdateAsyncCore<TUpdateDto>(TUpdateDto Dto)
+        {
+            //TODO : Convert DTO TObject to T object
+            //T tmpObj = new T();
+
+            Result result = await Dispatcher.SendCommandAsync<UpdateStockCommand<TEntity>>(
+                new UpdateStockCommand<TEntity>(null)
             );
 
             return this.FromResult(result);

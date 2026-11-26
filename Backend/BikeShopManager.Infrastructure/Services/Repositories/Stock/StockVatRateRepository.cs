@@ -83,4 +83,9 @@ public class StockVatRateRepository : StockRepositoryBase<VatRate>
             transaction: _dbSession.Transaction
         );
     }
+
+    public override async Task<bool> UpdateAsync(VatRate obj)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -92,4 +92,9 @@ public class StockArticleRepository : StockActivableRepositoryBase<Article>
             transaction: _dbSession.Transaction
         );
     }
+
+    public override async Task<bool> UpdateAsync(Article obj)
+    {
+        throw new NotImplementedException();
+    }
 }

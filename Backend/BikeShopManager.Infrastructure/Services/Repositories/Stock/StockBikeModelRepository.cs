@@ -90,4 +90,9 @@ public class StockBikeModelRepository : StockActivableRepositoryBase<BikeModel>
             transaction: _dbSession.Transaction
         );
     }
+
+    public override async Task<bool> UpdateAsync(BikeModel obj)
+    {
+        throw new NotImplementedException();
+    }
 }

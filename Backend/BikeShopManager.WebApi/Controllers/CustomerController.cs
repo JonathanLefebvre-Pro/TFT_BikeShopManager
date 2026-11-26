@@ -15,7 +15,7 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [TagGroup("Customer")]
+    [TagGroup("Customers")]
     [Authorize]
     public class CustomerController(IDispatcher Dispatcher) : ControllerBase
     {

@@ -85,4 +85,9 @@ public class StockImageRepository : StockRepositoryBase<Image>
             transaction: _dbSession.Transaction
         );
     }
+
+    public override async Task<bool> UpdateAsync(Image obj)
+    {
+        throw new NotImplementedException();
+    }
 }

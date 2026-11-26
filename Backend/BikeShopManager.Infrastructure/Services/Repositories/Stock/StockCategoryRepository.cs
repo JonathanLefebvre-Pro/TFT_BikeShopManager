@@ -85,4 +85,9 @@ public class StockCategoryRepository : StockRepositoryBase<Category>
             transaction: _dbSession.Transaction
         );
     }
+
+    public override async Task<bool> UpdateAsync(Category obj)
+    {
+        throw new NotImplementedException();
+    }
 }

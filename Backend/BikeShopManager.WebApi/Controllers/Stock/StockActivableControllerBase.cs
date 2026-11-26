@@ -20,8 +20,8 @@ namespace BikeShopManager.WebApi.Controllers.Stock
             this.Dispatcher = Dispatcher;
         }
 
-        [Route("EnableAsync")]
-        [HttpGet]
+        [Route("EnableAsync/{id}")]
+        [HttpPatch]
         //[Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public virtual async Task<IActionResult> EnableAsync(int id)
         {
@@ -32,8 +32,8 @@ namespace BikeShopManager.WebApi.Controllers.Stock
             return this.FromResult(result);
         }
 
-        [Route("DisableAsync")]
-        [HttpGet]
+        [Route("DisableAsync/{id}")]
+        [HttpPatch]
         //[Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public virtual async Task<IActionResult> DisableAsync(int id)
         {

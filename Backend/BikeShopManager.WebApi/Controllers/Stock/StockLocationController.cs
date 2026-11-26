@@ -8,7 +8,7 @@ namespace BikeShopManager.WebApi.Controllers.Stock
     [Route("api/Stock/Location")]
     [ApiController]
     [TagGroup("Stock")]
-    [Tags("Lcoation")]
+    [Tags("Location")]
     public class StockLocationController : StockControllerBase<Location>
     {
         public StockLocationController(IDispatcher Dispatcher)

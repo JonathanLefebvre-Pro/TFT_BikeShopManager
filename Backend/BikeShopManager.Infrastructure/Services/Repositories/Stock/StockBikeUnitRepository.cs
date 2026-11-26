@@ -85,4 +85,9 @@ public class StockBikeUnitRepository : StockRepositoryBase<BikeUnit>
             transaction: _dbSession.Transaction
         );
     }
+
+    public override async Task<bool> UpdateAsync(BikeUnit obj)
+    {
+        throw new NotImplementedException();
+    }
 }

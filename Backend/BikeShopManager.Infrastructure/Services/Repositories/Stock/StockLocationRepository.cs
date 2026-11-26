@@ -82,4 +82,9 @@ public class StockLocationRepository : StockRepositoryBase<Location>
             transaction: _dbSession.Transaction
         );
     }
+
+    public override async Task<bool> UpdateAsync(Location obj)
+    {
+        throw new NotImplementedException();
+    }
 }

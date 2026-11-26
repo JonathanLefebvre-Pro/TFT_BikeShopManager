@@ -16,7 +16,7 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [TagGroup("Employee")]
+    [TagGroup("Employees")]
     [Authorize(Roles = ("Admin, Manager"))]
     public class EmployeeController(IDispatcher Dispatcher, IJwtUtilities JwtUtilities)
         : ControllerBase

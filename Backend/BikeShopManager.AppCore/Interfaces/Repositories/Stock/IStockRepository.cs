@@ -10,4 +10,5 @@ public interface IStockRepository<TEntity>
     Task<IEnumerable<TEntity>> GetAsync();
     Task<int> AddAsync(TEntity obj);
     Task<bool> DeleteAsync(int id);
+    Task<bool> UpdateAsync(TEntity obj);
 }

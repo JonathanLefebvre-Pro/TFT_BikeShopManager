@@ -12,7 +12,7 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [TagGroup("Role")]
+    [TagGroup("Roles")]
     [Authorize]
     public class RoleController(IDispatcher Dispatcher) : ControllerBase
     {

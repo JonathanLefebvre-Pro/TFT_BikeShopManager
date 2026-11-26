@@ -12,18 +12,16 @@ public class AddStockCommandHandler<TEntity>(IStockRepository<TEntity> Repositor
 {
     public async Task<Result<int>> HandleAsync(AddStockCommand<TEntity> command)
     {
-        int newArticleId = 0;
         try
         {
-            newArticleId = await Repository.AddAsync(command.stockEntity);
+            int newArticleId = await Repository.AddAsync(command.stockEntity);
+            return (newArticleId is not 0)
+                ? Result<int>.Success(newArticleId)
+                : Result<int>.Failure(StockError<TEntity>.NotInserted);
         }
         catch (Exception ex)
         {
             return ex;
         }
-
-        return (newArticleId is 0)
-            ? Result<int>.Failure(StockError<TEntity>.NotInserted)
-            : Result<int>.Success(newArticleId);
     }
 }
