@@ -24,9 +24,9 @@ namespace BikeShopManager.WebApi.Controllers.Stock
 
         [Route("UpdateAsync")]
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] StockUpdateArticleDto Dto)
+        public async Task<IActionResult> UpdateAsync(int id, [FromBody] StockUpdateArticleDto Dto)
         {
-            return await UpdateAsyncCore<StockUpdateArticleDto>(Dto);
+            return await UpdateAsyncCore<StockUpdateArticleDto>(id, Dto);
         }
     }
 }

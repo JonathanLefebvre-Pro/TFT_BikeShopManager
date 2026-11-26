@@ -86,7 +86,7 @@ public class StockBikeUnitRepository : StockRepositoryBase<BikeUnit>
         );
     }
 
-    public override async Task<bool> UpdateAsync(BikeUnit obj)
+    public override async Task<bool> UpdateAsync(int id, BikeUnit obj)
     {
         throw new NotImplementedException();
     }

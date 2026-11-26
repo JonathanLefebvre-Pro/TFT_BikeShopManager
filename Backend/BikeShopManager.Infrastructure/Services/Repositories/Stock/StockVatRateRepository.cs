@@ -84,7 +84,7 @@ public class StockVatRateRepository : StockRepositoryBase<VatRate>
         );
     }
 
-    public override async Task<bool> UpdateAsync(VatRate obj)
+    public override async Task<bool> UpdateAsync(int id, VatRate obj)
     {
         throw new NotImplementedException();
     }

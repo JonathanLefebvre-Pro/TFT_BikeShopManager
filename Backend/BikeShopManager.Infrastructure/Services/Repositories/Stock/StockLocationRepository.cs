@@ -83,7 +83,7 @@ public class StockLocationRepository : StockRepositoryBase<Location>
         );
     }
 
-    public override async Task<bool> UpdateAsync(Location obj)
+    public override async Task<bool> UpdateAsync(int id, Location obj)
     {
         throw new NotImplementedException();
     }

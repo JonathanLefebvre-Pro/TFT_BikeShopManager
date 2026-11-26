@@ -3,5 +3,5 @@ using BikeShopManager.Domain.Entities.Stock;
 
 namespace BikeShopManager.AppCore.Features.Commands.Stock;
 
-public record UpdateStockCommand<TEntity>(TEntity stockEntity) : ICommandDefinition
+public record UpdateStockCommand<TEntity>(int Id, TEntity stockEntity) : ICommandDefinition
     where TEntity : StockEntityBase;

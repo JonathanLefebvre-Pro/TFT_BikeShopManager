@@ -83,7 +83,7 @@ public class StockBrandRepository : StockRepositoryBase<Brand>
         );
     }
 
-    public override async Task<bool> UpdateAsync(Brand obj)
+    public override async Task<bool> UpdateAsync(int id, Brand obj)
     {
         throw new NotImplementedException();
     }

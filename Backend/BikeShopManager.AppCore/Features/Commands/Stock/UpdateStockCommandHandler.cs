@@ -14,7 +14,7 @@ public class UpdateStockCommandHandler<TEntity>(IStockRepository<TEntity> Reposi
     {
         try
         {
-            return await Repository.UpdateAsync(command.stockEntity)
+            return await Repository.UpdateAsync(command.Id, command.stockEntity)
                 ? Result.Success()
                 : Result.Failure(StockError<TEntity>.NotUpdated);
         }

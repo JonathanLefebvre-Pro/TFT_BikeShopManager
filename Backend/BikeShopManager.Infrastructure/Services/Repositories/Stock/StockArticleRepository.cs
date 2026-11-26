@@ -93,7 +93,7 @@ public class StockArticleRepository : StockActivableRepositoryBase<Article>
         );
     }
 
-    public override async Task<bool> UpdateAsync(Article obj)
+    public override async Task<bool> UpdateAsync(int id, Article obj)
     {
         throw new NotImplementedException();
     }

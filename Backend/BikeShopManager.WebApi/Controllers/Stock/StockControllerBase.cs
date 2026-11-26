@@ -72,13 +72,13 @@ namespace BikeShopManager.WebApi.Controllers.Stock
             return this.FromResult(result);
         }
 
-        protected async Task<IActionResult> UpdateAsyncCore<TUpdateDto>(TUpdateDto Dto)
+        protected async Task<IActionResult> UpdateAsyncCore<TUpdateDto>(int id, TUpdateDto Dto)
         {
             //TODO : Convert DTO TObject to T object
             //T tmpObj = new T();
 
             Result result = await Dispatcher.SendCommandAsync<UpdateStockCommand<TEntity>>(
-                new UpdateStockCommand<TEntity>(null)
+                new UpdateStockCommand<TEntity>(id, null)
             );
 
             return this.FromResult(result);

@@ -86,7 +86,7 @@ public class StockCategoryRepository : StockRepositoryBase<Category>
         );
     }
 
-    public override async Task<bool> UpdateAsync(Category obj)
+    public override async Task<bool> UpdateAsync(int id, Category obj)
     {
         throw new NotImplementedException();
     }

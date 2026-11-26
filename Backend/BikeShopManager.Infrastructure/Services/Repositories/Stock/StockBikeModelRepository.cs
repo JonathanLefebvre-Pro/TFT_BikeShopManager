@@ -1,3 +1,4 @@
+using System.Transactions;
 using BikeShopManager.AppCore.Interfaces.Connection;
 using BikeShopManager.Domain.Entities.Stock;
 using BikeShopManager.Infrastructure.Services.Repositories.Stock.Abstract;
@@ -91,7 +92,7 @@ public class StockBikeModelRepository : StockActivableRepositoryBase<BikeModel>
         );
     }
 
-    public override async Task<bool> UpdateAsync(BikeModel obj)
+    public override async Task<bool> UpdateAsync(int id, BikeModel obj)
     {
         throw new NotImplementedException();
     }

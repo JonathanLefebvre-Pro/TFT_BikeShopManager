@@ -86,7 +86,7 @@ public class StockImageRepository : StockRepositoryBase<Image>
         );
     }
 
-    public override async Task<bool> UpdateAsync(Image obj)
+    public override async Task<bool> UpdateAsync(int id, Image obj)
     {
         throw new NotImplementedException();
     }
