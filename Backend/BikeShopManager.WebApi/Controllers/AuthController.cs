@@ -5,21 +5,32 @@ using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos.Auth;
 using BikeShopManager.WebApi.Extensions.Controller;
-using Microsoft.AspNetCore.Mvc;
+using BikeShopManager.WebApi.ScalarAttributes;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IDispatcher Dispatcher, IValidator<LoginRequestDto> Validator) : ControllerBase
+    [TagGroup("Auth")]
+    [Tags("Login")]
+    public class AuthController(IDispatcher Dispatcher, IValidator<LoginRequestDto> Validator)
+        : ControllerBase
     {
         [Route("LoginAsync")]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDto dto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Login(
+            [FromBody] LoginRequestDto dto,
+            CancellationToken cancellationToken
+        )
         {
-            FluentValidation.Results.ValidationResult validationResult = await Validator.ValidateAsync(dto, cancellationToken);
-            if(!validationResult.IsValid) return this.ValidationProblem(new ValidationProblemDetails(validationResult.ToDictionary()));
+            FluentValidation.Results.ValidationResult validationResult =
+                await Validator.ValidateAsync(dto, cancellationToken);
+            if (!validationResult.IsValid)
+                return this.ValidationProblem(
+                    new ValidationProblemDetails(validationResult.ToDictionary())
+                );
 
             Result<AuthUser> result = await Dispatcher.SendQueryAsync<LoginQuery, AuthUser>(
                 new LoginQuery(dto.Login, dto.Password)

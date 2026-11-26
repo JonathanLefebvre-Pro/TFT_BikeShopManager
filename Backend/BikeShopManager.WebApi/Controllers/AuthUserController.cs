@@ -8,6 +8,7 @@ using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos;
 using BikeShopManager.WebApi.Extensions.Controller;
 using BikeShopManager.WebApi.Mappers;
+using BikeShopManager.WebApi.ScalarAttributes;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,8 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TagGroup("Auth")]
+    [Tags("User")]
     [Authorize]
     public class AuthUserController(
         IDispatcher Dispatcher,

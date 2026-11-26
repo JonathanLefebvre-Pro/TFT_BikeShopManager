@@ -63,7 +63,7 @@ public static class DependencyInjectionExtension
         return services;
     }
 
-    public static IServiceCollection AddGenericHandlers(
+    private static IServiceCollection AddGenericHandlers(
         this IServiceCollection services,
         Type handlerInterface,
         Assembly assembly

@@ -7,6 +7,7 @@ using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos;
 using BikeShopManager.WebApi.Extensions.Controller;
 using BikeShopManager.WebApi.Mappers;
+using BikeShopManager.WebApi.ScalarAttributes;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TagGroup("Employee")]
     [Authorize(Roles = ("Admin, Manager"))]
     public class EmployeeController(IDispatcher Dispatcher, IJwtUtilities JwtUtilities)
         : ControllerBase

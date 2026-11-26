@@ -6,9 +6,8 @@ using BikeShopManager.Domain.Entities.Stock;
 using BikeShopManager.WebApi.Extensions.Controller;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BikeShopManager.WebApi.Controllers
+namespace BikeShopManager.WebApi.Controllers.Stock
 {
-    //[Route("api/[controller]")]
     [ApiController]
     public abstract class StockControllerBase<T>(IDispatcher Dispatcher) : ControllerBase
         where T : StockEntityBase

@@ -18,7 +18,7 @@ public class JwtUtilities : IJwtUtilities
         {
             return int.Parse(employeeId);
         }
-        catch (Exception error)
+        catch (Exception)
         {
             return 0;
         }

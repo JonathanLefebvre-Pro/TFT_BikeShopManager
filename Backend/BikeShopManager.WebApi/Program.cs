@@ -59,9 +59,6 @@ try
 
     builder.Services.AddControllers();
 
-    // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-    builder.Services.AddOpenApi();
-
     // Register FluentValidation validators
     builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
@@ -72,6 +69,7 @@ try
     builder.Services.AddOpenApi(options =>
     {
         options.AddFluentValidationRules();
+        options.AddOpenApiTagGroups();
     });
 
     var app = builder.Build();

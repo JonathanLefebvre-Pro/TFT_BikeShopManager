@@ -4,6 +4,7 @@ using BikeShopManager.AppCore.Interfaces.Dispatcher;
 using BikeShopManager.Domain.Entities;
 using BikeShopManager.WebApi.Dtos;
 using BikeShopManager.WebApi.Mappers;
+using BikeShopManager.WebApi.ScalarAttributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace BikeShopManager.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TagGroup("Role")]
     [Authorize]
     public class RoleController(IDispatcher Dispatcher) : ControllerBase
     {
