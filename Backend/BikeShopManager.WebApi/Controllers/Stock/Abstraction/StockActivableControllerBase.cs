@@ -1,23 +1,28 @@
 using BikeShopManager.AppCore.Features.Commands.Stock;
 using BikeShopManager.AppCore.Features.Results;
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
+using BikeShopManager.AppCore.Interfaces.Dtos;
+using BikeShopManager.AppCore.Interfaces.Mappers;
 using BikeShopManager.Domain.Entities.Shared;
 using BikeShopManager.Domain.Entities.Stock;
 using BikeShopManager.WebApi.Extensions.Controller;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BikeShopManager.WebApi.Controllers.Stock
+namespace BikeShopManager.WebApi.Controllers.Stock.Abstraction
 {
     [ApiController]
-    public abstract class StockActivableControllerBase<T> : StockControllerBase<T>
-        where T : StockEntityBase, IActivable
+    public abstract class StockActivableControllerBase<TEntity> : StockControllerBase<TEntity>
+        where TEntity : StockEntityBase, IActivable
     {
-        private IDispatcher Dispatcher;
+        private IDispatcher _dispatcher;
 
-        public StockActivableControllerBase(IDispatcher Dispatcher)
-            : base(Dispatcher)
+        public StockActivableControllerBase(
+            IDispatcher Dispatcher,
+            IDtoMapper<TEntity, IResponseDto<TEntity>> ResponseDtoMapper
+        )
+            : base(Dispatcher, ResponseDtoMapper)
         {
-            this.Dispatcher = Dispatcher;
+            this._dispatcher = Dispatcher;
         }
 
         [Route("EnableAsync/{id}")]
@@ -25,8 +30,8 @@ namespace BikeShopManager.WebApi.Controllers.Stock
         //[Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public virtual async Task<IActionResult> EnableAsync(int id)
         {
-            Result result = await Dispatcher.SendCommandAsync<EnableStockCommand<T>>(
-                new EnableStockCommand<T>(id)
+            Result result = await _dispatcher.SendCommandAsync<EnableStockCommand<TEntity>>(
+                new EnableStockCommand<TEntity>(id)
             );
 
             return this.FromResult(result);
@@ -37,8 +42,8 @@ namespace BikeShopManager.WebApi.Controllers.Stock
         //[Authorize(Roles = ("Admin, Manager, Seller, Mechanic"))]
         public virtual async Task<IActionResult> DisableAsync(int id)
         {
-            Result result = await Dispatcher.SendCommandAsync<DisableStockCommand<T>>(
-                new DisableStockCommand<T>(id)
+            Result result = await _dispatcher.SendCommandAsync<DisableStockCommand<TEntity>>(
+                new DisableStockCommand<TEntity>(id)
             );
 
             return this.FromResult(result);

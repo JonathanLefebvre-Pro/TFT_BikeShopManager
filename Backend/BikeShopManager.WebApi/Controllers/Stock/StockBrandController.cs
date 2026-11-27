@@ -1,5 +1,8 @@
 using BikeShopManager.AppCore.Interfaces.Dispatcher;
+using BikeShopManager.AppCore.Interfaces.Dtos;
+using BikeShopManager.AppCore.Interfaces.Mappers;
 using BikeShopManager.Domain.Entities.Stock;
+using BikeShopManager.WebApi.Controllers.Stock.Abstraction;
 using BikeShopManager.WebApi.ScalarAttributes;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +14,10 @@ namespace BikeShopManager.WebApi.Controllers.Stock
     [Tags("Brand")]
     public class StockBrandController : StockControllerBase<Brand>
     {
-        public StockBrandController(IDispatcher Dispatcher)
-            : base(Dispatcher) { }
+        public StockBrandController(
+            IDispatcher Dispatcher,
+            IDtoMapper<Brand, IResponseDto<Brand>> ResponseDtoMapper
+        )
+            : base(Dispatcher, ResponseDtoMapper) { }
     }
 }

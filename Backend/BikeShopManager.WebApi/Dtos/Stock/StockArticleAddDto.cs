@@ -1,6 +1,9 @@
+using BikeShopManager.AppCore.Interfaces.Dtos;
+using BikeShopManager.Domain.Entities.Stock;
+
 namespace BikeShopManager.WebApi.Dtos.Stock;
 
-public class StockAddArticleDto
+public class StockArticleAddDto : IAddDto<Article>
 {
     public required string Name { get; set; }
     public required int BrandId { get; set; }
