@@ -1,8 +1,6 @@
 using System.Reflection;
-using BikeShopManager.AppCore.Features.Commands.Stock;
 using BikeShopManager.AppCore.Features.Connection;
 using BikeShopManager.AppCore.Features.Dispatcher;
-using BikeShopManager.AppCore.Features.Queries.Stock;
 using BikeShopManager.AppCore.Features.Tokens;
 using BikeShopManager.AppCore.Interfaces.Commands;
 using BikeShopManager.AppCore.Interfaces.Connection;

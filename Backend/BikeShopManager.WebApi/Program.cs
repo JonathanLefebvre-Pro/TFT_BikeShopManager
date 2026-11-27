@@ -31,6 +31,9 @@ try
             lc.ReadFrom.Configuration(builder.Configuration).ReadFrom.Services(services)
     );
 
+    //Add Generic Mappers
+    builder.Services.AddMapperServices();
+
     //Add CORS config
     builder.Services.AddCorsConfiguration();
 
