@@ -3,26 +3,27 @@ using BikeShopManager.WebApi.Dtos.Stock;
 
 namespace BikeShopManager.WebApi.Mappers.Stock;
 
-public class StockArticleResponseDtoMapper : StockEntityMapperBase<Article, StockArticleResponseDto>
+public class StockArticleResponseDtoMapper : StockDtoMapperBase<Article, StockArticleResponseDto>
 {
-    public override Article ToEntity(StockArticleResponseDto dto)
+    public override StockArticleResponseDto ToDto(Article entity)
     {
-        Article entity = new Article()
+        StockArticleResponseDto dto = new StockArticleResponseDto()
         {
-            Id = dto.Id,
-            Name = dto.Name,
-            BrandId = dto.BrandId,
-            Description = dto.Description,
-            CategoryId = dto.CategoryId,
-            PurchasePriceExclVat = dto.PurchasePriceExclVat,
-            SalePriceInclVat = dto.SalePriceInclVat,
-            VatRateId = dto.VatRateId,
-            AvailableQuantity = dto.AvailableQuantity,
-            MinQuantity = dto.MinQuantity,
-            MaxQuantity = dto.MaxQuantity,
-            EAN = dto.EAN,
+            Id = entity.Id,
+            Name = entity.Name,
+            BrandId = entity.BrandId,
+            Description = entity.Description,
+            CategoryId = entity.CategoryId,
+            PurchasePriceExclVat = entity.PurchasePriceExclVat,
+            SalePriceInclVat = entity.SalePriceInclVat,
+            VatRateId = entity.VatRateId,
+            AvailableQuantity = entity.AvailableQuantity,
+            MinQuantity = entity.MinQuantity,
+            MaxQuantity = entity.MaxQuantity,
+            EAN = entity.EAN,
+            IsActive = entity.IsActive,
         };
 
-        return entity;
+        return dto;
     }
 }

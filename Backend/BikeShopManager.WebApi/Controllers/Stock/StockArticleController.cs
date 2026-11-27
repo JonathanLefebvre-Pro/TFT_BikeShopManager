@@ -26,9 +26,9 @@ namespace BikeShopManager.WebApi.Controllers.Stock
             IDispatcher Dispatcher,
             IEntityMapper<Article, StockArticleAddDto> AddEntityMapper,
             IEntityMapper<Article, StockArticleUpdateDto> UpdateEntityMapper,
-            IDtoMapper<Article, IResponseDto<Article>> ResponseDtomMapper
+            IDtoMapper<Article, IResponseDto<Article>> ResponseDtoMapper
         )
-            : base(Dispatcher, ResponseDtomMapper)
+            : base(Dispatcher, ResponseDtoMapper)
         {
             _addEntityMapper = AddEntityMapper;
             _updateEntityMapper = UpdateEntityMapper;

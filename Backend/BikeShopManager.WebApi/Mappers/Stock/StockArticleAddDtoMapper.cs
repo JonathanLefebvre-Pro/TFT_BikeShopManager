@@ -1,8 +1,7 @@
 using BikeShopManager.Domain.Entities.Stock;
 using BikeShopManager.WebApi.Dtos.Stock;
-using BikeShopManager.WebApi.Mappers.Stock;
 
-namespace BikeShopManager.WebApi.Mappers;
+namespace BikeShopManager.WebApi.Mappers.Stock;
 
 public class StockArticleAddDtoMapper : StockEntityMapperBase<Article, StockArticleAddDto>
 {
