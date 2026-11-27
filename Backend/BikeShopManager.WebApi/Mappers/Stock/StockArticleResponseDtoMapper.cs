@@ -1,5 +1,6 @@
 using BikeShopManager.Domain.Entities.Stock;
 using BikeShopManager.WebApi.Dtos.Stock;
+using BikeShopManager.WebApi.Mappers.Stock.Abstraction;
 
 namespace BikeShopManager.WebApi.Mappers.Stock;
 

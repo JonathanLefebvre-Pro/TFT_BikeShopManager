@@ -3,7 +3,7 @@ using BikeShopManager.Domain.Entities.Shared;
 
 namespace BikeShopManager.AppCore.Interfaces.Mappers;
 
-public interface IDtoMapper<TEntity, TDto>
+public interface IDtoMapper<TEntity, out TDto>
     where TEntity : EntityBase
     where TDto : IDto<TEntity>
 {

@@ -9,74 +9,83 @@ public static class MappersExtensions
 {
     public static IServiceCollection AddMapperServices(this IServiceCollection services)
     {
-        services.AddGenericMappers(typeof(IEntityMapper<,>), typeof(MappersExtensions).Assembly);
-        services.AddGenericMappers(typeof(IDtoMapper<,>), typeof(MappersExtensions).Assembly);
+        services.AddGenericMappers(typeof(MappersExtensions).Assembly);
 
         return services;
     }
 
     private static IServiceCollection AddGenericMappers(
         this IServiceCollection services,
-        Type mapperInterface,
         Assembly assembly
     )
     {
-        IReadOnlyList<Type> entityTypes = typeof(StockEntityBase)
-            .Assembly.GetTypes()
-            .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(StockEntityBase)))
-            .ToList();
-
-        IReadOnlyList<Type> dtoTypes = assembly
+        // Uniquement les mappers concrets : les bases abstraites et les génériques
+        // ouverts (StockDtoMapperBase<,>) ne sont pas instanciables.
+        IEnumerable<Type> mappers = assembly
             .GetTypes()
             .Where(t =>
                 t is { IsClass: true, IsAbstract: false, IsGenericTypeDefinition: false }
-                && t.GetInterfaces()
-                    .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDto<>))
+                && t.GetInterfaces().Any(IsMapper)
             )
-            .ToList();
+            .ToArray();
 
-        IEnumerable<Type> openMappers = assembly
-            .GetTypes()
-            .Where(t =>
-                t is { IsClass: true, IsAbstract: false, IsGenericTypeDefinition: false }
-                && t.GetInterfaces()
-                    .Any(i =>
-                        i.IsGenericType
-                        && i.GetGenericArguments().Length == 2
-                        && i.GetGenericTypeDefinition() == mapperInterface
-                    )
-            );
-
-        foreach (Type openType in openMappers)
+        foreach (Type mapperType in mappers)
         {
-            foreach (Type entityType in entityTypes)
-            {
-                foreach (Type dtoType in dtoTypes)
-                {
-                    Type closed;
-                    try
-                    {
-                        closed = openType.MakeGenericType(entityType, dtoType);
-                    }
-                    catch (ArgumentException)
-                    {
-                        continue;
-                    }
+            // Enregistrement du type concret : c'est lui qui porte l'unique instance.
+            services.AddSingleton(mapperType);
 
-                    foreach (
-                        Type service in closed
-                            .GetInterfaces()
-                            .Where(i =>
-                                i.IsGenericType && i.GetGenericTypeDefinition() == mapperInterface
-                            )
-                    )
-                    {
-                        services.AddSingleton(service, closed);
-                    }
+            // Une boucle plutôt qu'un Single : une classe peut implémenter
+            // à la fois IEntityMapper et IDtoMapper.
+            foreach (Type mapperInterface in mapperType.GetInterfaces().Where(IsMapper))
+            {
+                // Alias vers l'instance concrète, pour qu'il n'y ait pas une
+                // instance par interface.
+                services.AddSingleton(mapperInterface, sp => sp.GetRequiredService(mapperType));
+
+                // La covariance (out TDto) n'existe que pour IDtoMapper.
+                // IEntityMapper est résolu avec le type concret du DTO.
+                if (mapperInterface.GetGenericTypeDefinition() != typeof(IDtoMapper<,>))
+                    continue;
+
+                Type[] args = mapperInterface.GetGenericArguments();
+                Type dtoContract = typeof(IDto<>).MakeGenericType(args[0]);
+
+                // Le conteneur DI ne tient pas compte de la variance : il faut
+                // enregistrer explicitement chaque interface DTO (IResponseDto<Article>...)
+                // sous laquelle le mapper doit être résolu.
+                // IDto<> est exclu car c'est l'interface marqueur commune, trop générique.
+                IEnumerable<Type> dtoInterfaces = args[1]
+                    .GetInterfaces()
+                    .Where(i =>
+                        i.IsGenericType
+                        && i.GetGenericTypeDefinition() != typeof(IDto<>)
+                        && dtoContract.IsAssignableFrom(i)
+                    );
+
+                foreach (Type dtoInterface in dtoInterfaces)
+                {
+                    // Ex. : IDtoMapper<Article, IResponseDto<Article>> pointe vers
+                    // StockArticleResponseDtoMapper. Si deux mappers partagent la même
+                    // interface DTO, le dernier enregistré l'emporte.
+                    services.AddSingleton(
+                        typeof(IDtoMapper<,>).MakeGenericType(args[0], dtoInterface),
+                        sp => sp.GetRequiredService(mapperType)
+                    );
                 }
             }
         }
 
         return services;
+    }
+
+    private static bool IsMapper(Type type)
+    {
+        Type[] mapperTypes = [typeof(IEntityMapper<,>), typeof(IDtoMapper<,>)];
+
+        if (!type.IsGenericType)
+            return false;
+
+        Type typeDef = type.GetGenericTypeDefinition();
+        return mapperTypes.Contains(typeDef);
     }
 }

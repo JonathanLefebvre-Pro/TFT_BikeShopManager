@@ -22,7 +22,8 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     //Change this (in development) to use the Vault (the vault container have to be started and unsealed !!!)
-    //False => use jwt and connection secrets from appSettings.development.json sections as IOptions<JwtOptions> or IOptions<ConnectionOptions>
+    //False => use jwt and connection secrets from appSettin
+    // gs.development.json sections as IOptions<JwtOptions> or IOptions<ConnectionOptions>
     //True => use secrets from Vault
     //bool useVault = !builder.Environment.IsDevelopment();
 
